@@ -11,7 +11,7 @@ import {
   Button
 } from "shards-react";
 
-const SidebarActions = ({ title }) => (
+const SidebarActions = ({ title, onSaveClick, onPreviewClick }) => (
   <Card small className="mb-3">
     <CardHeader className="border-bottom">
       <h6 className="m-0">{title}</h6>
@@ -49,10 +49,10 @@ const SidebarActions = ({ title }) => (
           </span> */}
         </ListGroupItem>
         <ListGroupItem className="d-flex px-3 border-0">
-          <Button outline theme="accent" size="sm">
+          <Button outline theme="accent" size="sm" onClick={onSaveClick}>
             <i className="material-icons">save</i> Lưu
           </Button>
-          <Button theme="accent" size="sm" className="ml-auto">
+          <Button theme="accent" size="sm" className="ml-auto" onClick={onPreviewClick}>
             <i className="material-icons">file_copy</i> Xem trước
           </Button>
         </ListGroupItem>

@@ -30,6 +30,11 @@ export default function() {
       htmlBefore: '<i class="material-icons">note_add</i>',
       to: "/add-new-post",
     },
+    {
+      title: "Quản lý bài đăng",
+      htmlBefore: '<i class="material-icons">note_add</i>',
+      to: "/bai-dang",
+    },
     // {
     //   title: "Blog Dashboard",
     //   to: "/blog-overview",

@@ -14,6 +14,9 @@ import Tables from "./views/Tables";
 import BlogPosts from "./views/BlogPosts";
 import SinhVien from "./views/SinhVien";
 import GiangVien from "./views/GiangVien";
+import ListBaiDang from './views/BaiDang/ListBaiDang';
+import NewBaiDang from './views/BaiDang/NewBaiDang';
+import PreviewBaiDang from './views/BaiDang/PreviewBaiDang';
 
 export default [
   {
@@ -67,4 +70,20 @@ export default [
     layout: DefaultLayout,
     component: GiangVien
   },
+  {
+    path: "/bai-dang",
+    layout: DefaultLayout,
+    exact: true,
+    component: ListBaiDang
+  },
+  {
+    path: "/bai-dang/new",
+    layout: DefaultLayout,
+    component: NewBaiDang
+  },
+  {
+    path: "/bai-dang/preview",
+    layout: DefaultLayout,
+    component: PreviewBaiDang
+  }
 ];
