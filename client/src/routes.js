@@ -16,6 +16,7 @@ import SinhVien from "./views/SinhVien";
 import GiangVien from "./views/GiangVien";
 import ListBaiDang from './views/BaiDang/ListBaiDang';
 import NewBaiDang from './views/BaiDang/NewBaiDang';
+import CreateOrEditBaiDang from './views/BaiDang/CreateOrEditBaiDang';
 import PreviewBaiDang from './views/BaiDang/PreviewBaiDang';
 
 export default [
@@ -80,6 +81,11 @@ export default [
     path: "/bai-dang/new",
     layout: DefaultLayout,
     component: NewBaiDang
+  },
+  {
+    path: "/bai-dang/create-or-edit",
+    layout: DefaultLayout,
+    component: CreateOrEditBaiDang
   },
   {
     path: "/bai-dang/preview",

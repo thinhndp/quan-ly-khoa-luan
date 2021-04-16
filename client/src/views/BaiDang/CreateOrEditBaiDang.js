@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Container, Row, Col, Card, CardBody, Form, FormInput, Button } from "shards-react";
 import moment from 'moment';
 import ReactQuill from "react-quill";
@@ -13,7 +13,7 @@ import PageTitle from "../../components/common/PageTitle";
 import SidebarActions from "../../components/add-new-post/SidebarActions";
 import SidebarCategories from "../../components/add-new-post/SidebarCategories";
 
-const NewBaiDang = () => {
+const CreateOrEditBaiDang = () => {
   const [ newPost, setNewPost ] = useState({
     title: '',
     content: '',
@@ -24,6 +24,29 @@ const NewBaiDang = () => {
   });
   const [ isShowPreview, setIsShowPreview ] = useState(false);
   let history = useHistory();
+  let isUpdate = false;
+  useEffect(() => {
+    if (history.location.state != null && history.location.state.postId != null) {
+      console.log(history.location.state.postId);
+      const id = history.location.state.postId;
+      axios.get(`http://localhost:5000/posts/${id}`)
+        .then((res) => {
+          isUpdate = true;
+          console.log('***');
+          console.log(res.data);
+          console.log({ ...res.data });
+          console.log('***');
+          setNewPost({ ...res.data });
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+  }, []);
+  useEffect(() => {
+    console.log('newPost');
+    console.log(newPost);
+  }, [newPost]);
   const upsertPost = (post) => {
     console.log(post);
     if (post.title == '' || post.content == '') {
@@ -47,11 +70,13 @@ const NewBaiDang = () => {
   }
   const onPreviewClick = () => {
     setIsShowPreview(true);
+    console.log(newPost);
   }
   const onBackClick = () => {
     setIsShowPreview(false);
   }
   const onLoaiTinChange = (type) => {
+    console.log("a..");
     setNewPost({ ...newPost, type: type });
   }
   return (
@@ -120,4 +145,4 @@ const NewBaiDang = () => {
   );
 }
 
-export default NewBaiDang;
+export default CreateOrEditBaiDang;

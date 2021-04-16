@@ -10,6 +10,16 @@ export const getPosts = (req, res) => {
     });
 };
 
+export const getPostById = (req, res) => {
+  Post.findOne({ _id: req.params.id })
+    .then((post) => {
+      res.status(201).json(post);
+    })
+    .catch((err) => {
+      res.status(400).json({ message: err.message });
+    });
+}
+
 export const createPost = (req, res) => {
   const post = req.body;
   const newPost = new Post(post);
@@ -20,5 +30,15 @@ export const createPost = (req, res) => {
     })
     .catch((err) => {
       res.status(400).json({ message: err.message });
-    })
+    });
 };
+
+export const deletePost = (req, res) => {
+  Post.deleteOne({ _id: req.params.id })
+    .then(() => {
+      res.status(201).json(req.params.id);
+    })
+    .catch((err) => {
+      res.status(400).json({ message: err.message });
+    });
+}

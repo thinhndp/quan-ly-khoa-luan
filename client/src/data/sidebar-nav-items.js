@@ -25,11 +25,11 @@ export default function() {
       htmlBefore: '<i class="material-icons">table_chart</i>',
       to: "/aaa",
     },
-    {
-      title: "Quản lý bài đăng",
-      htmlBefore: '<i class="material-icons">note_add</i>',
-      to: "/add-new-post",
-    },
+    // {
+    //   title: "Quản lý bài đăng",
+    //   htmlBefore: '<i class="material-icons">note_add</i>',
+    //   to: "/add-new-post",
+    // },
     {
       title: "Quản lý bài đăng",
       htmlBefore: '<i class="material-icons">note_add</i>',

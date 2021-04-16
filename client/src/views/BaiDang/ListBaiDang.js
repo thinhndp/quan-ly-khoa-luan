@@ -1,14 +1,23 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom"
-import { Container, Row, Col, Card, CardHeader, CardBody, Button } from "shards-react";
+import { Container, Row, Col, Card, CardHeader, CardBody, Button,
+  Dropdown, DropdownToggle, DropdownMenu, DropdownItem} from "shards-react";
+// import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
+import DeleteIcon from '@material-ui/icons/Delete';
+import EditIcon from '@material-ui/icons/Edit';
 
+import commonStyles from '../../styles/CommonStyles.module.scss';
 import PageTitle from "../../components/common/PageTitle";
 
 const ListBaiDang = () => {
-  const [posts, setPosts] = useState([]);
+  const [ posts, setPosts ] = useState([]);
+  const [ isOpenActions, setIsOpenActions ] = useState(false);
   let history = useHistory();
   useEffect(() => {
+    getPosts();
+  }, []);
+  const getPosts = () => {
     axios.get('http://localhost:5000/posts')
       .then((res) => {
         console.log(res);
@@ -17,9 +26,28 @@ const ListBaiDang = () => {
       .catch((err) => {
         console.log(err);
       });
-  }, []);
+  }
   const onNewPostClick = () => {
-    history.push('/bai-dang/new');
+    // history.push('/bai-dang/new');
+    history.push('/bai-dang/create-or-edit');
+  }
+  const toggleActions = () => {
+    setIsOpenActions(!isOpenActions);
+  }
+  const onEditClick = (id) => {
+    history.push('/bai-dang/create-or-edit', { postId: id });
+
+  }
+  const onDeleteClick = (id) => {
+    console.log(id);
+    axios.delete(`http://localhost:5000/posts/${id}`)
+      .then((res) => {
+        console.log(res);
+        getPosts();
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   }
   return (
     <Container fluid className="main-content-container px-4">
@@ -66,10 +94,26 @@ const ListBaiDang = () => {
                     <tr key={`post_${index}`}>
                       <td>{post.title}</td>
                       <td>Xem</td>
-                      <td>{post.postedTime}</td>
-                      <td>{post.type}</td>
-                      <td>{post.isPosted == true ? 'Đã đăng' : 'Chưa đăng'}</td>
-                      <td>...</td>
+                      <td>{post.isPosted === true ? post.postedTime : '-'}</td>
+                      <td>{post.type === 'CK' ? 'Công khai' : 'Nội bộ'}</td>
+                      <td>{post.isPosted === true ? 'Đã đăng' : 'Chưa đăng'}</td>
+                      <td>
+                        {/* <MoreHorizIcon className={commonStyles['icon-button']}onClick={() => {}}/> */}
+                        {/* <Dropdown className="ml-auto" open={isOpenActions} toggle={toggleActions}>
+                          <MoreHorizIcon className={commonStyles['icon-button']}
+                            onClick={toggleActions}/>
+                          <DropdownMenu right>
+                            <DropdownItem onClick={() => onEditClick()}>Sửa</DropdownItem>
+                            <DropdownItem onClick={() => onDeleteClick(post._id)}>Xóa</DropdownItem>
+                          </DropdownMenu>
+                        </Dropdown> */}
+                        {/* TODO: Move to common */}
+                        <EditIcon style={{ color: 'blue' }} className={commonStyles['icon-button']}
+                          onClick={() => onEditClick(post._id)}/>
+                        <span style={{ margin: '0 5px' }} />
+                        <DeleteIcon style={{ color: 'red' }} className={commonStyles['icon-button']}
+                          onClick={() => onDeleteClick(post._id)}/>
+                      </td>
                     </tr>
                   ))
                 }

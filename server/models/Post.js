@@ -4,7 +4,7 @@ const postSchema = mongoose.Schema({
   title: String,
   content: String,
   creator: String,
-  category: [ String ],
+  // category: [ String ],
   type: String,
   isPosted: Boolean,
   postedTime: {
