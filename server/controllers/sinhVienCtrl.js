@@ -33,3 +33,13 @@ export const createManySinhViens = (req, res) => {
       res.status(400).json({ message: err.message });
     })
 }
+
+export const deleteSinhVien = (req, res) => {
+  SinhVien.deleteOne({ _id: req.params.id })
+    .then(() => {
+      res.status(201).json(req.params.id);
+    })
+    .catch((err) => {
+      res.status(400).json({ message: err.message });
+    });
+}

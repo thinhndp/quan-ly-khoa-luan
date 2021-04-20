@@ -6,7 +6,15 @@ const sinhVienSchema = mongoose.Schema({
   name: String,
   image: String,
   phone: String,
-  email: String
+  email: String,
+  status: {
+    type: String,
+    default: 'IP'
+  },
+  diemTB: {
+    type: Number,
+    default: 0
+  }
 });
 
 const SinhVien = mongoose.model('SinhVien', sinhVienSchema, 'SinhVien');

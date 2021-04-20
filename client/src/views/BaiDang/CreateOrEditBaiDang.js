@@ -22,63 +22,88 @@ const CreateOrEditBaiDang = () => {
     isPosted: false,
     postedTime: moment().toISOString()
   });
+  const [ content, setContent ] = useState('');
   const [ isShowPreview, setIsShowPreview ] = useState(false);
   let history = useHistory();
-  let isUpdate = false;
+  let isUpdate = (history.location.state != null && history.location.state.postId != null)
+                  ? true : false;
   useEffect(() => {
-    if (history.location.state != null && history.location.state.postId != null) {
+    if (isUpdate) {
       console.log(history.location.state.postId);
       const id = history.location.state.postId;
       axios.get(`http://localhost:5000/posts/${id}`)
         .then((res) => {
-          isUpdate = true;
-          console.log('***');
-          console.log(res.data);
-          console.log({ ...res.data });
-          console.log('***');
+          // isUpdate = true;
+          console.log('isUpdate: ' + isUpdate);
+          // console.log('***');
+          // console.log(res.data);
+          // console.log({ ...res.data });
+          // console.log('***');
           setNewPost({ ...res.data });
+          setContent(res.data.content);
         })
         .catch((err) => {
           console.log(err);
         });
     }
   }, []);
-  useEffect(() => {
-    console.log('newPost');
-    console.log(newPost);
-  }, [newPost]);
+  // useEffect(() => {
+  //   console.log('newPost');
+  //   console.log(newPost);
+
+  // }, [newPost]);
   const upsertPost = (post) => {
+    console.log('upsert');
+    console.log(isUpdate);
+
     console.log(post);
     if (post.title == '' || post.content == '') {
       return;
     }
-    axios.post('http://localhost:5000/posts', post)
+    if (!isUpdate) {
+      axios.post('http://localhost:5000/posts/', post)
       .then((res) => {
         console.log(res);
         history.push('/bai-dang');
       })
       .catch((err) => {
+        console.log('create err');
         console.log(err);
       });
+    }
+    else {
+      axios.post(`http://localhost:5000/posts/${post._id}`, post)
+        .then((res) => {
+          console.log(res);
+          history.push('/bai-dang');
+        })
+        .catch((err) => {
+          console.log('update err');
+          console.log(err);
+        });
+    }
   }
   const onSaveClick = () => {
-    upsertPost(newPost);
+    const post = { ...newPost, content: content };
+    upsertPost(post);
   }
   const onPostClick = () => {
-    const post = { ...newPost, isPosted: true, postedTime: moment().toISOString() };
+    const post = { ...newPost, isPosted: true, postedTime: moment().toISOString(), content: content };
     upsertPost(post);
   }
   const onPreviewClick = () => {
     setIsShowPreview(true);
-    console.log(newPost);
+    console.log(content);
+    // console.log(newPost);
   }
   const onBackClick = () => {
     setIsShowPreview(false);
   }
   const onLoaiTinChange = (type) => {
-    console.log("a..");
+    // console.log("a..");
     setNewPost({ ...newPost, type: type });
   }
+  // return (<div></div>);
   return (
     <Container fluid className="main-content-container px-4 pb-4">
       {/* Page Header */}
@@ -96,7 +121,7 @@ const CreateOrEditBaiDang = () => {
                   <FormInput size="lg" className="mb-3" placeholder="Tên bài đăng"
                     value={newPost.title} onChange={(e) => { setNewPost({ ...newPost, title: e.target.value}) }}/>
                   <ReactQuill className="add-new-post__editor mb-1"
-                    value={newPost.content} onChange={(html) => { setNewPost({ ...newPost, content: html}) }}/>
+                    value={content} onChange={(html) => { setContent(html) }}/>
                 </Form>
               </CardBody>
             </Card>
@@ -128,7 +153,7 @@ const CreateOrEditBaiDang = () => {
                 value={newPost.content} readOnly={true} theme={"snow"}/> */}
                 <div style={{ border: 'none' }} class="ql-container ql-snow">
                   <div class="ql-editor">
-                    <div dangerouslySetInnerHTML={{__html: newPost.content}} />
+                    <div dangerouslySetInnerHTML={{__html: content}} />
                   </div>
                 </div>
             </CardBody>
