@@ -1,6 +1,6 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { useHistory } from "react-router-dom"
+import { useHistory } from "react-router-dom";
 import { Container, Row, Col, Card, CardHeader, CardBody, Button,
   Dropdown, DropdownToggle, DropdownMenu, DropdownItem} from "shards-react";
 // import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
@@ -9,6 +9,7 @@ import EditIcon from '@material-ui/icons/Edit';
 
 import commonStyles from '../../styles/CommonStyles.module.scss';
 import PageTitle from "../../components/common/PageTitle";
+import ActionButtons from '../../components/common/ActionButtons';
 
 const ListBaiDang = () => {
   const [ posts, setPosts ] = useState([]);
@@ -36,7 +37,6 @@ const ListBaiDang = () => {
   }
   const onEditClick = (id) => {
     history.push('/bai-dang/create-or-edit', { postId: id });
-
   }
   const onDeleteClick = (id) => {
     console.log(id);
@@ -108,11 +108,13 @@ const ListBaiDang = () => {
                           </DropdownMenu>
                         </Dropdown> */}
                         {/* TODO: Move to common */}
-                        <EditIcon style={{ color: 'blue' }} className={commonStyles['icon-button']}
+                        {/* <EditIcon style={{ color: 'blue' }} className={commonStyles['icon-button']}
                           onClick={() => onEditClick(post._id)}/>
                         <span style={{ margin: '0 5px' }} />
                         <DeleteIcon style={{ color: 'red' }} className={commonStyles['icon-button']}
-                          onClick={() => onDeleteClick(post._id)}/>
+                          onClick={() => onDeleteClick(post._id)}/> */}
+                        <ActionButtons onEditClick={() => onEditClick(post._id)}
+                          onDeleteClick={() => onDeleteClick(post._id)} />
                       </td>
                     </tr>
                   ))

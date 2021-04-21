@@ -1,10 +1,11 @@
 import mongoose from 'mongoose';
+import upsertMany from '@meanie/mongoose-upsert-many';
 
 const sinhVienSchema = mongoose.Schema({
   maSV: String,
   lopSH: String,
   name: String,
-  image: String,
+  // image: String,
   phone: String,
   email: String,
   status: {
@@ -16,6 +17,8 @@ const sinhVienSchema = mongoose.Schema({
     default: 0
   }
 });
+
+sinhVienSchema.plugin(upsertMany);
 
 const SinhVien = mongoose.model('SinhVien', sinhVienSchema, 'SinhVien');
 

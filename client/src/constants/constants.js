@@ -1,0 +1,3 @@
+export const SINH_VIEN_STATUS_IN_PROGRESS = 'IP';
+export const SINH_VIEN_STATUS_DONE = 'DN';
+export const SINH_VIEN_STATUS_ABANDONED = 'AB';

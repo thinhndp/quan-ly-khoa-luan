@@ -4,3 +4,7 @@ export var ID = function () {
   // after the decimal.
   return '_' + Math.random().toString(36).substr(2, 9);
 };
+
+export const refreshPage = () => {
+  window.location.reload();
+}

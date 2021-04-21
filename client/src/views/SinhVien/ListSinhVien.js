@@ -1,32 +1,48 @@
 import React, { useEffect, useState, useRef } from "react";
 import axios from "axios";
+import { useHistory } from "react-router-dom";
 import xlsxParser from 'xlsx-parse-json';
 import { Container, Row, Col, Card, CardHeader, CardBody, Button } from "shards-react";
 
-import PageTitle from "../components/common/PageTitle";
+import { getSinhViens, deleteSinhVienById, upsertSinhViens } from '../../api/sinhVienAPI';
+import * as Utils from '../../utils/utils';
 
-const SinhVien = () => {
-  const [sinhViens, setSinhViens] = useState([]);
+import PageTitle from "../../components/common/PageTitle";
+import ActionButtons from '../../components/common/ActionButtons';
+import EditSinhVienModal from './EditSinhVienModal';
+
+const ListSinhVien = () => {
+  const [ sinhViens, setSinhViens ] = useState([]);
+  const [ isFileResetting, setIsFileResetting ] = useState(false);
+  const [ isOpenEditModal, setIsOpenEditModal ] = useState(false);
   const inputFile = useRef(null);
+  let history = useHistory();
   useEffect(() => {
-    axios.get('http://localhost:5000/sinhViens')
+    getList();
+  }, []);
+  useEffect(() => {
+    if (isFileResetting) {
+      setIsFileResetting(false);
+    }
+  }, [isFileResetting]);
+
+  const getList = () => {
+    getSinhViens()
       .then((res) => {
         console.log(res);
         setSinhViens(res.data);
       })
       .catch((err) => {
         console.log(err);
-      })
-    // console.log('init');
-  }, []);
-  useEffect(() => {
-    console.log("asdasd");
-  }, [inputFile]);
+      });
+  }
+
   const onImportButtonClick = () => {
     inputFile.current.click();
   }
-  const handleImportList = e => {
-    const { files } = e.target;
+
+  const handleImportList = event => {
+    const { files } = event.target;
     console.log(files);
     xlsxParser
       .onFileSelection(files[0])
@@ -34,14 +50,32 @@ const SinhVien = () => {
         var parsedData = data;
         var sinhViens = parsedData.Sheet1;
         console.log(sinhViens);
-        axios.post('http://localhost:5000/sinhViens/create-many', sinhViens)
+        upsertSinhViens(sinhViens)
           .then((res) => {
             console.log(res);
+            setIsFileResetting(true);
+            getList();
           })
           .catch((err) => {
             console.log(err);
           })
       });
+  }
+
+  const onDeleteClick = (id) => {
+    deleteSinhVienById(id)
+      .then((res) => {
+        console.log(res);
+        getList();
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+
+  const onEditClick = (id) => {
+    // history.push('/sinh-vien/edit', { sinhVienId: id });
+    history.push(`/sinh-vien/edit/${id}`);
   }
   return (
     <Container fluid className="main-content-container px-4">
@@ -50,15 +84,18 @@ const SinhVien = () => {
         <PageTitle sm="4" title="Danh sách Sinh Viên" subtitle="QUẢN LÝ SINH VIÊN" className="text-sm-left" />
       </Row>
 
-      {/* Default Light Table */}
       <Row>
         <Col>
           <Card small className="mb-4">
             <CardHeader className="border-bottom">
-              {/* <h6 className="m-0">Active Users</h6> */}
-              <Button onClick={onImportButtonClick}>Nhập danh sách</Button>
-              <input type="file" id="file" ref={inputFile}
-                  style={{ display: 'none' }}  onChange={handleImportList} />
+              {
+                !isFileResetting &&
+                <div>
+                  <Button onClick={onImportButtonClick}>Nhập danh sách</Button>
+                  <input type="file" id="file" ref={inputFile}
+                    style={{ display: 'none' }} onChange={(e) => handleImportList(e)} on />
+                </div>
+              }
             </CardHeader>
             <CardBody className="p-0 pb-3">
               <table className="table mb-0">
@@ -66,9 +103,6 @@ const SinhVien = () => {
                   <tr>
                     <th scope="col" className="border-0">
                       MSSV
-                    </th>
-                    <th scope="col" className="border-0">
-                      Ảnh
                     </th>
                     <th scope="col" className="border-0">
                       Họ Tên
@@ -83,6 +117,12 @@ const SinhVien = () => {
                       Email
                     </th>
                     <th scope="col" className="border-0">
+                      Trạng thái thực hiện KL
+                    </th>
+                    <th scope="col" className="border-0">
+                      Điểm TBCTL
+                    </th>
+                    <th scope="col" className="border-0">
                       Action
                     </th>
                   </tr>
@@ -92,32 +132,30 @@ const SinhVien = () => {
                     sinhViens.map((sinhVien, index) => (
                       <tr key={`sinh-vien_${index}`}>
                         <td>{sinhVien.maSV}</td>
-                        <td>-</td>
+                        {/* <td>-</td> */}
                         <td>{sinhVien.name}</td>
                         <td>{sinhVien.lopSH}</td>
                         <td>{sinhVien.phone}</td>
                         <td>{sinhVien.email}</td>
-                        <td>...</td>
+                        <td>{sinhVien.status === 'IP' ? 'Đang thực hiện' : 'Đã hoàn thành'}</td>
+                        <td>{sinhVien.diemTB}</td>
+                        <td>
+                          <ActionButtons
+                            onDeleteClick={() => { onDeleteClick(sinhVien._id) }}
+                            onEditClick={() => { onEditClick(sinhVien._id) }} />
+                        </td>
                       </tr>
                     ))
                   }
-                  {/* <tr>
-                    <td>16520000</td>
-                    <td>-</td>
-                    <td>Nguyễn Văn A</td>
-                    <td>KTPM2016</td>
-                    <td>09000000000</td>
-                    <td>16520000@gm.uit.edu.vn</td>
-                    <td>...</td>
-                  </tr> */}
                 </tbody>
               </table>
             </CardBody>
           </Card>
         </Col>
       </Row>
+      <EditSinhVienModal isOpen={isOpenEditModal}/>
     </Container>
   )
 };
 
-export default SinhVien;
+export default ListSinhVien;

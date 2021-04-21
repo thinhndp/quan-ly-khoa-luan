@@ -12,7 +12,8 @@ import Errors from "./views/Errors";
 import ComponentsOverview from "./views/ComponentsOverview";
 import Tables from "./views/Tables";
 import BlogPosts from "./views/BlogPosts";
-import SinhVien from "./views/SinhVien";
+import ListSinhVien from "./views/SinhVien/ListSinhVien";
+import EditSinhVienPage from './views/SinhVien/EditSinhVienPage';
 import GiangVien from "./views/GiangVien";
 import ListBaiDang from './views/BaiDang/ListBaiDang';
 import NewBaiDang from './views/BaiDang/NewBaiDang';
@@ -64,7 +65,13 @@ export default [
   {
     path: "/sinh-vien",
     layout: DefaultLayout,
-    component: SinhVien
+    exact: true,
+    component: ListSinhVien
+  },
+  {
+    path: "/sinh-vien/edit/:id",
+    layout: DefaultLayout,
+    component: EditSinhVienPage
   },
   {
     path: "/giang-vien",
