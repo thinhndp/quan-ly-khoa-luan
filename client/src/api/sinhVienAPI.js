@@ -15,3 +15,7 @@ export const deleteSinhVienById = (id) => {
 export const upsertSinhViens = (sinhViens) => {
   return axios.post('/sinh-viens/upsert-many/', sinhViens);
 }
+
+export const updateSinhVienById = (id, sinhVien) => {
+  return axios.post(`/sinh-viens/${id}`, sinhVien);
+}

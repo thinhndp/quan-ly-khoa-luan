@@ -34,11 +34,10 @@ export const createPost = (req, res) => {
 };
 
 export const updatePostById = (req, res) => {
-  console.log(req);
   const post = req.body;
   const id = req.params.id;
 
-  Post.updateOne({ _id: req.params.id }, post)
+  Post.updateOne({ _id: id }, post)
     .then(() => {
       res.status(201).json(post);
     })

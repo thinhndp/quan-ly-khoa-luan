@@ -56,6 +56,18 @@ export const upsertManySinhViens = (req, res) => {
     })
 }
 
+export const updateSinhVienById = (req, res) => {
+  const sinhVien = req.body;
+  const id = req.params.id;
+  SinhVien.findByIdAndUpdate({ _id: id }, sinhVien)
+    .then(() => {
+      res.status(201).json(sinhVien);
+    })
+    .catch((err) => {
+      res.status(400).json({ message: err.message });
+    });
+}
+
 export const deleteSinhVienById = (req, res) => {
   SinhVien.deleteOne({ _id: req.params.id })
     .then(() => {
