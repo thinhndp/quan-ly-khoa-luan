@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useHistory } from "react-router-dom";
 import PropTypes from "prop-types";
 import {
   Card,
@@ -17,12 +17,13 @@ import {
   Container
 } from "shards-react";
 
-import { getSinhVienById } from '../../api/sinhVienAPI';
+import { getSinhVienById, updateSinhVienById } from '../../api/sinhVienAPI';
 import * as Constants from '../../constants/constants';
 import PageTitle from "../../components/common/PageTitle";
 
 const EditSinhVienPage = () => {
   let { id } = useParams();
+  let history = useHistory();
   const [ sinhVien, setSinhVien ] = useState({
     maSV: '',
     lopSH: '',
@@ -43,6 +44,19 @@ const EditSinhVienPage = () => {
         console.log(err);
       });
   }, []);
+  const onUpdateClick = () => {
+    console.log(sinhVien);
+    // TODO: Validation
+    updateSinhVienById(id, sinhVien)
+      .then((res) => {
+        console.log(res);
+        history.push('/sinh-vien');
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+    
+  }
   return (
     <Container fluid className="main-content-container px-4">
       <Row noGutters className="page-header py-4">
@@ -67,7 +81,7 @@ const EditSinhVienPage = () => {
                           <FormInput
                             id="feMaSV"
                             value={sinhVien.maSV}
-                            onChange={() => {}}
+                            onChange={(e) => { setSinhVien({ ...sinhVien, maSV: e.target.value }) }}
                           />
                         </Col>
                         {/* Lop SH */}
@@ -76,7 +90,7 @@ const EditSinhVienPage = () => {
                           <FormInput
                             id="feLopSH"
                             value={sinhVien.lopSH}
-                            onChange={() => {}}
+                            onChange={(e) => { setSinhVien({ ...sinhVien, lopSH: e.target.value }) }}
                           />
                         </Col>
                       </Row>
@@ -85,7 +99,7 @@ const EditSinhVienPage = () => {
                         <FormInput
                           id="feName"
                           value={sinhVien.name}
-                          onChange={() => {}}
+                          onChange={(e) => { setSinhVien({ ...sinhVien, name: e.target.value }) }}
                         />
                       </FormGroup>
                       <Row form>
@@ -96,7 +110,7 @@ const EditSinhVienPage = () => {
                             type="email"
                             id="feEmail"
                             value={sinhVien.email}
-                            onChange={() => {}}
+                            onChange={(e) => { setSinhVien({ ...sinhVien, email: e.target.value }) }}
                             autoComplete="email"
                           />
                         </Col>
@@ -107,7 +121,7 @@ const EditSinhVienPage = () => {
                             type="number"
                             id="fePhone"
                             value={sinhVien.phone}
-                            onChange={() => {}}
+                            onChange={(e) => { setSinhVien({ ...sinhVien, phone: e.target.value }) }}
                           />
                         </Col>
                       </Row>
@@ -119,14 +133,15 @@ const EditSinhVienPage = () => {
                             type="number"
                             id="feDiemTB"
                             value={sinhVien.diemTB}
-                            onChange={() => {}}
+                            onChange={(e) => { setSinhVien({ ...sinhVien, diemTB: e.target.value }) }}
                           />
                         </Col>
                         {/* Password */}
                         <Col md="6" className="form-group">
                           <label htmlFor="feStatus">Trạng thái thực hiện KL</label>
-                          <FormSelect value={sinhVien.status} id="feStatus">
-                            <option>Chọn...</option>
+                          <FormSelect value={sinhVien.status} id="feStatus"
+                              onChange={(e) => { setSinhVien({ ...sinhVien, status: e.target.value }) }}>
+                            <option value=''>Chọn...</option>
                             <option value={Constants.SINH_VIEN_STATUS_IN_PROGRESS}>Đang thực hiện</option>
                             <option value={Constants.SINH_VIEN_STATUS_DONE}>Đã hoàn thành</option>
                             <option value={Constants.SINH_VIEN_STATUS_ABANDONED}>Đã dừng</option>
@@ -164,7 +179,7 @@ const EditSinhVienPage = () => {
                           <FormTextarea id="feDescription" rows="5" />
                         </Col>
                       </Row> */}
-                      <Button theme="accent">Cập nhật</Button>
+                      <Button theme="accent" onClick={onUpdateClick}>Cập nhật</Button>
                     </Form>
                   </Col>
                 </Row>
