@@ -4,14 +4,15 @@ import { useHistory } from "react-router-dom";
 import xlsxParser from 'xlsx-parse-json';
 import { Container, Row, Col, Card, CardHeader, CardBody, Button } from "shards-react";
 
-import { getSinhViens, deleteSinhVienById, upsertSinhViens } from '../../api/sinhVienAPI';
+import { getGiangViens, deleteGiangVienById, upsertGiangViens } from '../../api/giangVienAPI';
 import * as Utils from '../../utils/utils';
 
 import PageTitle from "../../components/common/PageTitle";
 import ActionButtons from '../../components/common/ActionButtons';
+// import EditGiangVienModal from './EditGiangVienModal';
 
-const ListSinhVien = () => {
-  const [ sinhViens, setSinhViens ] = useState([]);
+const ListGiangVien = () => {
+  const [ giangViens, setGiangViens ] = useState([]);
   const [ isFileResetting, setIsFileResetting ] = useState(false);
   const [ isOpenEditModal, setIsOpenEditModal ] = useState(false);
   const inputFile = useRef(null);
@@ -26,10 +27,10 @@ const ListSinhVien = () => {
   }, [isFileResetting]);
 
   const getList = () => {
-    getSinhViens()
+    getGiangViens()
       .then((res) => {
         console.log(res);
-        setSinhViens(res.data);
+        setGiangViens(res.data);
       })
       .catch((err) => {
         console.log(err);
@@ -47,9 +48,9 @@ const ListSinhVien = () => {
       .onFileSelection(files[0])
       .then(data => {
         var parsedData = data;
-        var sinhViens = parsedData.Sheet1;
-        console.log(sinhViens);
-        upsertSinhViens(sinhViens)
+        var giangViens = parsedData.Sheet1;
+        console.log(giangViens);
+        upsertGiangViens(giangViens)
           .then((res) => {
             console.log(res);
             setIsFileResetting(true);
@@ -62,7 +63,7 @@ const ListSinhVien = () => {
   }
 
   const onDeleteClick = (id) => {
-    deleteSinhVienById(id)
+    deleteGiangVienById(id)
       .then((res) => {
         console.log(res);
         getList();
@@ -73,14 +74,14 @@ const ListSinhVien = () => {
   }
 
   const onEditClick = (id) => {
-    // history.push('/sinh-vien/edit', { sinhVienId: id });
-    history.push(`/sinh-vien/edit/${id}`);
+    // history.push('/giang-vien/edit', { giangVienId: id });
+    history.push(`/giang-vien/edit/${id}`);
   }
   return (
     <Container fluid className="main-content-container px-4">
       {/* Page Header */}
       <Row noGutters className="page-header py-4">
-        <PageTitle sm="4" title="Danh sách Sinh Viên" subtitle="QUẢN LÝ SINH VIÊN" className="text-sm-left" />
+        <PageTitle sm="4" title="Danh sách Giảng Viên" subtitle="QUẢN LÝ GIẢNG VIÊN" className="text-sm-left" />
       </Row>
 
       <Row>
@@ -101,13 +102,13 @@ const ListSinhVien = () => {
                 <thead className="bg-light">
                   <tr>
                     <th scope="col" className="border-0">
-                      MSSV
+                      Mã Giảng viên
                     </th>
                     <th scope="col" className="border-0">
                       Họ Tên
                     </th>
                     <th scope="col" className="border-0">
-                      Lớp Sinh hoạt
+                      Học hàm
                     </th>
                     <th scope="col" className="border-0">
                       Số điện thoại
@@ -116,10 +117,7 @@ const ListSinhVien = () => {
                       Email
                     </th>
                     <th scope="col" className="border-0">
-                      Trạng thái thực hiện KL
-                    </th>
-                    <th scope="col" className="border-0">
-                      Điểm TBCTL
+                      Hướng nghiên cứu
                     </th>
                     <th scope="col" className="border-0">
                       Action
@@ -128,20 +126,18 @@ const ListSinhVien = () => {
                 </thead>
                 <tbody>
                   {
-                    sinhViens.map((sinhVien, index) => (
-                      <tr key={`sinh-vien_${index}`}>
-                        <td>{sinhVien.maSV}</td>
-                        {/* <td>-</td> */}
-                        <td>{sinhVien.name}</td>
-                        <td>{sinhVien.lopSH}</td>
-                        <td>{sinhVien.phone}</td>
-                        <td>{sinhVien.email}</td>
-                        <td>{sinhVien.status === 'IP' ? 'Đang thực hiện' : 'Đã hoàn thành'}</td>
-                        <td>{sinhVien.diemTB}</td>
+                    giangViens.map((giangVien, index) => (
+                      <tr key={`giang-vien_${index}`}>
+                        <td>{giangVien.maGV}</td>
+                        <td>{giangVien.name}</td>
+                        <td>{giangVien.hocHam}</td>
+                        <td>{giangVien.phone}</td>
+                        <td>{giangVien.email}</td>
+                        <td>{giangVien.huongNghienCuu}</td>
                         <td>
                           <ActionButtons
-                            onDeleteClick={() => { onDeleteClick(sinhVien._id) }}
-                            onEditClick={() => { onEditClick(sinhVien._id) }} />
+                            onDeleteClick={() => { onDeleteClick(giangVien._id) }}
+                            onEditClick={() => { onEditClick(giangVien._id) }} />
                         </td>
                       </tr>
                     ))
@@ -152,8 +148,9 @@ const ListSinhVien = () => {
           </Card>
         </Col>
       </Row>
+      {/* <EditGiangVienModal isOpen={isOpenEditModal}/> */}
     </Container>
   )
 };
 
-export default ListSinhVien;
+export default ListGiangVien;

@@ -14,7 +14,9 @@ import Tables from "./views/Tables";
 import BlogPosts from "./views/BlogPosts";
 import ListSinhVien from "./views/SinhVien/ListSinhVien";
 import EditSinhVienPage from './views/SinhVien/EditSinhVienPage';
-import GiangVien from "./views/GiangVien";
+// import GiangVien from "./views/GiangVien";
+import ListGiangVien from "./views/GiangVien/ListGiangVien";
+import EditGiangVienPage from './views/GiangVien/EditGiangVienPage';
 import ListBaiDang from './views/BaiDang/ListBaiDang';
 import NewBaiDang from './views/BaiDang/NewBaiDang';
 import CreateOrEditBaiDang from './views/BaiDang/CreateOrEditBaiDang';
@@ -76,7 +78,13 @@ export default [
   {
     path: "/giang-vien",
     layout: DefaultLayout,
-    component: GiangVien
+    exact: true,
+    component: ListGiangVien
+  },
+  {
+    path: "/giang-vien/edit/:id",
+    layout: DefaultLayout,
+    component: EditGiangVienPage
   },
   {
     path: "/bai-dang",
