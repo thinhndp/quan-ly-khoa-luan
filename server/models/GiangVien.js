@@ -2,20 +2,12 @@ import mongoose from 'mongoose';
 import upsertMany from '@meanie/mongoose-upsert-many';
 
 const giangVienSchema = mongoose.Schema({
-  maSV: String,
-  lopSH: String,
+  maGV: String,
   name: String,
-  // image: String,
+  hocHam: String,
   phone: String,
   email: String,
-  status: {
-    type: String,
-    default: 'IP'
-  },
-  diemTB: {
-    type: Number,
-    default: 0
-  }
+  huongNghienCuu: String
 });
 
 giangVienSchema.plugin(upsertMany);
