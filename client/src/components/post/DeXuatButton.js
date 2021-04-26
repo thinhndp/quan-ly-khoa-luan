@@ -3,10 +3,15 @@ import { Button, Modal, ModalBody, ModalHeader, FormGroup, FormInput, FormSelect
   FormTextarea } from "shards-react";
 import ControlPointIcon from '@material-ui/icons/ControlPoint';
 import RemoveCircleOutlineIcon from '@material-ui/icons/RemoveCircleOutline';
+import AssignmentTurnedInIcon from '@material-ui/icons/AssignmentTurnedIn';
 import { Scrollbars } from 'react-custom-scrollbars-2';
+import { useHistory } from "react-router-dom";
+
 import * as Utils from '../../utils/utils';
 import * as Constants from '../../constants/constants';
-
+import { MOCK_DATA } from '../../data/mock-data';
+import { getGiangVienByEmail } from '../../api/giangVienAPI';
+import { createManyDeTais } from '../../api/deTaiAPI';
 import styles from './DeXuatButton.module.scss';
 
 const DeXuatButton = () => {
@@ -18,6 +23,17 @@ const DeXuatButton = () => {
     heDaoTao: '',
     moTa: ''
   }]);
+  const [ giangVien, setGiangVien ] = useState({});
+  let history = useHistory();
+  useEffect(() => {
+    getGiangVienByEmail({ email: MOCK_DATA.currentUser.email })
+      .then((res) => {
+        setGiangVien(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      })
+  }, []);
   const toggleModal = () => {
     setIsOpen(!isOpen);
   }
@@ -38,7 +54,7 @@ const DeXuatButton = () => {
       setDeXuatList([ ...list ]);
     }
     return (
-      <div className={styles['de-xuat-container']}>
+      <div key={`de-xuat-${index}`} className={styles['de-xuat-container']}>
         <div className={styles['title']}>Đề tài {index + 1}</div>
         <RemoveCircleOutlineIcon className={styles['close-button']}
             onClick={() => onRemoveClick(deXuat.tmpId)}/>
@@ -82,6 +98,25 @@ const DeXuatButton = () => {
   }
   const onSubmit = () => {
     console.log(deXuatList);
+    const deTais = [];
+    deXuatList.map((deXuat) => {
+      const deTai = {};
+      deTai.tenDeTai = deXuat.deTaiName;
+      deTai.giangVien = giangVien;
+      deTai.heDaoTao = deXuat.heDaoTao;
+      deTai.moTa = deXuat.moTa;
+      deTais.push(deTai);
+    });
+    // console.log('de tai');
+    console.log(deTais);
+    createManyDeTais(deTais)
+      .then((res) => {
+        console.log(res);
+        history.push('/de-tai');
+      })
+      .catch((err) => {
+        console.log(err);
+      })
   }
   return (
     <div>
@@ -98,12 +133,12 @@ const DeXuatButton = () => {
             }
           </Scrollbars>
           <Button className={styles['add-de-xuat-button']}
-            onClick={onAddDeXuatClick}>
+              onClick={onAddDeXuatClick} outline>
             <ControlPointIcon />
           </Button>
           <Button className={styles['add-de-xuat-button']}
-            onClick={onSubmit}>
-            <ControlPointIcon />
+              onClick={onSubmit}>
+            <AssignmentTurnedInIcon />
           </Button>
         </ModalBody>
       </Modal>

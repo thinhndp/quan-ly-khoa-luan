@@ -8,6 +8,10 @@ export const getGiangVienById = (id) => {
   return axios.get(`/giang-viens/${id}`);
 }
 
+export const getGiangVienByEmail = (giangVien) => {
+  return axios.post('/giang-viens/get-by-email', giangVien);
+}
+
 export const deleteGiangVienById = (id) => {
   return axios.delete(`/giang-viens/${id}`);
 }

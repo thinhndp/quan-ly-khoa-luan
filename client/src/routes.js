@@ -19,6 +19,7 @@ import ListGiangVien from "./views/GiangVien/ListGiangVien";
 import EditGiangVienPage from './views/GiangVien/EditGiangVienPage';
 import ListBaiDang from './views/BaiDang/ListBaiDang';
 import NewBaiDang from './views/BaiDang/NewBaiDang';
+import ListDeTai from './views/DeTai/ListDeTai';
 import CreateOrEditBaiDang from './views/BaiDang/CreateOrEditBaiDang';
 import PreviewBaiDang from './views/BaiDang/PreviewBaiDang';
 
@@ -106,5 +107,11 @@ export default [
     path: "/bai-dang/preview",
     layout: DefaultLayout,
     component: PreviewBaiDang
+  },
+  {
+    path: "/de-tai",
+    layout: DefaultLayout,
+    exact: true,
+    component: ListDeTai
   }
 ];

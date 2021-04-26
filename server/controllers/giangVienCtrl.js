@@ -19,6 +19,18 @@ export const getGiangVienById = (req, res) => {
       res.status(400).json({ message: err.message });
     });
 }
+export const getGiangVienByEmail = (req, res) => {
+  const { email } = req.body;
+  console.log('email');
+  console.log(email);
+  GiangVien.findOne({ email: email })
+    .then((giangVien) => {
+      res.status(200).json(giangVien);
+    })
+    .catch((err) => {
+      res.status(400).json({ message: err.message });
+    });
+}
 
 export const createGiangVien = (req, res) => {
   const giangVien = req.body;

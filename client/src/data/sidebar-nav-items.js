@@ -18,7 +18,7 @@ export default function() {
     {
       title: "Quản lý Đề tài",
       htmlBefore: '<i class="material-icons">table_chart</i>',
-      to: "/aaa",
+      to: "/de-tai",
     },
     {
       title: "Quản lý Biểu mẫu",
@@ -31,7 +31,7 @@ export default function() {
     //   to: "/add-new-post",
     // },
     {
-      title: "Quản lý bài đăng",
+      title: "Quản lý Bài đăng",
       htmlBefore: '<i class="material-icons">note_add</i>',
       to: "/bai-dang",
     },

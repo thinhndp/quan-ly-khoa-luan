@@ -1,15 +1,13 @@
 import mongoose from 'mongoose';
-import GiangVien from './GiangVien';
-import SinhVien from './SinhVien';
+import { GiangVienSchema } from './GiangVien.js';
+import { SinhVienSchema } from './SinhVien.js';
 
-const deTaiSchema ='DeTai' ;
-
-export default DeTai;mongoose.Schema({
-  tenDetai: {
+const deTaiSchema = mongoose.Schema({
+  tenDeTai: {
     type: String,
     required: true
   },
-  giangVien: GiangVien,
+  giangVien: GiangVienSchema,
   trangThai: {
     type: String,
     enum: [ 'CD', 'DD', 'DTH', 'HT' ],
@@ -26,14 +24,15 @@ export default DeTai;mongoose.Schema({
     default: 0
   },
   sinhVienThucHien: {
-    type: [SinhVien],
+    type: [SinhVienSchema],
     validate: {
       validator: function(v) {
         return !(this.sinhVienThucHien.length > 2);
       },
       message: props => `${props.value} exceeds the maximum array size (2)!`
     }
-  }
+  },
+  moTa: String
 });
 
 const DeTai = mongoose.model('DeTai', deTaiSchema, 'DeTai');
