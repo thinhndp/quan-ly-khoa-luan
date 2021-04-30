@@ -11,11 +11,6 @@ export default function() {
       to: "/sinh-vien",
     },
     {
-      title: "Quản lý Đề xuất",
-      htmlBefore: '<i class="material-icons">table_chart</i>',
-      to: "/aaa",
-    },
-    {
       title: "Quản lý Đề tài",
       htmlBefore: '<i class="material-icons">table_chart</i>',
       to: "/de-tai",

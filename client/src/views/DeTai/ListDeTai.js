@@ -11,10 +11,12 @@ import commonStyles from '../../styles/CommonStyles.module.scss';
 import PageTitle from "../../components/common/PageTitle";
 import ActionButtons from '../../components/common/ActionButtons';
 import { getDeTais } from '../../api/deTaiAPI';
+import CustomModal from '../../components/common/CustomModal/CustomModal';
 
 const ListDeTai = () => {
   const [ deTais, setDeTais ] = useState([]);
   const [ isOpenActions, setIsOpenActions ] = useState(false);
+  const [ isDKModalOpen, setIsDKModalOpen ] = useState(false);
   let history = useHistory();
   useEffect(() => {
     getDeTaiList();
@@ -32,6 +34,10 @@ const ListDeTai = () => {
 
   const toggleActions = () => {
     setIsOpenActions(!isOpenActions);
+  }
+
+  const toggleDKModal = () => {
+    setIsDKModalOpen(!isDKModalOpen);
   }
   const onEditClick = (id) => {
     // history.push('/bai-dang/create-or-edit', { postId: id });
@@ -58,9 +64,9 @@ const ListDeTai = () => {
       <Row>
         <Col>
           <Card small className="mb-4">
-            {/* <CardHeader className="border-bottom">
-              <Button onClick={onNewPostClick}>Bài đăng mới</Button>
-            </CardHeader> */}
+            <CardHeader className="border-bottom">
+              <Button onClick={toggleDKModal}>Tùy chỉnh điều kiện</Button>
+            </CardHeader>
             <CardBody className="p-0 pb-3">
               <table className="table mb-0">
                 <thead className="bg-light">
@@ -111,6 +117,18 @@ const ListDeTai = () => {
           </Card>
         </Col>
       </Row>
+      {/*  */}
+      <CustomModal isOpen={isDKModalOpen} toggle={toggleDKModal}
+        title='Tùy chỉnh điều kiện'
+        body={
+          <div>Alo</div>
+        }
+        footer={
+          <div>
+            <Button>Cập nhật</Button>
+          </div>
+        }
+      />
     </Container>
   );
 }
