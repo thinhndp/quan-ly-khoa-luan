@@ -23,15 +23,17 @@ const deTaiSchema = mongoose.Schema({
     max: 10,
     default: 0
   },
-  sinhVienThucHien: {
-    type: [SinhVienSchema],
-    validate: {
-      validator: function(v) {
-        return !(this.sinhVienThucHien.length > 2);
-      },
-      message: props => `${props.value} exceeds the maximum array size (2)!`
-    }
-  },
+  // sinhVienThucHien: {
+  //   type: [SinhVienSchema],
+  //   validate: {
+  //     validator: function(v) {
+  //       return !(this.sinhVienThucHien.length > 2);
+  //     },
+  //     message: props => `${props.value} exceeds the maximum array size (2)!`
+  //   }
+  // },
+  sinhVien1: SinhVienSchema,
+  sinhVien2: SinhVienSchema,
   moTa: String
 });
 

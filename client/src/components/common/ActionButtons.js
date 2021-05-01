@@ -6,10 +6,10 @@ import EditIcon from '@material-ui/icons/Edit';
 const ActionButtons = ({ onEditClick, onDeleteClick }) => {
   return (
     <div>
-      <EditIcon style={{ color: 'blue' }} className={commonStyles['icon-button']}
+      <EditIcon color="primary" className={commonStyles['icon-button']}
         onClick={onEditClick}/>
       <span style={{ margin: '0 5px' }} />
-      <DeleteIcon style={{ color: 'red' }} className={commonStyles['icon-button']}
+      <DeleteIcon color="secondary" className={commonStyles['icon-button']}
         onClick={onDeleteClick}/>
     </div>
   );

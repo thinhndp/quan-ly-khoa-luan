@@ -8,6 +8,7 @@ import postRoutes from './routes/posts.js';
 import sinhVienRoutes from './routes/sinhViens.js';
 import giangVienRoutes from './routes/giangViens.js';
 import deTaiRoutes from './routes/deTais.js';
+import systemSettingRoutes from './routes/systemSettings.js';
 
 const app = express();
 
@@ -20,6 +21,7 @@ app.use('/posts', postRoutes);
 app.use('/sinh-viens', sinhVienRoutes);
 app.use('/giang-viens', giangVienRoutes);
 app.use('/de-tais', deTaiRoutes);
+app.use('/system-setting', systemSettingRoutes);
 
 const CONNECTION_URL = 'mongodb+srv://admin:admin123456@cluster0.cjuu6.mongodb.net/QLKL?retryWrites=true&w=majority';
 const PORT = process.env.PORT || 5000;

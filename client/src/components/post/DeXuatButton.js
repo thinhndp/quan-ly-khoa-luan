@@ -28,6 +28,8 @@ const DeXuatButton = () => {
   useEffect(() => {
     getGiangVienByEmail({ email: MOCK_DATA.currentUser.email })
       .then((res) => {
+        console.log('GV:');
+        console.log(res);
         setGiangVien(res.data);
       })
       .catch((err) => {

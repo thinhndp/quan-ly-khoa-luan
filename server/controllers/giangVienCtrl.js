@@ -1,4 +1,5 @@
 import GiangVien from '../models/GiangVien.js';
+import DeTai from '../models/DeTai.js';
 
 export const getGiangViens = (req, res) => {
   GiangVien.find()
@@ -59,19 +60,55 @@ export const createManyGiangViens = (req, res) => {
 export const upsertManyGiangViens = (req, res) => {
   const giangViens = req.body;
   const config = { matchFields: ['maGV'] };
-  GiangVien.upsertMany(giangViens, config)
+  const giangVienPromise = GiangVien.upsertMany(giangViens, config);
+  
+  let giangViensMap = new Map();
+  let maGVs = [];
+  giangViens.forEach((gv, index) => {
+    giangViensMap.set(gv.maGV, gv);
+    maGVs.push(gv.maGV);
+  });
+  console.log('map');
+  console.log(giangViensMap);
+
+  const deTaiPromise = DeTai.find({ 'giangVien.maGV': { $in: maGVs } })
+    .then((deTais) => {
+      let bulkArr = [];
+      for (let deTai of deTais) {
+        bulkArr.push({
+          updateOne: {
+            "filter": { "_id": deTai._id },
+            "update": { $set: { "giangVien": giangViensMap.get(deTai.giangVien.maGV) } }
+          }
+        });
+      }
+      DeTai.bulkWrite(bulkArr);
+    });
+  
+  Promise.all([ giangVienPromise, deTaiPromise ])
     .then(() => {
+      console.log('promise');
       res.status(201).json(giangViens);
     })
     .catch((err) => {
       res.status(400).json({ message: err.message });
-    })
+    });
 }
 
 export const updateGiangVienById = (req, res) => {
   const giangVien = req.body;
   const id = req.params.id;
-  GiangVien.findByIdAndUpdate({ _id: id }, giangVien)
+  const giangVienPromise = GiangVien.findByIdAndUpdate({ _id: id }, giangVien);
+
+  console.log(id);
+  console.log(giangVien);
+
+  const deTaiPromise = DeTai.updateMany(
+    { "giangVien._id": id },
+    { $set: { "giangVien": giangVien } }
+  );
+
+  Promise.all([ giangVienPromise, deTaiPromise ])
     .then(() => {
       res.status(201).json(giangVien);
     })
