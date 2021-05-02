@@ -7,3 +7,7 @@ export const getDeTais = () => {
 export const createManyDeTais = (deTais) => {
   return axios.post('/de-tais/create-many', deTais);
 }
+
+export const deleteDeTaiById = (id) => {
+  return axios.delete(`/de-tais/${id}`);
+}

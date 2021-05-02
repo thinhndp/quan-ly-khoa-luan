@@ -1,0 +1,10 @@
+.input-group .form-control {
+  margin-right: 5px;
+  padding-right: 60px !important;
+}
+
+.search-button {
+  display: flex !important;
+  justify-content: center;
+  align-items: center;
+}

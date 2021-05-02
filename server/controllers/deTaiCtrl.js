@@ -21,3 +21,13 @@ export const createManyDeTais = (req, res) => {
       res.status(400).json({ message: err.message });
     })
 }
+
+export const deleteDeTaiById = (req, res) => {
+  DeTai.deleteOne({ _id: req.params.id })
+    .then(() => {
+      res.status(201).json(req.params.id);
+    })
+    .catch((err) => {
+      res.status(400).json({ message: err.message });
+    });
+}

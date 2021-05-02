@@ -9,6 +9,15 @@ export const GIANG_VIEN_HOC_HAM_TS = 'TS.';
 export const DE_TAI_HDT_DAI_TRA = 'DT';
 export const DE_TAI_HDT_CHAT_LUONG_CAO = 'CLC';
 
+export const DE_TAI_APPROVE_STATUS_NOT_APPROVED = 'CD';
+export const DE_TAI_APPROVE_STATUS_APPROVED = 'DD';
+export const DE_TAI_APPROVE_STATUS_REJECTED = 'DTC';
+
+export const DE_TAI_PROGRESS_STATUS_AVAILABLE = 'CDK';
+export const DE_TAI_PROGRESS_STATUS_IN_PROGRESS = 'DTH';
+export const DE_TAI_PROGRESS_STATUS_ABANDONED = 'DH';
+export const DE_TAI_PROGRESS_STATUS_DONE = 'DHT';
+
 export const SYSTEM_SETTING_INSTANCE = 'DEFAULT';
 
 export const DETAIL_MODE_VIEW = 'VIEW';

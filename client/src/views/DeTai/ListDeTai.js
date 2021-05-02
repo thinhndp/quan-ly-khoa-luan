@@ -12,13 +12,15 @@ import commonStyles from '../../styles/CommonStyles.module.scss';
 import styles from './styles.module.scss';
 import PageTitle from "../../components/common/PageTitle";
 import ActionButtons from '../../components/common/ActionButtons';
-import { getDeTais } from '../../api/deTaiAPI';
+import { getDeTais, deleteDeTaiById } from '../../api/deTaiAPI';
 import { getSystemSettings, updateSystemSetting } from '../../api/systemSettingAPI';
 import CustomModal from '../../components/common/CustomModal/CustomModal';
 import { FormGroup } from "@material-ui/core";
 import * as Constants from '../../constants/constants';
+import * as Utils from '../../utils/utils';
 import GiangVienModal from './DetailGiangVienModal';
 import DeXuatButton from '../../components/post/DeXuatButton';
+import DangKyDTButton from '../../components/post/DangKyDTButton';
 
 const ListDeTai = () => {
   const [ deTais, setDeTais ] = useState([]);
@@ -85,14 +87,14 @@ const ListDeTai = () => {
   }
   const onDeleteClick = (id) => {
     // console.log(id);
-    // axios.delete(`http://localhost:5000/posts/${id}`)
-    //   .then((res) => {
-    //     console.log(res);
-    //     getPosts();
-    //   })
-    //   .catch((err) => {
-    //     console.log(err);
-    //   });
+    deleteDeTaiById(id)
+      .then((res) => {
+        console.log(res);
+        getDeTaiList();
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   }
   const onDeXuatToiDaUpdate = () => {
     console.log(deXuatToiDa);
@@ -133,8 +135,12 @@ const ListDeTai = () => {
           <Card small className="mb-4">
             <CardHeader className="border-bottom">
               <Row>
+                <span class="pr-05r"/>
                 <Button onClick={toggleDKModal}>Tùy chỉnh điều kiện</Button>
+                <span class="pr-05r"/>
                 <DeXuatButton />
+                <span class="pr-05r"/>
+                <DangKyDTButton />
               </Row>
             </CardHeader>
             <CardBody className="p-0 pb-3">
@@ -148,7 +154,10 @@ const ListDeTai = () => {
                       Giảng viên Hướng dẫn
                     </th>
                     <th scope="col" className="border-0">
-                      Trạng thái
+                      Trạng thái duyệt
+                    </th>
+                    <th scope="col" className="border-0">
+                      Trạng thái thực hiện
                     </th>
                     <th scope="col" className="border-0">
                       Hệ đào tạo
@@ -174,7 +183,8 @@ const ListDeTai = () => {
                           style={{ fontSize: '1rem' }} onClick={() => { onGVClick(deTai.giangVien) }}/>
                         </span>
                       </td>
-                      <td>{deTai.trangThai}</td>
+                      <td>{Utils.getDeTaiApproveStatusText(deTai.trangThaiDuyet)}</td>
+                      <td>{Utils.getDeTaiProgressStatusText(deTai.trangThaiThucHien)}</td>
                       <td>{deTai.heDaoTao}</td>
                       <td>{deTai.diemSo}</td>
                       <td>-</td>

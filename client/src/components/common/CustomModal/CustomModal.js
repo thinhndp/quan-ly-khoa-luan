@@ -1,6 +1,8 @@
 import React from 'react';
 // import { Modal, ModalBody, ModalHeader, ModalFooter} from "shards-react";
 import Modal from 'react-bootstrap/Modal'
+// import styles from './styles.module.scss';
+import styles from './styles.css';
 
 // const CustomModal = ({ isOpen, toggle, title, body, footer }) => {
 //   return (
@@ -15,19 +17,23 @@ import Modal from 'react-bootstrap/Modal'
 //     </Modal>
 //   );
 // }
-const CustomModal = ({ isOpen, toggle, title, body, footer, onClose, onEnter }) => {
+const CustomModal = ({ isOpen, toggle, title, body, footer, onClose, onEnter, size }) => {
   return (
     <Modal show={isOpen} onHide={toggle} scrollable={true} backdrop="static" onExited={onClose}
-      onEnter={onEnter}>
+      onEnter={onEnter} contentClassName="custom-modal" size={size}>
       <Modal.Header closeButton={true}>
         <Modal.Title as="h5">{title}</Modal.Title>
       </Modal.Header>
-      <Modal.Body>
+      <Modal.Body >
         {body}
       </Modal.Body>
-      <Modal.Footer>
-        {footer}
-      </Modal.Footer>
+      {
+        footer != null && (
+          <Modal.Footer>
+            {footer}
+          </Modal.Footer>
+        )
+      }
     </Modal>
   );
 }

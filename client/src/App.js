@@ -7,6 +7,7 @@ import withTracker from "./withTracker";
 
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./shards-dashboard/styles/shards-dashboards.1.1.0.min.css";
+import "./styles/global-styles.css";
 
 axios.defaults.baseURL = 'http://localhost:5000';
 
