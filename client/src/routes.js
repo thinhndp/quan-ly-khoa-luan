@@ -22,6 +22,7 @@ import NewBaiDang from './views/BaiDang/NewBaiDang';
 import ListDeTai from './views/DeTai/ListDeTai';
 import CreateOrEditBaiDang from './views/BaiDang/CreateOrEditBaiDang';
 import PreviewBaiDang from './views/BaiDang/PreviewBaiDang';
+import TestPage from './views/TestPage/TestPage';
 
 export default [
   {
@@ -113,5 +114,10 @@ export default [
     layout: DefaultLayout,
     exact: true,
     component: ListDeTai
+  },
+  {
+    path: "/test",
+    layout: DefaultLayout,
+    component: TestPage
   }
 ];

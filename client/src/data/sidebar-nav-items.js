@@ -15,11 +15,6 @@ export default function() {
       htmlBefore: '<i class="material-icons">table_chart</i>',
       to: "/de-tai",
     },
-    {
-      title: "Quản lý Biểu mẫu",
-      htmlBefore: '<i class="material-icons">table_chart</i>',
-      to: "/aaa",
-    },
     // {
     //   title: "Quản lý bài đăng",
     //   htmlBefore: '<i class="material-icons">note_add</i>',
@@ -29,6 +24,11 @@ export default function() {
       title: "Quản lý Bài đăng",
       htmlBefore: '<i class="material-icons">note_add</i>',
       to: "/bai-dang",
+    },
+    {
+      title: "Test",
+      htmlBefore: '<i class="material-icons">table_chart</i>',
+      to: "/test",
     },
     // {
     //   title: "Blog Dashboard",
