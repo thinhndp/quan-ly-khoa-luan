@@ -26,6 +26,8 @@ export const getHocHamText = (abbr) => {
 
 export const getSinhVienStatusText = (abbr) => {
   switch(abbr) {
+    case Constants.SINH_VIEN_STATUS_NOT_STARTED:
+      return "Chưa đăng ký";
     case Constants.SINH_VIEN_STATUS_IN_PROGRESS:
       return "Đang thực hiện";
     case Constants.SINH_VIEN_STATUS_DONE:

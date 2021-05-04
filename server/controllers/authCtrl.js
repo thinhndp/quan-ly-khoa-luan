@@ -1,20 +1,52 @@
 import { OAuth2Client } from 'google-auth-library';
+import mongoose from 'mongoose';
+import User from '../models/User.js';
+import SinhVien from '../models/SinhVien.js';
+import GiangVien from '../models/GiangVien.js';
 
 const client = new OAuth2Client(process.env.CLIENT_ID);
 
 export const authGoogle = async (req, res) => {
   const { token }  = req.body;
-  const ticket = await client.verifyIdToken({
+  client.verifyIdToken({
       idToken: token,
       audience: process.env.CLIENT_ID
+  }).then((ticket) => {
+    const info = ticket.getPayload();
+    const svPromise = SinhVien.findOne({ 'email': info.email });
+    const gvPromise = GiangVien.findOne({ 'email': info.email });
+    Promise.all([ svPromise, gvPromise ])
+      .then((promiseRes) => {
+        let relatedInfoSV = null;
+        let relatedInfoGV = null;
+        let role = null;
+        if (promiseRes[0] != null) {
+          relatedInfoSV = new mongoose.Types.ObjectId(promiseRes[0]._id);
+          role = "SinhVien";
+        }
+        else if (promiseRes[1] != null) {
+          relatedInfoGV = new mongoose.Types.ObjectId(promiseRes[0]._id);
+          role = "GiangVien";
+        }
+        User.findOneAndUpdate(
+          {'email': info.email},
+          { 
+            name: info.name,
+            email: info.email,
+            picture: info.picture,
+            relatedInfoSV: relatedInfoSV,
+            relatedInfoGV: relatedInfoGV,
+            role: role
+          },
+          {
+            new: true,
+            upsert: true
+          }
+        ).then((user) => {
+          res.status(201).json(user);
+        });
+      })
+  }).catch((err) => {
+    res.status(400).json({ message: err.message });
   });
-  const info = ticket.getPayload();
-  // const user = await db.user.upsert({ 
-  //     where: { email: email },
-  //     update: { name, picture },
-  //     create: { name, email, picture }
-  // });
-  console.log(info);
-  res.status(201);
-  res.json(info);
 }

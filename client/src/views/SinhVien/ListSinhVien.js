@@ -116,7 +116,7 @@ const ListSinhVien = () => {
                       Email
                     </th>
                     <th scope="col" className="border-0">
-                      Trạng thái thực hiện KL
+                      Trạng thái thực hiện Khóa luận
                     </th>
                     <th scope="col" className="border-0">
                       Điểm TBCTL
@@ -136,7 +136,7 @@ const ListSinhVien = () => {
                         <td>{sinhVien.lopSH}</td>
                         <td>{sinhVien.phone}</td>
                         <td>{sinhVien.email}</td>
-                        <td>{sinhVien.status === 'IP' ? 'Đang thực hiện' : 'Đã hoàn thành'}</td>
+                        <td>{Utils.getSinhVienStatusText(sinhVien.status)}</td>
                         <td>{sinhVien.diemTB}</td>
                         <td>
                           <ActionButtons

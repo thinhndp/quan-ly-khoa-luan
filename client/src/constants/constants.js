@@ -1,6 +1,7 @@
-export const SINH_VIEN_STATUS_IN_PROGRESS = 'IP';
-export const SINH_VIEN_STATUS_DONE = 'DN';
-export const SINH_VIEN_STATUS_ABANDONED = 'AB';
+export const SINH_VIEN_STATUS_NOT_STARTED = 'CDK';
+export const SINH_VIEN_STATUS_IN_PROGRESS = 'DTH';
+export const SINH_VIEN_STATUS_DONE = 'DHT';
+export const SINH_VIEN_STATUS_ABANDONED = 'DD';
 
 export const GIANG_VIEN_HOC_HAM_THS = 'ThS.';
 export const GIANG_VIEN_HOC_HAM_PGS_TS = 'PGS.TS.';
