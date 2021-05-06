@@ -1,4 +1,5 @@
 import DeTai from '../models/DeTai.js';
+import SinhVien from '../models/SinhVien.js';
 
 export const getDeTais = (req, res) => {
   DeTai.find()
@@ -30,4 +31,44 @@ export const deleteDeTaiById = (req, res) => {
     .catch((err) => {
       res.status(400).json({ message: err.message });
     });
+}
+
+export const applyForDeTai = (req, res) => {
+  const { sinhVienId, deTaiId } = req.body;
+  const dtPromise = DeTai.findOne({ _id: deTaiId });
+  const svPromise = SinhVien.findOne({ _id: sinhVienId });
+  Promise.all([ dtPromise, svPromise ])
+    .then((prRes) => {
+      let deTai = prRes[0];
+      let sinhVien = prRes[1];
+      console.log('alo');
+      console.log(deTai);
+      console.log(sinhVien);
+      if (sinhVien != null) {
+        if (sinhVien.status != 'CDK') {
+          throw new Error("Sinh viên đã đăng ký");
+        }
+
+        sinhVien.status = 'DTH';
+        if (deTai.sinhVien1 == null) {
+          deTai.sinhVien1 = sinhVien;
+        }
+        else if (deTai.sinhVien2 == null) {
+          deTai.sinhVien2 = sinhVien;
+        }
+        else {
+          console.log(3);
+          throw new Error("Số lượng đăng ký vượt mức tối đa");
+        }
+        const svUpdatePromise = SinhVien.findByIdAndUpdate({ _id: sinhVien._id }, { status: 'DTH' });
+        const dtUpdatePromise = DeTai.findByIdAndUpdate({ _id: deTai._id }, deTai);
+        Promise.all([ svUpdatePromise, dtUpdatePromise ])
+          .then((pr2Res) => {
+            res.status(201).json(pr2Res);
+          })
+      }
+    })
+    .catch((err) => {
+      res.status(400).json({ message: err.message });
+    })
 }

@@ -10,7 +10,8 @@ export const SinhVienSchema = mongoose.Schema({
   email: String,
   status: {
     type: String,
-    default: 'IP'
+    enum: ['CDK', 'DTH', 'DHT', 'DD'],
+    default: 'CDK'
   },
   diemTB: {
     type: Number,

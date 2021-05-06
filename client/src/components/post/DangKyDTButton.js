@@ -3,12 +3,12 @@ import { Button, FormGroup, FormInput, FormSelect, FormTextarea, CardBody } from
 
 import CustomModal from '../../components/common/CustomModal/CustomModal';
 import SearchBar from '../../components/common/SearchBar/SearchBar';
-import { getDeTais } from '../../api/deTaiAPI';
+import { getDeTais, applyForDeTai } from '../../api/deTaiAPI';
 import * as Utils from '../../utils/utils';
 
 import "./dang-ki-btn.css";
 
-const DangKyDTButton = () => {
+const DangKyDTButton = ({ user }) => {
   const [ isOpen, setIsOpen ] = useState(false);
   const [ deTais, setDeTais ] = useState([]);
 
@@ -29,6 +29,20 @@ const DangKyDTButton = () => {
   const toggleModal = () => {
     setIsOpen(!isOpen);
   }
+
+  const onApplyClick = (deTaiId) => {
+    const sinhVienId = user.relatedInfoSV;
+    console.log(deTaiId);
+    console.log(sinhVienId);
+    applyForDeTai(deTaiId, sinhVienId)
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((err) => {
+        console.log(err);
+      })
+  }
+
   return (
     <div>
       <Button onClick={toggleModal}>DKDT</Button>
@@ -70,7 +84,7 @@ const DangKyDTButton = () => {
                       <td>{deTai.heDaoTao}</td>
                       <td>{Utils.getSinhVienNumOfDeTai(deTai)}</td>
                       <td>
-                        <Button>Đăng ký</Button>
+                        <Button onClick={() => { onApplyClick(deTai._id) }}>Đăng ký</Button>
                       </td>
                     </tr>
                   ))

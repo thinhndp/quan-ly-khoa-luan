@@ -11,3 +11,7 @@ export const createManyDeTais = (deTais) => {
 export const deleteDeTaiById = (id) => {
   return axios.delete(`/de-tais/${id}`);
 }
+
+export const applyForDeTai = (deTaiId, sinhVienId) => {
+  return axios.post('/de-tais/apply', { deTaiId: deTaiId, sinhVienId: sinhVienId });
+}
