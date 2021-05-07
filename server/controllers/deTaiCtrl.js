@@ -46,6 +46,7 @@ export const applyForDeTai = (req, res) => {
       console.log(sinhVien);
       if (sinhVien != null) {
         if (sinhVien.status != 'CDK') {
+          console.log("Sinh viên đã đăng ký");
           throw new Error("Sinh viên đã đăng ký");
         }
 
@@ -57,7 +58,7 @@ export const applyForDeTai = (req, res) => {
           deTai.sinhVien2 = sinhVien;
         }
         else {
-          console.log(3);
+          console.log("Số lượng đăng ký vượt mức tối đa");
           throw new Error("Số lượng đăng ký vượt mức tối đa");
         }
         const svUpdatePromise = SinhVien.findByIdAndUpdate({ _id: sinhVien._id }, { status: 'DTH' });

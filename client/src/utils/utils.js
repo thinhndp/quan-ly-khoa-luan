@@ -90,3 +90,19 @@ export const getSinhVienNumOfDeTai = (deTai) => {
   }
   return count;
 }
+
+export const getUser = () => {
+  let user = JSON.parse(localStorage.getItem('user'));
+  if (user == null) {
+    user = {
+      email: "guess",
+      name: "Khách",
+      picture: "https://lh3.googleusercontent.com/a/AATXAJz4oPUDrD9RzCc9JJgJc2wmF43R20HYoaPV-suk=s96-c",
+      relatedInfoGV: null,
+      relatedInfoSV: null,
+      role: "Khach",
+      _id: "guess"
+    }
+  }
+  return user;
+}

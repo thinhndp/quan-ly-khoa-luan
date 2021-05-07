@@ -187,7 +187,7 @@ const ListDeTai = () => {
                       <td>{Utils.getDeTaiProgressStatusText(deTai.trangThaiThucHien)}</td>
                       <td>{deTai.heDaoTao}</td>
                       <td>{deTai.diemSo}</td>
-                      <td>-</td>
+                      <td>{Utils.getSinhVienNumOfDeTai(deTai)}</td>
                       <td>
                         <ActionButtons onEditClick={() => onEditClick(deTai._id)}
                             onDeleteClick={() => onDeleteClick(deTai._id)} />

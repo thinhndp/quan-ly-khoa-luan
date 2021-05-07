@@ -26,10 +26,13 @@ const DeXuatButton = () => {
   const [ giangVien, setGiangVien ] = useState({});
   let history = useHistory();
   useEffect(() => {
-    getGiangVienByEmail({ email: MOCK_DATA.currentUser.email })
+    getGiangVienByEmail({ email: Utils.getUser().email })
       .then((res) => {
         console.log('GV:');
         console.log(res);
+        // if (res.data == null) {
+        //   return null;
+        // }
         setGiangVien(res.data);
       })
       .catch((err) => {
@@ -122,28 +125,34 @@ const DeXuatButton = () => {
   }
   return (
     <div>
-      <Button onClick={toggleModal}>Test</Button>
-      <Modal open={isOpen} toggle={toggleModal}>
-        <ModalHeader>Đề xuất đề tài</ModalHeader>
-        <ModalBody>
-          <Scrollbars className={styles['list-de-tai-container']}
-            autoHeight
-            autoHeightMin={0}
-            autoHeightMax={459}>
-            {
-              deXuatList.map((value, index) => renderDexuat(value, index))
-            }
-          </Scrollbars>
-          <Button className={styles['add-de-xuat-button']}
-              onClick={onAddDeXuatClick} outline>
-            <ControlPointIcon />
-          </Button>
-          <Button className={styles['add-de-xuat-button']}
-              onClick={onSubmit}>
-            <AssignmentTurnedInIcon />
-          </Button>
-        </ModalBody>
-      </Modal>
+      {
+        (giangVien != null) && (
+          <div>
+            <Button onClick={toggleModal}>Test</Button>
+            <Modal open={isOpen} toggle={toggleModal}>
+              <ModalHeader>Đề xuất đề tài</ModalHeader>
+              <ModalBody>
+                <Scrollbars className={styles['list-de-tai-container']}
+                  autoHeight
+                  autoHeightMin={0}
+                  autoHeightMax={459}>
+                  {
+                    deXuatList.map((value, index) => renderDexuat(value, index))
+                  }
+                </Scrollbars>
+                <Button className={styles['add-de-xuat-button']}
+                    onClick={onAddDeXuatClick} outline>
+                  <ControlPointIcon />
+                </Button>
+                <Button className={styles['add-de-xuat-button']}
+                    onClick={onSubmit}>
+                  <AssignmentTurnedInIcon />
+                </Button>
+              </ModalBody>
+            </Modal>
+          </div>
+        )
+      }
     </div>
   );
 }

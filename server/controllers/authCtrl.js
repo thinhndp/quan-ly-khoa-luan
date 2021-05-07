@@ -25,7 +25,7 @@ export const authGoogle = async (req, res) => {
           role = "SinhVien";
         }
         else if (promiseRes[1] != null) {
-          relatedInfoGV = new mongoose.Types.ObjectId(promiseRes[0]._id);
+          relatedInfoGV = new mongoose.Types.ObjectId(promiseRes[1]._id);
           role = "GiangVien";
         }
         User.findOneAndUpdate(

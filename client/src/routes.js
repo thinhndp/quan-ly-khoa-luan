@@ -2,7 +2,7 @@ import React from "react";
 import { Redirect } from "react-router-dom";
 
 // Layout Types
-import { DefaultLayout } from "./layouts";
+import { DefaultLayout, None } from "./layouts";
 
 // Route Views
 import BlogOverview from "./views/BlogOverview";
@@ -23,6 +23,7 @@ import ListDeTai from './views/DeTai/ListDeTai';
 import CreateOrEditBaiDang from './views/BaiDang/CreateOrEditBaiDang';
 import PreviewBaiDang from './views/BaiDang/PreviewBaiDang';
 import TestPage from './views/TestPage/TestPage';
+import LoginPage from './views/Login/LoginPage';
 
 export default [
   {
@@ -119,5 +120,10 @@ export default [
     path: "/test",
     layout: DefaultLayout,
     component: TestPage
+  },
+  {
+    path: "/login",
+    layout: None,
+    component: LoginPage
   }
 ];

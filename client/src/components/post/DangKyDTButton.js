@@ -8,9 +8,10 @@ import * as Utils from '../../utils/utils';
 
 import "./dang-ki-btn.css";
 
-const DangKyDTButton = ({ user }) => {
+const DangKyDTButton = () => {
   const [ isOpen, setIsOpen ] = useState(false);
   const [ deTais, setDeTais ] = useState([]);
+  const user = Utils.getUser();
 
   useEffect(() => {
     getDeTaiList();
