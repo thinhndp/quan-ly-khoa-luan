@@ -23,3 +23,14 @@ export const SYSTEM_SETTING_INSTANCE = 'DEFAULT';
 
 export const DETAIL_MODE_VIEW = 'VIEW';
 export const DETAIL_MODE_EDIT = 'EDIT';
+
+export const USER_ROLE_GUEST = 'Khach';
+export const DEFAULT_USER = {
+  email: "guest",
+  name: "Khách",
+  picture: "https://lh3.googleusercontent.com/a/AATXAJz4oPUDrD9RzCc9JJgJc2wmF43R20HYoaPV-suk=s96-c",
+  relatedInfoGV: null,
+  relatedInfoSV: null,
+  role: USER_ROLE_GUEST,
+  _id: "guest"
+};

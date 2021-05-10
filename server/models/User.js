@@ -3,6 +3,7 @@ import mongoose from 'mongoose';
 const userSchema = mongoose.Schema({
   name: {
     type: String,
+    trim: true,
     required: true
   },
   role: {
@@ -12,6 +13,8 @@ const userSchema = mongoose.Schema({
   },
   email: {
     type: String,
+    trim: true,
+    unique: true,
     required: true
   },
   picture: {

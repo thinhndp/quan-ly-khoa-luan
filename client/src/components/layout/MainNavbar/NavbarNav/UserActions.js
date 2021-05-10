@@ -9,21 +9,25 @@ import {
   NavItem,
   NavLink
 } from "shards-react";
+import { useRecoilValue } from 'recoil';
 
 import * as Utils from '../../../../utils/utils';
+import { userAsSafeVal, userAsIsAuth } from '../../../../recoil/user';
 
 const UserActions = () => {
   const [ visible, setVisible ] = useState(false);
-  let [user, setUser] = useState({ name: "Khách", photo: "https://lh3.googleusercontent.com/a/AATXAJz4oPUDrD9RzCc9JJgJc2wmF43R20HYoaPV-suk=s96-c" });
+  // let [user, setUser] = useState({ name: "Khách", photo: "https://lh3.googleusercontent.com/a/AATXAJz4oPUDrD9RzCc9JJgJc2wmF43R20HYoaPV-suk=s96-c" });
+  const user = useRecoilValue(userAsSafeVal);
+  const isAuth = useRecoilValue(userAsIsAuth);
 
   useEffect(() => {
-    setUser(Utils.getUser());
+    // setUser(Utils.getUser());
     console.log(user);
   }, []);
 
-  useEffect(() => {
-    console.log(user);
-  }, [user]);
+  // useEffect(() => {
+  //   console.log(user);
+  // }, [user]);
 
   const toggleUserActions = () => {
     setVisible(!visible);

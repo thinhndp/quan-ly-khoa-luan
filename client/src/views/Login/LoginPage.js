@@ -3,11 +3,13 @@ import { useHistory } from 'react-router-dom';
 import { Container, Row, Col, Card, CardBody, CardImg, CardTitle, CardHeader } from "shards-react";
 import GoogleLogin from 'react-google-login';
 import axios from 'axios';
+import { useRecoilState } from 'recoil';
 
 import './styles.css';
+import userAtom from '../../recoil/user';
 
 const LoginPage = () => {
-  // const [user, setUser] = useState(null);
+  const [user, setUser] = useRecoilState(userAtom);
   let history = useHistory();
 
   const handleLogin = (googleData) => {
@@ -15,7 +17,8 @@ const LoginPage = () => {
       .then((res) => {
         console.log(res);
         // setUser(res.data);
-        localStorage.setItem('user', JSON.stringify(res.data));
+        // localStorage.setItem('user', JSON.stringify(res.data));
+        setUser({ ...res.data });
         history.push('/');
       })
       .catch((err) => {
