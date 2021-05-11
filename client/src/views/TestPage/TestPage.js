@@ -3,6 +3,7 @@ import GoogleLogin from 'react-google-login';
 import axios from 'axios';
 
 import DangKyDTButton from '../../components/post/DangKyDTButton';
+import FileSubmitterButton from '../../components/FileSubmitter/FileSubmitterButton';
 
 const TestPage = () => {
   const [user, setUser] = useState(null);
@@ -31,6 +32,7 @@ const TestPage = () => {
         cookiePolicy={'single_host_origin'}
       />
       <DangKyDTButton user={user}/>
+      <FileSubmitterButton />
     </div>
   );
 }

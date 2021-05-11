@@ -1,0 +1,36 @@
+.submitter {
+  display: flex;
+  flex-direction: column;
+  font-family: sans-serif;
+}
+
+.submitter-browse_link {
+  color:#2196f3;
+  cursor: pointer;
+  transition: 0.3s;
+  text-decoration: underline;
+  text-decoration-color: #2196f300;
+  text-underline-offset: 0.1rem;
+}
+
+.submitter-browse_link:hover {
+  /* text-shadow: 0 0 #2196f3; */
+  text-decoration-color: #2196f3;
+}
+
+.submitter .MuiSvgIcon-fontSizeLarge {
+  font-size: 4rem;
+}
+
+/* .submitter h5 {
+  margin-top: 0.75rem;
+  margin-bottom: 0.3rem;
+}
+
+.submitter h6 {
+  margin-bottom: 0.6rem;
+} */
+
+.submitter h6 {
+  margin-top: 0.5rem;
+}
