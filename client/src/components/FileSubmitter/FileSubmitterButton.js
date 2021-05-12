@@ -2,8 +2,10 @@ import React, { useEffect, useState, useMemo } from 'react';
 import { Button, FormGroup, FormInput, FormSelect, FormTextarea, CardBody } from "shards-react";
 import {useDropzone} from 'react-dropzone';
 import CloudUploadIcon from '@material-ui/icons/CloudUpload';
+import CloseIcon from '@material-ui/icons/Close';
 
 import CustomModal from '../../components/common/CustomModal/CustomModal';
+import * as Utils from '../../utils/utils';
 import "./styles.css";
 
 const baseStyle = {
@@ -62,10 +64,43 @@ const FileSubmitterButton = () => {
   ]);
 
   const files = acceptedFiles.map(file => (
-    <li key={file.path}>
-      {file.path} - {file.size} bytes
-    </li>
+    <div className="file-row">
+      <div className="file-type">
+        <span>{ Utils.getFileExtension(file.name) }</span>
+      </div>
+      <div className="file-info truncate">
+        <div className="file-name truncate">{file.name}</div>
+        <div className="file-size">{Utils.getFormattedSize(file.size)}</div>
+      </div>
+      <div className="file-action">
+        <CloseIcon color="action" className="icon-button"
+          onClick={() => { console.log('hello') }}/>
+      </div>
+    </div>
   ));
+
+  // const files = (
+  //   <div className="file-row">
+  //     <div className="file-type">
+  //       <span>HTML</span>
+  //     </div>
+  //     <div className="file-info">
+  //       <div className="file-name">Biodata.pdf</div>
+  //       <div className="file-size">1.2KB</div>
+  //     </div>
+  //     <div className="file-action">
+  //       <CloseIcon color="primary" className="icon-button"
+  //         onClick={() => { console.log('hello') }}/>
+  //     </div>
+  //   </div>
+  // );
+
+  const onSubmitClick = () => {
+    console.log(acceptedFiles);
+    acceptedFiles.forEach((file) => {
+      console.log(Utils.getFileExtension(file.name));
+    })
+  }
 
   return (
     <div>
@@ -89,9 +124,14 @@ const FileSubmitterButton = () => {
                   onClick={open}>Duyệt thư mục</span></h6>
             </div>
             <aside>
-              <h4>Files</h4>
-              <ul>{files}</ul>
+              {/* <h4>Files</h4> */}
+              <div>{files}</div>
             </aside>
+          </div>
+        }
+        footer={
+          <div>
+            <Button onClick={onSubmitClick}>Submit</Button>
           </div>
         }
       />

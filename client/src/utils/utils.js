@@ -106,3 +106,11 @@ export const getUser = () => {
   }
   return user;
 }
+
+export const getFileExtension = (fileName) => {
+  return fileName.split('.').pop().toUpperCase();
+}
+
+export const getFormattedSize = (bytes) => {
+  return bytes.toString() + ' bytes';
+}

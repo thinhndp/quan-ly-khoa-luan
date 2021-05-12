@@ -34,3 +34,54 @@
 .submitter h6 {
   margin-top: 0.5rem;
 }
+
+.file-row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  margin-top: 0.75rem;
+}
+
+.file-row .file-type {
+  width: 2.5rem;
+  height: 2.5rem;
+  background-color: #daefff;
+  border-radius: 100%;
+  font-size: 0.7rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 2px solid #2196f3;
+  font-weight: 600;
+  color: #2196f3;
+}
+
+.file-row .file-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 0 0.75rem;
+}
+
+.file-row .file-info .file-name {
+  font-weight: 500;
+  font-size: 1rem;
+  color: #2196f3;
+}
+
+.file-row .file-info .file-size {
+  font-weight: 400;
+  font-size: 0.8rem;
+}
+
+.file-row .file-action {
+  width: 2rem;
+  height: 2rem;
+  /* background: green; */
+  display: flex;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
