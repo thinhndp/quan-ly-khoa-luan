@@ -4,7 +4,20 @@ import FileNop from '../models/FileNop.js';
 export const getThuMucs = (req, res) => {
   ThuMuc.find()
     .then((thuMucs) => {
-      res.status(200).json(thuMucs);
+      let bulkArr = [];
+      let returnedThuMucs = [];
+      for (let thuMuc of thuMucs) {
+        const status = (thuMuc.deadline < Date.now()) ? 'Closed' : 'Open';
+        bulkArr.push({
+          updateOne: {
+            "filter": { "_id": thuMuc._id },
+            "update": { $set: { "status": status } }
+          }
+        });
+        returnedThuMucs.push({ ...thuMuc, status: status });
+      }
+      ThuMuc.bulkWrite(bulkArr);
+      res.status(200).json(returnedThuMucs);
     })
     .catch((err) => {
       res.status(400).json({ message: err.message });
@@ -14,7 +27,12 @@ export const getThuMucs = (req, res) => {
 export const getThuMucById = (req, res) => {
   ThuMuc.findOne({ _id: req.params.id })
     .then((thuMuc) => {
-      res.status(201).json(thuMuc);
+      const status = (thuMuc.deadline < Date.now()) ? 'Closed' : 'Open';
+      const returnedThuMuc = { ...thuMuc, status: status };
+      returnedThuMuc.save()
+        .then((resThuMuc) => {
+          res.status(201).json(resThuMuc);
+        });
     })
     .catch((err) => {
       res.status(400).json({ message: err.message });

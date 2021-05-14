@@ -78,6 +78,17 @@ export const getDeTaiProgressStatusText = (abbr) => {
   }
 }
 
+export const getThuMucStatusText = (abbr) => {
+  switch(abbr) {
+    case Constants.THU_MUC_STATUS_OPEN:
+      return "Đang mở nộp";
+    case Constants.THU_MUC_STATUS_CLOSED:
+      return "Đã đóng";
+    default:
+      return "-";
+  }
+}
+
 export const getSinhVienNumOfDeTai = (deTai) => {
   let count = 0;
   if (deTai != null) {

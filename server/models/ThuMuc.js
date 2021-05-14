@@ -7,11 +7,17 @@ const thuMucSchema = mongoose.Schema({
     required: true
   },
   files: {
-    type: [ FileNopSchema ]
+    type: [ FileNopSchema ],
+    default: []
   },
   deadline: {
     type: Date,
     default: new Date((new Date()).getTime() + (10 * 86400000))
+  },
+  status: {
+    type: String,
+    enum: [ 'Open', 'Closed' ],
+    default: 'Open',
   }
 });
 

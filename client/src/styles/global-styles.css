@@ -14,3 +14,11 @@
   overflow: hidden;
   text-overflow: ellipsis;
 }
+
+.flex-filler {
+  flex: 1;
+}
+
+.blue-text {
+  color: #2196f3;
+}

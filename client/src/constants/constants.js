@@ -19,6 +19,9 @@ export const DE_TAI_PROGRESS_STATUS_IN_PROGRESS = 'DTH';
 export const DE_TAI_PROGRESS_STATUS_ABANDONED = 'DH';
 export const DE_TAI_PROGRESS_STATUS_DONE = 'DHT';
 
+export const THU_MUC_STATUS_OPEN = 'Open';
+export const THU_MUC_STATUS_CLOSED = 'Closed';
+
 export const SYSTEM_SETTING_INSTANCE = 'DEFAULT';
 
 export const DETAIL_MODE_VIEW = 'VIEW';

@@ -26,6 +26,11 @@ export default function() {
       to: "/bai-dang",
     },
     {
+      title: "Quản lý File nộp",
+      htmlBefore: '<i class="material-icons">note_add</i>',
+      to: "/thu-muc",
+    },
+    {
       title: "Test",
       htmlBefore: '<i class="material-icons">table_chart</i>',
       to: "/test",
