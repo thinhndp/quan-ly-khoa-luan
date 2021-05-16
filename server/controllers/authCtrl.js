@@ -4,13 +4,17 @@ import User from '../models/User.js';
 import SinhVien from '../models/SinhVien.js';
 import GiangVien from '../models/GiangVien.js';
 
-const client = new OAuth2Client(process.env.CLIENT_ID);
+const CLIENT_ID = process.env.GOOGLE_DRIVE_CLIENT_ID;
+
+const client = new OAuth2Client(CLIENT_ID);
 
 export const authGoogle = async (req, res) => {
   const { token }  = req.body;
+  console.log('token');
+  console.log(token);
   client.verifyIdToken({
       idToken: token,
-      audience: process.env.CLIENT_ID
+      audience: CLIENT_ID
   }).then((ticket) => {
     const info = ticket.getPayload();
     const svPromise = SinhVien.findOne({ 'email': info.email });

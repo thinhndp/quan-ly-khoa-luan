@@ -7,13 +7,17 @@ import { useRecoilState } from 'recoil';
 
 import './styles.css';
 import userAtom from '../../recoil/user';
+import MyGoogleLogin from '../../components/common/GoogleAuthButton/GoogleLogin';
 
 const LoginPage = () => {
   const [user, setUser] = useRecoilState(userAtom);
   let history = useHistory();
 
   const handleLogin = (googleData) => {
-    axios.post('/auth/google', { token: googleData.tokenId })
+    console.log(googleData);
+    // const token = googleData.tokenId;
+    const token = googleData.accessToken;
+    axios.post('/auth/google', { token: token })
       .then((res) => {
         console.log(res);
         // setUser(res.data);
@@ -66,13 +70,17 @@ const LoginPage = () => {
                 <div class="logo-container">
                   <div class="logo-uit"/>
                 </div>
-                <GoogleLogin
+                {/* <GoogleLogin
                   className="google-button"
-                  clientId={process.env.REACT_APP_API_KEY}
+                  clientId={process.env.REACT_APP_GOOGLE_DRIVE_CLIENT_ID}
                   buttonText="Đăng nhập bằng tài khoản Google"
                   onSuccess={handleLogin}
                   onFailure={handleLogin}
                   cookiePolicy={'single_host_origin'}
+                /> */}
+                <MyGoogleLogin
+                  onSuccess={handleLogin}
+                  onFailure={(err) => { console.log(err) }}
                 />
               </CardBody>
             </Card>

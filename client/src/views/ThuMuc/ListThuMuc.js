@@ -11,13 +11,15 @@ import ActionButtons from '../../components/common/ActionButtons';
 import ViewListIcon from '@material-ui/icons/ViewList';
 import ViewModuleIcon from '@material-ui/icons/ViewModule';
 import FolderIcon from '@material-ui/icons/Folder';
+import CreateOrEditThuMucModal from './CreateOrEditThuMucModal';
 import './styles.css';
 
 const ListThuMuc = () => {
   const [ thuMucs, setThuMucs ] = useState([]);
   const [ viewMode, setViewMode ] = useState(0);
   // const [ isFileResetting, setIsFileResetting ] = useState(false);
-  const [ isOpenEditModal, setIsOpenEditModal ] = useState(false);
+  const [ isOpenModal, setIsOpenModal ] = useState(false);
+  const [ selectedThuMuc, setSelectedThuMuc ] = useState({});
 
   let history = useHistory();
   useEffect(() => {
@@ -53,6 +55,19 @@ const ListThuMuc = () => {
   const onEditClick = (id) => {
     // history.push('/sinh-vien/edit', { sinhVienId: id });
     // history.push(`/sinh-vien/edit/${id}`);
+  }
+
+  const toggleModal = () => {
+    setIsOpenModal(!isOpenModal);
+  }
+
+  const onModalClose = () => {
+    setSelectedThuMuc({});
+  }
+
+  const onUpdateThuMuc = () => {
+    setSelectedThuMuc({});
+    getList();
   }
 
   const renderFoldersView = () => {
@@ -116,6 +131,7 @@ const ListThuMuc = () => {
                   <ViewModuleIcon />
                 </Button>
               </ButtonGroup>
+              <Button onClick={toggleModal}>Tạo mới</Button>
             </CardHeader>
             <CardBody className="p-0 pb-3">
               { viewMode == 0 && (
@@ -166,6 +182,8 @@ const ListThuMuc = () => {
           </Card>
         </Col>
       </Row>
+      <CreateOrEditThuMucModal selected={selectedThuMuc} isModalOpen={isOpenModal}
+        toggleModal={toggleModal} onClose={onModalClose} onUpdate={onUpdateThuMuc}/>
     </Container>
   )
 };

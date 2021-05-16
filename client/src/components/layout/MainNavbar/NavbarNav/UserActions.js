@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { Link } from "react-router-dom";
 import {
   Dropdown,
@@ -10,6 +10,7 @@ import {
   NavLink
 } from "shards-react";
 import { useRecoilValue } from 'recoil';
+import { GoogleLogout } from 'react-google-login';
 
 import * as Utils from '../../../../utils/utils';
 import { userAsSafeVal, userAsIsAuth } from '../../../../recoil/user';
@@ -19,11 +20,17 @@ const UserActions = () => {
   // let [user, setUser] = useState({ name: "Khách", photo: "https://lh3.googleusercontent.com/a/AATXAJz4oPUDrD9RzCc9JJgJc2wmF43R20HYoaPV-suk=s96-c" });
   const user = useRecoilValue(userAsSafeVal);
   const isAuth = useRecoilValue(userAsIsAuth);
+  const logOutButton = useRef();
 
   useEffect(() => {
     // setUser(Utils.getUser());
     console.log(user);
   }, []);
+
+  const onLogOutClick = () => {
+    // logOutButton.current.click();
+    console.log(logOutButton.current);
+  }
 
   // useEffect(() => {
   //   console.log(user);
@@ -57,9 +64,18 @@ const UserActions = () => {
           <i className="material-icons">&#xE896;</i> Transactions
         </DropdownItem> */}
         <DropdownItem divider />
-        <DropdownItem tag={Link} to="/" className="text-danger">
-          <i className="material-icons text-danger">&#xE879;</i> Logout
+        <DropdownItem tag={Link} onClick={onLogOutClick} className="text-danger">
+          <i className="material-icons text-danger">&#xE879;</i> Đăng xuất
         </DropdownItem>
+        <div className="hiddenn">
+          <GoogleLogout
+            clientId={process.env.REACT_APP_GOOGLE_LOG_IN_CLIENT_ID}
+            buttonText="Logout"
+            onLogoutSuccess={() => { console.log('log out') }}
+
+          >
+          </GoogleLogout>
+        </div>
       </Collapse>
     </NavItem>
   );

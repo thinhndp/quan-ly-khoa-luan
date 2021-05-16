@@ -18,6 +18,10 @@ const thuMucSchema = mongoose.Schema({
     type: String,
     enum: [ 'Open', 'Closed' ],
     default: 'Open',
+  },
+  link: {
+    type: String,
+    required: true
   }
 });
 

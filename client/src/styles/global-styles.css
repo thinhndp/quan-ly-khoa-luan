@@ -22,3 +22,7 @@
 .blue-text {
   color: #2196f3;
 }
+
+.hidden {
+  display: none;
+}

@@ -23,6 +23,7 @@ import ListDeTai from './views/DeTai/ListDeTai';
 import CreateOrEditBaiDang from './views/BaiDang/CreateOrEditBaiDang';
 import PreviewBaiDang from './views/BaiDang/PreviewBaiDang';
 import TestPage from './views/TestPage/TestPage';
+import TestGAPI from './views/TestPage/TestGAPI';
 import LoginPage from './views/Login/LoginPage';
 import ListThuMuc from './views/ThuMuc/ListThuMuc';
 
@@ -126,7 +127,14 @@ export default [
   {
     path: "/test",
     layout: DefaultLayout,
+    exact: true,
     component: TestPage
+  },
+  {
+    path: "/test-gapi",
+    exact: true,
+    layout: DefaultLayout,
+    component: TestGAPI
   },
   {
     path: "/login",

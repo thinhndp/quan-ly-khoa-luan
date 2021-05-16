@@ -10,6 +10,14 @@ export const getThuMucs = () => {
   // return axios.get('/de-tais');
 }
 
+export const createThuMuc = (thuMuc) => {
+  return axios.post('/thu-mucs', thuMuc);
+}
+
+export const updateThuMucById = (id, thuMuc) => {
+  return axios.post(`/thu-mucs/${id}`, thuMuc);
+}
+
 // export const createManyDeTais = (deTais) => {
 //   return axios.post('/de-tais/create-many', deTais);
 // }
