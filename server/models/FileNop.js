@@ -18,6 +18,10 @@ export const FileNopSchema = mongoose.Schema({
   link: {
     type: String,
     required: true
+  },
+  driveId: {
+    type: String,
+    required: true
   }
 });
 

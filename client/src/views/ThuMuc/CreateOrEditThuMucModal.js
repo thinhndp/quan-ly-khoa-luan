@@ -10,7 +10,8 @@ import { Container, Row, Col, Card, CardHeader, CardBody, Button,
   import CustomModal from '../../components/common/CustomModal/CustomModal';
   import * as Constants from '../../constants/constants';
   import * as Utils from '../../utils/utils';
-  import { createThuMuc } from '../../api/thuMucAPI';
+  import * as API from '../../api/thuMucAPI';
+  import * as Services from '../../services/googleDriveServices';
 
 const DeTailGiangVienModal = ({ isModalOpen, toggleModal, selected, onClose, onUpdate }) => {
   // const [ giangVien, setGiangVien ] = useState(null);
@@ -45,14 +46,31 @@ const DeTailGiangVienModal = ({ isModalOpen, toggleModal, selected, onClose, onU
   const onCreateOrUpdateClick = () => {
     console.log(thuMuc);
     if (thuMuc._id == null) {
-      createThuMuc(thuMuc)
+      Services.createFolder(thuMuc.name)
         .then((res) => {
-          console.log(res);
-          onUpdate();
+          console.log('id');
+          console.log(res.result.id);
+          Services.setPermission(res.result.id)
+            .then((res2) => {
+              console.log(res2);
+              API.createThuMuc({ ...thuMuc, driveId: res.result.id })
+                .then((res3) => {
+                  console.log('db');
+                  console.log(res3);
+                });
+            });
         })
         .catch((err) => {
           console.log(err);
         })
+      // createThuMuc(thuMuc)
+      //   .then((res) => {
+      //     console.log(res);
+      //     onUpdate();
+      //   })
+      //   .catch((err) => {
+      //     console.log(err);
+      //   })
     }
     // updateGiangVienById(giangVien._id, giangVien)
     //   .then((res) => {
@@ -128,20 +146,20 @@ const DeTailGiangVienModal = ({ isModalOpen, toggleModal, selected, onClose, onU
                 onClick={callDateTimePicker}
               />
             </FormGroup>
-            <FormGroup>
+            {/* <FormGroup>
               <label htmlFor="feLink">Link</label>
               <FormInput
                 id="feLink"
                 value={thuMuc.link}
                 onChange={(e) => { setThuMuc({ ...thuMuc, link: e.target.value }) }}
               />
-            </FormGroup>
+            </FormGroup> */}
           </div>
         </div>
       }
       footer={
         <div>
-          <Button onClick={onCreateOrUpdateClick}>Cập nhật</Button>
+          <Button onClick={onCreateOrUpdateClick}>{thuMuc._id == null ? 'Tạo thư mục' : 'Cập nhật'}</Button>
         </div>
       }
     />

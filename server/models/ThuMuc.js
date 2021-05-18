@@ -20,6 +20,9 @@ const thuMucSchema = mongoose.Schema({
     default: 'Open',
   },
   link: {
+    type: String
+  },
+  driveId: {
     type: String,
     required: true
   }
