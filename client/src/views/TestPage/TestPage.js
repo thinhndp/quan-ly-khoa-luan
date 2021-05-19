@@ -20,7 +20,6 @@ const DISCOVERY_DOCS = ['https://www.googleapis.com/discovery/v1/apis/drive/v3/r
 // included, separated by spaces.
 const SCOPES = 'https://www.googleapis.com/auth/drive.file';
 
-
 const TestPage = () => {
   const [user, setUser] = useState(null);
   const [ auth2, setAuth2 ] = useState(null);

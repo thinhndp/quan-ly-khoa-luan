@@ -7,6 +7,7 @@ import CloseIcon from '@material-ui/icons/Close';
 import CustomModal from '../../components/common/CustomModal/CustomModal';
 import * as Utils from '../../utils/utils';
 import "./styles.css";
+import { uploadFileToFolder } from '../../services/googleDriveServices';
 
 const baseStyle = {
   flex: 1,
@@ -35,6 +36,8 @@ const acceptStyle = {
 const rejectStyle = {
   borderColor: '#ff1744'
 };
+
+const FOLDER_ID = '1gOOoOXUaISEs06bp1COm_oHnVAKu1Ugn';
 
 const FileSubmitterButton = () => {
   const [ isOpen, setIsOpen ] = useState(false);
@@ -99,6 +102,22 @@ const FileSubmitterButton = () => {
     console.log(acceptedFiles);
     acceptedFiles.forEach((file) => {
       console.log(Utils.getFileExtension(file.name));
+      console.log(file);
+      const fileMetadata = {
+        name: file.name,
+        parents: [ FOLDER_ID ]
+      };
+      // const media = {
+      //   mimeType: file.type,
+      //   body: file,
+      // };
+      uploadFileToFolder(fileMetadata, file)
+        .then((res) => {
+          console.log(res);
+        })
+        .catch((err) => {
+          console.log(err);
+        })
     })
   }
 
