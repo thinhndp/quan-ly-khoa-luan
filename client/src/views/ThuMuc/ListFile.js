@@ -1,9 +1,9 @@
 import React, { useEffect, useState, useRef } from "react";
 import axios from "axios";
-import { useHistory } from "react-router-dom";
+import { useHistory, useParams } from "react-router-dom";
 import { Container, Row, Col, Card, CardHeader, CardBody, Button, ButtonGroup } from "shards-react";
 
-import { getThuMucs } from '../../api/fileNopAPI';
+import { getFilesByThuMucId } from '../../api/fileNopAPI';
 import * as Utils from '../../utils/utils';
 
 import PageTitle from "../../components/common/PageTitle";
@@ -14,23 +14,24 @@ import FolderIcon from '@material-ui/icons/Folder';
 import CreateOrEditThuMucModal from './CreateOrEditThuMucModal';
 import './styles.css';
 
-const ListThuMuc = () => {
-  const [ thuMucs, setThuMucs ] = useState([]);
-  const [ viewMode, setViewMode ] = useState(0);
+const ListFile = () => {
+  const [ fileNops, setFileNops ] = useState([]);
+  const [ viewMode, setViewMode ] = useState(1);
   // const [ isFileResetting, setIsFileResetting ] = useState(false);
   const [ isOpenModal, setIsOpenModal ] = useState(false);
-  const [ selectedThuMuc, setSelectedThuMuc ] = useState({});
-
+  const [ selectedFileNop, setSelectedThuMuc ] = useState({});
+  let { folderId } = useParams();
   let history = useHistory();
+
   useEffect(() => {
     getList();
   }, []);
 
   const getList = () => {
-    getThuMucs()
+    getFilesByThuMucId(folderId)
       .then((res) => {
         console.log(res);
-        setThuMucs(res.data);
+        setFileNops(res.data);
       })
       .catch((err) => {
         console.log(err);
@@ -70,16 +71,12 @@ const ListThuMuc = () => {
     getList();
   }
 
-  const onThuMucClick = (id) => {
-    history.push(`/thu-muc/${id}/files`);
-  }
-
   const renderFoldersView = () => {
     return (
       <div className="folders-view">
         {
-          thuMucs.map((thuMuc) => (
-            <div className="folder" onClick={(id) => { onThuMucClick(id) }}>
+          fileNops.map((thuMuc) => (
+            <div className="folder">
               <FolderIcon fontSize="large" />
               <div className="folder-info">
                 <div className="info-container truncate">
@@ -146,36 +143,36 @@ const ListThuMuc = () => {
                   <thead className="bg-light">
                     <tr>
                       <th scope="col" className="border-0">
-                        Tên
+                        Tên file
                       </th>
                       <th scope="col" className="border-0">
-                        Số file đã nộp
+                        Người nộp
                       </th>
                       <th scope="col" className="border-0">
-                        Hạn nộp
+                        Ngày nộp
                       </th>
                       <th scope="col" className="border-0">
-                        Trạng thái
+                        Tải file
                       </th>
-                      <th scope="col" className="border-0">
+                      {/* <th scope="col" className="border-0">
                         Action
-                      </th>
+                      </th> */}
                     </tr>
                   </thead>
                   <tbody>
                     {
-                      thuMucs.map((thuMuc, index) => (
+                      fileNops.map((fileNop, index) => (
                         <tr key={`thu-muc_${index}`}>
-                          <td>{thuMuc.name}</td>
+                          <td>{fileNop.name}</td>
                           {/* <td>-</td> */}
-                          <td>{thuMuc.files.length}</td>
-                          <td>{thuMuc.deadline}</td>
-                          <td>{Utils.getThuMucStatusText(thuMuc.status)}</td>
-                          <td>
+                          <td>{fileNop.userObj.name}</td>
+                          <td>{fileNop.ngayNop}</td>
+                          <td>Tải</td>
+                          {/* <td>
                             <ActionButtons
-                              onDeleteClick={() => { onDeleteClick(thuMuc._id) }}
-                              onEditClick={() => { onEditClick(thuMuc._id) }} />
-                          </td>
+                              onDeleteClick={() => { onDeleteClick(fileNop._id) }}
+                              onEditClick={() => { onEditClick(fileNop._id) }} />
+                          </td> */}
                         </tr>
                       ))
                     }
@@ -186,10 +183,10 @@ const ListThuMuc = () => {
           </Card>
         </Col>
       </Row>
-      <CreateOrEditThuMucModal selected={selectedThuMuc} isModalOpen={isOpenModal}
+      <CreateOrEditThuMucModal selected={selectedFileNop} isModalOpen={isOpenModal}
         toggleModal={toggleModal} onClose={onModalClose} onUpdate={onUpdateThuMuc}/>
     </Container>
   )
 };
 
-export default ListThuMuc;
+export default ListFile;

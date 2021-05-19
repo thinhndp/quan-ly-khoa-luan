@@ -27,6 +27,7 @@ const GoogleLogin  = ({ onSuccess, onFailure }) => {
   // let auth2;
 
   useEffect(() => {
+    console.log('load');
     gapi.load("auth2", () => {
       const auth2 = gapi.auth2.init(config);
       attachSignin(document.getElementById('customBtn'), auth2);
@@ -34,6 +35,8 @@ const GoogleLogin  = ({ onSuccess, onFailure }) => {
   }, []);
 
   function attachSignin(element, auth2) {
+    console.log('element');
+    console.log(element);
     console.log(element.id);
     auth2.attachClickHandler(element, {},
       function(googleUser) {

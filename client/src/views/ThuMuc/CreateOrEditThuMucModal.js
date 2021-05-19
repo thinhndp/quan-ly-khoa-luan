@@ -10,7 +10,7 @@ import { Container, Row, Col, Card, CardHeader, CardBody, Button,
   import CustomModal from '../../components/common/CustomModal/CustomModal';
   import * as Constants from '../../constants/constants';
   import * as Utils from '../../utils/utils';
-  import * as API from '../../api/thuMucAPI';
+  import * as API from '../../api/fileNopAPI';
   import * as Services from '../../services/googleDriveServices';
 
 const DeTailGiangVienModal = ({ isModalOpen, toggleModal, selected, onClose, onUpdate }) => {

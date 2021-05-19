@@ -28,7 +28,7 @@ const MOCK_USERS = [
   }
 ];
 
-const MOCK_FILES = [
+export const MOCK_FILES = [
   {
     name: '16521178_GTDT',
     ngayNop: (new Date()).toISOString(),
