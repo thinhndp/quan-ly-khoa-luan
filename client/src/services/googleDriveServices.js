@@ -1,3 +1,4 @@
+import axios from 'axios';
 import { gapi } from 'gapi-script';
 
 const endpoint = 'https://www.googleapis.com/drive/v3/files';
@@ -29,9 +30,23 @@ export const uploadFileToFolder = (fileMetadata, file) => {
   const form = new FormData();
     form.append('metadata', new Blob([JSON.stringify(fileMetadata)], {type: 'application/json'}));
     form.append('file', file);
-    return fetch('https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart', {
-      method: 'POST',
-      headers: new Headers({'Authorization': 'Bearer ' + gapi.auth.getToken().access_token}),
-      body: form
-    })
+    // return fetch('https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart', {
+    //   method: 'POST',
+    //   headers: new Headers({'Authorization': 'Bearer ' + gapi.auth.getToken().access_token}),
+    //   body: form
+    // })
+
+    let config = {
+      headers: {
+        Authorization: 'Bearer ' + gapi.auth.getToken().access_token
+      }
+    };
+    return axios.post('https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart', form, config);
+
+    // return gapi.client.request({
+    //   'path': 'https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart',
+    //   'method': 'POST',
+    //   'headers': new Headers({'Authorization': 'Bearer ' + gapi.auth.getToken().access_token}),
+    //   'body': form
+    // });
 }

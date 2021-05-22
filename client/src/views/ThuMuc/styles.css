@@ -33,15 +33,33 @@
   color: #fefefe;
 }
 
+.folders-view .click-zone {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}
+
 .folder-info .info-container {
   display: flex;
   flex-direction: column;
+  width: 100%;
+}
+.folder-info .action-icons {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  color: rgba(255, 255, 255, 0.7);
+  display: flex;
+}
+.folder-info .action-icons .icon-button:hover {
+  color: white;
+  opacity: 1;
 }
 
 .folder-info .info-container .submitted img{
   vertical-align: middle;
   border-style: none;
-  width: calc(25% - 0.5rem);
+  width: calc(25% - 0.7rem);
   margin: 0.25rem;
   border-radius: 100%;
 }
@@ -58,4 +76,10 @@
 
 .sub-text {
   font-weight: 400;
+}
+
+.small-logo {
+  width: 1rem;
+  margin: 0 0.75rem;
+  vertical-align: bottom;
 }

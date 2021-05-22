@@ -33,6 +33,7 @@
 
 .submitter h6 {
   margin-top: 0.5rem;
+  max-height: 400px;
 }
 
 .file-row {
@@ -84,4 +85,8 @@
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.submitter .scroll-area {
+  padding-top: 20px;
 }

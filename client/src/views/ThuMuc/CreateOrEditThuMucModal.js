@@ -57,6 +57,7 @@ const DeTailGiangVienModal = ({ isModalOpen, toggleModal, selected, onClose, onU
                 .then((res3) => {
                   console.log('db');
                   console.log(res3);
+                  onUpdate();
                 });
             });
         })

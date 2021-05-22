@@ -2,16 +2,21 @@ import React, { useEffect, useState, useRef } from "react";
 import axios from "axios";
 import { useHistory } from "react-router-dom";
 import { Container, Row, Col, Card, CardHeader, CardBody, Button, ButtonGroup } from "shards-react";
+import PublishIcon from '@material-ui/icons/Publish';
+import ViewListIcon from '@material-ui/icons/ViewList';
+import ViewModuleIcon from '@material-ui/icons/ViewModule';
+import FolderIcon from '@material-ui/icons/Folder';
+import DeleteIcon from '@material-ui/icons/Delete';
+import EditIcon from '@material-ui/icons/Edit';
 
 import { getThuMucs } from '../../api/fileNopAPI';
 import * as Utils from '../../utils/utils';
 
 import PageTitle from "../../components/common/PageTitle";
 import ActionButtons from '../../components/common/ActionButtons';
-import ViewListIcon from '@material-ui/icons/ViewList';
-import ViewModuleIcon from '@material-ui/icons/ViewModule';
-import FolderIcon from '@material-ui/icons/Folder';
 import CreateOrEditThuMucModal from './CreateOrEditThuMucModal';
+import FileSubmitterButton from '../../components/FileSubmitter/FileSubmitterButton';
+
 import './styles.css';
 
 const ListThuMuc = () => {
@@ -68,10 +73,19 @@ const ListThuMuc = () => {
   const onUpdateThuMuc = () => {
     setSelectedThuMuc({});
     getList();
+    setIsOpenModal(false);
   }
 
-  const onThuMucClick = (id) => {
-    history.push(`/thu-muc/${id}/files`);
+  const onThuMucClick = (thuMuc) => {
+    history.push(`/thu-muc/${thuMuc._id}/files`, thuMuc);
+  }
+
+  const onCreateFileClick = (id) => {
+
+  }
+
+  const onFileUploaded = () => {
+    getList();
   }
 
   const renderFoldersView = () => {
@@ -79,15 +93,32 @@ const ListThuMuc = () => {
       <div className="folders-view">
         {
           thuMucs.map((thuMuc) => (
-            <div className="folder" onClick={(id) => { onThuMucClick(id) }}>
+            <div className="folder">
               <FolderIcon fontSize="large" />
               <div className="folder-info">
+                <div onClick={(e) => { onThuMucClick(thuMuc) }} className="click-zone" />
+                <div class="action-icons">
+                  <FileSubmitterButton onUploaded={onFileUploaded} folderId={thuMuc._id}
+                      folderDriveId={thuMuc.driveId}
+                      renderAs={
+                        <PublishIcon color="inherit" className="icon-button" />
+                      }/>
+                  <EditIcon color="inherit" className="icon-button"
+                      onClick={() => {}}/>
+                  <DeleteIcon color="inherit" className="icon-button"
+                      onClick={() => {}}/>
+                </div>
                 <div className="info-container truncate">
                   <div className="submitted">
                     {/* <div>ĐÃ NỘP</div> */}
-                    <div>
+                    {/* <div>
                       {thuMuc.files.slice(0, 4).map((file) => (
-                        <img src={file.userObj.picture}/>
+                        <img src={file.user.picture}/>
+                      ))}
+                    </div> */}
+                    <div>
+                      {Utils.getUniqueUploader(thuMuc.files).map((user) => (
+                        <img src={user.picture}/>
                       ))}
                     </div>
                   </div>
@@ -158,6 +189,9 @@ const ListThuMuc = () => {
                         Trạng thái
                       </th>
                       <th scope="col" className="border-0">
+                        Upload file
+                      </th>
+                      <th scope="col" className="border-0">
                         Action
                       </th>
                     </tr>
@@ -171,6 +205,16 @@ const ListThuMuc = () => {
                           <td>{thuMuc.files.length}</td>
                           <td>{thuMuc.deadline}</td>
                           <td>{Utils.getThuMucStatusText(thuMuc.status)}</td>
+                          <td>
+                            <FileSubmitterButton onUploaded={onFileUploaded} folderId={thuMuc._id} renderAs={
+                              <PublishIcon color="primary" className="icon-button"
+                                onClick={onEditClick}/>
+                            }/>
+                            {/* <div>
+                              <PublishIcon color="primary" className="icon-button"
+                                onClick={onEditClick}/>
+                            </div> */}
+                          </td>
                           <td>
                             <ActionButtons
                               onDeleteClick={() => { onDeleteClick(thuMuc._id) }}

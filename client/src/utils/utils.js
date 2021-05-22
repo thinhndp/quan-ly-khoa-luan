@@ -1,4 +1,11 @@
 import * as Constants from '../constants/constants';
+import ExcelLogo from '../resources/file-icons/excel.svg';
+import PDFLogo from '../resources/file-icons/pdf.svg';
+import PowerpointLogo from '../resources/file-icons/powerpoint.svg';
+import TextLogo from '../resources/file-icons/text.svg';
+import WordLogo from '../resources/file-icons/word.svg';
+import ZipLogo from '../resources/file-icons/zip.svg';
+import ImageLogo from '../resources/file-icons/jpg.svg';
 
 export var ID = function () {
   // Math.random should be unique because of its seeding algorithm.
@@ -9,6 +16,34 @@ export var ID = function () {
 
 export const refreshPage = () => {
   window.location.reload();
+}
+
+export const getFileLogo = (fileName) => {
+  const extension = getFileExtension(fileName).toLowerCase();
+  console.log(extension);
+  switch (extension) {
+    case 'xls':
+    case 'xlsx':
+      return ExcelLogo;
+    case 'pdf':
+      return PDFLogo;
+    case 'ppt':
+    case 'pptx':
+      return PowerpointLogo;
+    case 'doc':
+    case 'docx':
+      return WordLogo;
+    case 'zip':
+    case 'rar':
+    case '7z':
+      return ZipLogo;
+    case 'jpg':
+    case 'jpeg':
+    case 'png':
+      return ImageLogo;
+    default:
+      return TextLogo;
+  }
 }
 
 export const getHocHamText = (abbr) => {
@@ -124,4 +159,12 @@ export const getFileExtension = (fileName) => {
 
 export const getFormattedSize = (bytes) => {
   return bytes.toString() + ' bytes';
+}
+
+export const getUniqueUploader = (files) => {
+  const userList = files.map(file => file.user);
+  const retArr = [ ...new Map(userList.map(user => [ user.email, user ])).values() ];
+  console.log('@@@retArr');
+  console.log(retArr);
+  return retArr;
 }

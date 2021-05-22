@@ -2,6 +2,10 @@
   padding-right: 0.5rem;
 }
 
+.mr-05r {
+  margin-right: 0.5rem;
+}
+
 .icon-button {
   cursor: pointer;
 }
@@ -13,6 +17,11 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+.flex-row {
+  display: flex;
+  flex-direction: row;
 }
 
 .flex-filler {

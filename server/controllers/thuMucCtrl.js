@@ -14,7 +14,10 @@ export const getThuMucs = (req, res) => {
             "update": { $set: { "status": status } }
           }
         });
-        returnedThuMucs.push({ ...thuMuc, status: status });
+        // returnedThuMucs.push({ ...thuMuc, status: status });
+        let thuMucWNewStatus = thuMuc;
+        thuMucWNewStatus.status = status;
+        returnedThuMucs.push(thuMucWNewStatus);
       }
       ThuMuc.bulkWrite(bulkArr);
       res.status(200).json(returnedThuMucs);
@@ -47,9 +50,9 @@ export const createThuMuc = (req, res) => {
     .then(() => {
       res.status(201).json(newThuMuc);
     })
-    .catch((err) => {
-      res.status(400).json({ message: err.message });
-    });
+    // .catch((err) => {
+    //   res.status(400).json({ message: err.message });
+    // });
 };
 
 export const updateThuMucById = (req, res) => {
@@ -69,6 +72,40 @@ export const deleteThuMuc = (req, res) => {
   ThuMuc.deleteOne({ _id: req.params.id })
     .then(() => {
       res.status(201).json(req.params.id);
+    })
+    .catch((err) => {
+      res.status(400).json({ message: err.message });
+    });
+}
+
+export const getFilesOfFolder = (req, res) => {
+  const id = req.params.id;
+  ThuMuc.findById(id)
+    .then((thuMuc) => {
+      res.status(201).json(thuMuc.files);
+    })
+    .catch((err) => {
+      res.status(400).json({ message: err.message });
+    });
+}
+
+export const createFilesInFolder = (req, res) => {
+  const id = req.params.id;
+  const files = req.body;
+  ThuMuc.findById(id)
+    .then((thuMuc) => {
+      for (let file of files) {
+        thuMuc.files.push(file);
+      }
+      console.log('@tmmm');
+      console.log(thuMuc);
+      thuMuc.save()
+        .then((saveRes) => {
+          res.status(201).json(saveRes);
+        })
+        // .catch((err) => {
+        //   res.status(400).json({ message: err.message });
+        // });
     })
     .catch((err) => {
       res.status(400).json({ message: err.message });
