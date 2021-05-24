@@ -53,3 +53,13 @@
 .blue_link:hover {
   text-decoration-color: #2196f3;
 }
+
+.relative_wrap {
+  position: relative;
+}
+
+.absolute_child-rb {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+}

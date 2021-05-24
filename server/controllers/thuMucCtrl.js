@@ -31,7 +31,8 @@ export const getThuMucById = (req, res) => {
   ThuMuc.findOne({ _id: req.params.id })
     .then((thuMuc) => {
       const status = (thuMuc.deadline < Date.now()) ? 'Closed' : 'Open';
-      const returnedThuMuc = { ...thuMuc, status: status };
+      const returnedThuMuc = thuMuc;
+      returnedThuMuc.status = status;
       returnedThuMuc.save()
         .then((resThuMuc) => {
           res.status(201).json(resThuMuc);

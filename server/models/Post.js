@@ -11,6 +11,23 @@ const postSchema = mongoose.Schema({
     type: Date,
     default: new Date()
   },
+  submitter: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'ThuMuc'
+  },
+  submitterObj: {
+    name: {
+      type: String,
+      required: true
+    },
+    link: {
+      type: String
+    },
+    driveId: {
+      type: String,
+      required: true
+    }
+  },
 });
 
 const Post = mongoose.model('Post', postSchema, 'Post');

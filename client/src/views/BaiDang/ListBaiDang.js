@@ -12,6 +12,7 @@ import ReactQuill from "react-quill";
 import commonStyles from '../../styles/CommonStyles.module.scss';
 import PageTitle from "../../components/common/PageTitle";
 import ActionButtons from '../../components/common/ActionButtons';
+import PostReader from '../../components/post/PostReader';
 
 const ListBaiDang = () => {
   const [ viewMode, setViewMode ] = useState(0);
@@ -40,13 +41,14 @@ const ListBaiDang = () => {
 
   const onNewPostClick = () => {
     // history.push('/bai-dang/new');
-    history.push('/bai-dang/create-or-edit');
+    history.push('/bai-dang/create-or-edit/');
   }
   const toggleActions = () => {
     setIsOpenActions(!isOpenActions);
   }
   const onEditClick = (id) => {
-    history.push('/bai-dang/create-or-edit', { postId: id });
+    // history.push('/bai-dang/create-or-edit', { postId: id });
+    history.push(`/bai-dang/create-or-edit/${id}`);
   }
   const onDeleteClick = (id) => {
     console.log(id);
@@ -66,10 +68,17 @@ const ListBaiDang = () => {
         { posts.map((post) => (
           <Card small className="card-post mb-4">
             <CardBody>
-              <h5>{post.title}</h5>
-              <ReactQuill className="card-text text-muted"
-                  value={post.content} readOnly={true} theme={"bubble"}/>
-              {/* <p className="card-text text-muted">{post.content}</p> */}
+              <div className="relative_wrap">
+                <h5>{post.title}</h5>
+                <PostReader post={post}/>
+                {/* <ReactQuill className="card-text text-muted"
+                    value={post.content} readOnly={true} theme={"bubble"}/> */}
+                {/* <p className="card-text text-muted">{post.content}</p> */}
+                <div className="absolute_child-rb">
+                  <ActionButtons onEditClick={() => onEditClick(post._id)}
+                      onDeleteClick={() => onDeleteClick(post._id)} />
+                </div>
+              </div>
             </CardBody>
             {/* <CardFooter className="border-top d-flex">
               <div className="card-post__author d-flex">

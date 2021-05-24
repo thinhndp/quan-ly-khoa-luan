@@ -106,10 +106,16 @@ export default [
   {
     path: "/bai-dang/create-or-edit",
     layout: DefaultLayout,
+    exact: true,
     component: CreateOrEditBaiDang
   },
   {
-    path: "/bai-dang/preview",
+    path: "/bai-dang/create-or-edit/:id",
+    layout: DefaultLayout,
+    component: CreateOrEditBaiDang
+  },
+  {
+    path: "/bai-dang/preview/:id",
     layout: DefaultLayout,
     component: PreviewBaiDang
   },

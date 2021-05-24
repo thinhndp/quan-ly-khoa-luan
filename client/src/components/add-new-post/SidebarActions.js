@@ -8,10 +8,20 @@ import {
 } from "shards-react";
 import SubmitterPicker from "../SubmitterPicker/SubmitterPicker";
 
-const SidebarActions = ({ title, onSaveClick, onPreviewClick, post, onLoaiTinChange, onPostClick }) => {
+const SidebarActions = ({ title, onSaveClick, onPreviewClick, post, onLoaiTinChange, onPostClick, onThuMucChange, thuMuc }) => {
   const [ isOpenLoaiTin, setIsOpenLoaiTin ] = useState(false);
   const [ submitter, setSubmitter ] = useState(null);
   const [ submitterName, setSubmitterName ] = useState("Không");
+
+  useEffect(() => {
+    console.log('thuMuc');
+    console.log(thuMuc);
+    if (thuMuc != null) {
+      console.log(thuMuc);
+      setSubmitter(thuMuc);
+    }
+  }, [thuMuc]);
+
   useEffect(() => {
     if (submitter != null) {
       setSubmitterName(submitter.name);
@@ -25,6 +35,9 @@ const SidebarActions = ({ title, onSaveClick, onPreviewClick, post, onLoaiTinCha
   }
   const onSelectSubmitter = (thuMuc) => {
     setSubmitter(thuMuc);
+    if (thuMuc._id !=  null) {
+      onThuMucChange(thuMuc._id);
+    }
   }
   return (
     <Card small className="mb-3">
