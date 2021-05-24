@@ -113,10 +113,10 @@ const TestPage = () => {
    *  listeners.
    */
   const initClient = () => {
-    console.log('init');
-    console.log(gapi);
-    console.log(gapi.auth2.getAuthInstance());
-    console.log(gapi.auth2.getAuthInstance().currentUser.get());
+    // console.log('init');
+    // console.log(gapi);
+    // console.log(gapi.auth2.getAuthInstance());
+    // console.log(gapi.auth2.getAuthInstance().currentUser.get());
     // setIsLoadingGoogleDriveApi(true);
     gapi.client
       .init({

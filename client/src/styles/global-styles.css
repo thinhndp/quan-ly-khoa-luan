@@ -35,3 +35,21 @@
 .hidden {
   display: none;
 }
+
+/* .blue-clickable {
+  color: #2196f3;
+  cursor: pointer;
+} */
+
+.blue_link {
+  color:#2196f3;
+  cursor: pointer;
+  transition: 0.3s;
+  text-decoration: underline;
+  text-decoration-color: #2196f300;
+  text-underline-offset: 0.1rem;
+}
+
+.blue_link:hover {
+  text-decoration-color: #2196f3;
+}
