@@ -1,0 +1,65 @@
+.pr-05r {
+  padding-right: 0.5rem;
+}
+
+.mr-05r {
+  margin-right: 0.5rem;
+}
+
+.icon-button {
+  cursor: pointer;
+}
+.icon-button:hover {
+  opacity: 0.7;
+}
+
+.truncate {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.flex-row {
+  display: flex;
+  flex-direction: row;
+}
+
+.flex-filler {
+  flex: 1;
+}
+
+.blue-text {
+  color: #2196f3;
+}
+
+.hidden {
+  display: none;
+}
+
+/* .blue-clickable {
+  color: #2196f3;
+  cursor: pointer;
+} */
+
+.blue_link {
+  color:#2196f3;
+  cursor: pointer;
+  transition: 0.3s;
+  text-decoration: underline;
+  text-decoration-color: #2196f300;
+  text-underline-offset: 0.1rem;
+}
+
+.blue_link:hover {
+  text-decoration-color: #2196f3;
+}
+
+.relative_wrap {
+  position: relative;
+}
+
+.absolute_child-rb {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+}

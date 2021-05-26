@@ -1,0 +1,11 @@
+#submitter_picker .blue_link {
+	margin-bottom: 0.5rem;
+}
+
+#submitter_picker .cancel_option {
+	color: #999;
+	text-decoration: none;
+}
+#submitter_picker .cancel_option:hover {
+	color: #111;
+}

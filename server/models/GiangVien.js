@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 import upsertMany from '@meanie/mongoose-upsert-many';
 
-const giangVienSchema = mongoose.Schema({
+export const GiangVienSchema = mongoose.Schema({
   maGV: String,
   name: String,
   hocHam: String,
@@ -10,8 +10,8 @@ const giangVienSchema = mongoose.Schema({
   huongNghienCuu: String
 });
 
-giangVienSchema.plugin(upsertMany);
+GiangVienSchema.plugin(upsertMany);
 
-const GiangVien = mongoose.model('GiangVien', giangVienSchema, 'GiangVien');
+const GiangVien = mongoose.model('GiangVien', GiangVienSchema, 'GiangVien');
 
 export default GiangVien;

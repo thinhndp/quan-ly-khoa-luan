@@ -1,19 +1,22 @@
 import mongoose from 'mongoose';
-import GiangVien from './GiangVien';
-import SinhVien from './SinhVien';
+import { GiangVienSchema } from './GiangVien.js';
+import { SinhVienSchema } from './SinhVien.js';
 
-const deTaiSchema ='DeTai' ;
-
-export default DeTai;mongoose.Schema({
-  tenDetai: {
+const deTaiSchema = mongoose.Schema({
+  tenDeTai: {
     type: String,
     required: true
   },
-  giangVien: GiangVien,
-  trangThai: {
+  giangVien: GiangVienSchema,
+  trangThaiDuyet: {
     type: String,
-    enum: [ 'CD', 'DD', 'DTH', 'HT' ],
+    enum: [ 'CD', 'DD', 'DTC' ],
     default: 'CD'
+  },
+  trangThaiThucHien: {
+    type: String,
+    enum: [ '-', 'CDK', 'DTH', 'DH', 'HT' ],
+    default: '-'
   },
   heDaoTao: {
     type: String,
@@ -25,15 +28,18 @@ export default DeTai;mongoose.Schema({
     max: 10,
     default: 0
   },
-  sinhVienThucHien: {
-    type: [SinhVien],
-    validate: {
-      validator: function(v) {
-        return !(this.sinhVienThucHien.length > 2);
-      },
-      message: props => `${props.value} exceeds the maximum array size (2)!`
-    }
-  }
+  // sinhVienThucHien: {
+  //   type: [SinhVienSchema],
+  //   validate: {
+  //     validator: function(v) {
+  //       return !(this.sinhVienThucHien.length > 2);
+  //     },
+  //     message: props => `${props.value} exceeds the maximum array size (2)!`
+  //   }
+  // },
+  sinhVien1: SinhVienSchema,
+  sinhVien2: SinhVienSchema,
+  moTa: String
 });
 
 const DeTai = mongoose.model('DeTai', deTaiSchema, 'DeTai');

@@ -2,7 +2,7 @@ import React from "react";
 import { Redirect } from "react-router-dom";
 
 // Layout Types
-import { DefaultLayout } from "./layouts";
+import { DefaultLayout, None } from "./layouts";
 
 // Route Views
 import BlogOverview from "./views/BlogOverview";
@@ -19,6 +19,7 @@ import ListGiangVien from "./views/GiangVien/ListGiangVien";
 import EditGiangVienPage from './views/GiangVien/EditGiangVienPage';
 import ListBaiDang from './views/BaiDang/ListBaiDang';
 import NewBaiDang from './views/BaiDang/NewBaiDang';
+import ListDeTai from './views/DeTai/ListDeTai';
 import CreateOrEditBaiDang from './views/BaiDang/CreateOrEditBaiDang';
 import PreviewBaiDang from './views/BaiDang/PreviewBaiDang';
 import TestPage from './views/TestPage/TestPage';
@@ -106,10 +107,16 @@ export default [
   {
     path: "/bai-dang/create-or-edit",
     layout: DefaultLayout,
+    exact: true,
     component: CreateOrEditBaiDang
   },
   {
-    path: "/bai-dang/preview",
+    path: "/bai-dang/create-or-edit/:id",
+    layout: DefaultLayout,
+    component: CreateOrEditBaiDang
+  },
+  {
+    path: "/bai-dang/preview/:id",
     layout: DefaultLayout,
     component: PreviewBaiDang
   },

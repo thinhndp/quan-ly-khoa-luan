@@ -11,19 +11,9 @@ export default function() {
       to: "/sinh-vien",
     },
     {
-      title: "Quản lý Đề xuất",
-      htmlBefore: '<i class="material-icons">table_chart</i>',
-      to: "/aaa",
-    },
-    {
       title: "Quản lý Đề tài",
       htmlBefore: '<i class="material-icons">table_chart</i>',
-      to: "/aaa",
-    },
-    {
-      title: "Quản lý Biểu mẫu",
-      htmlBefore: '<i class="material-icons">table_chart</i>',
-      to: "/aaa",
+      to: "/de-tai",
     },
     // {
     //   title: "Quản lý bài đăng",
@@ -31,7 +21,7 @@ export default function() {
     //   to: "/add-new-post",
     // },
     {
-      title: "Quản lý bài đăng",
+      title: "Quản lý Bài đăng",
       htmlBefore: '<i class="material-icons">note_add</i>',
       to: "/bai-dang",
     },

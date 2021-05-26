@@ -1,4 +1,5 @@
 import Post from '../models/Post.js';
+import ThuMuc from '../models/ThuMuc.js';
 
 export const getPosts = (req, res) => {
   Post.find()
@@ -14,6 +15,23 @@ export const getPostById = (req, res) => {
   Post.findOne({ _id: req.params.id })
     .then((post) => {
       res.status(201).json(post);
+    })
+    .catch((err) => {
+      res.status(400).json({ message: err.message });
+    });
+}
+
+export const getPostWSubmitterById = (req, res) => {
+  Post.findOne({ _id: req.params.id })
+    .then((post) => {
+      if (post.submitter != null) {
+        ThuMuc.findOne({ _id: post.submitter })
+          .then((thuMuc) => {
+            let returnedPost = post;
+            returnedPost.submitterObj = thuMuc;
+            res.status(201).json(returnedPost);
+          })
+      }
     })
     .catch((err) => {
       res.status(400).json({ message: err.message });
@@ -36,7 +54,6 @@ export const createPost = (req, res) => {
 export const updatePostById = (req, res) => {
   const post = req.body;
   const id = req.params.id;
-
   Post.updateOne({ _id: id }, post)
     .then(() => {
       res.status(201).json(post);

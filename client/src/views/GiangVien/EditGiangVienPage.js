@@ -54,8 +54,8 @@ const EditGiangVienPage = () => {
       .catch((err) => {
         console.log(err);
       });
-
   }
+
   return (
     <Container fluid className="main-content-container px-4">
       <Row noGutters className="page-header py-4">

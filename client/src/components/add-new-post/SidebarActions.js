@@ -6,11 +6,38 @@ import {
   Card, CardHeader, CardBody, ListGroup, ListGroupItem, Button,
   Dropdown, DropdownToggle, DropdownMenu, DropdownItem
 } from "shards-react";
+import SubmitterPicker from "../SubmitterPicker/SubmitterPicker";
 
-const SidebarActions = ({ title, onSaveClick, onPreviewClick, post, onLoaiTinChange, onPostClick }) => {
+const SidebarActions = ({ title, onSaveClick, onPreviewClick, post, onLoaiTinChange, onPostClick, onThuMucChange, thuMuc }) => {
   const [ isOpenLoaiTin, setIsOpenLoaiTin ] = useState(false);
+  const [ submitter, setSubmitter ] = useState(null);
+  const [ submitterName, setSubmitterName ] = useState("Không");
+
+  useEffect(() => {
+    console.log('thuMuc');
+    console.log(thuMuc);
+    if (thuMuc != null) {
+      console.log(thuMuc);
+      setSubmitter(thuMuc);
+    }
+  }, [thuMuc]);
+
+  useEffect(() => {
+    if (submitter != null) {
+      setSubmitterName(submitter.name);
+    }
+    else {
+      setSubmitterName("Không")
+    }
+  }, [submitter]);
   const toggleLoaiTin = () => {
     setIsOpenLoaiTin(!isOpenLoaiTin);
+  }
+  const onSelectSubmitter = (thuMuc) => {
+    setSubmitter(thuMuc);
+    if (thuMuc._id !=  null) {
+      onThuMucChange(thuMuc._id);
+    }
   }
   return (
     <Card small className="mb-3">
@@ -34,7 +61,7 @@ const SidebarActions = ({ title, onSaveClick, onPreviewClick, post, onLoaiTinCha
               <strong style={{ color: "#007BFF" }}>{post.type === 'CK' ? ' Công khai ' : ' Nội bộ '}</strong>{" "}
               <Dropdown className="ml-auto" open={isOpenLoaiTin} toggle={toggleLoaiTin}>
                 <a href="#" onClick={toggleLoaiTin}>
-                  Edit
+                  Sửa
                 </a>
                 <DropdownMenu right>
                   <DropdownItem onClick={() => onLoaiTinChange('CK')}>Công khai</DropdownItem>
@@ -44,6 +71,18 @@ const SidebarActions = ({ title, onSaveClick, onPreviewClick, post, onLoaiTinCha
               {/* <a className="ml-auto" href="#">
                 Edit
               </a> */}
+            </span>
+            <span className="d-flex mb-2">
+              <i className="material-icons mr-1">source</i>
+              <strong className="mr-1">Thư mục nộp file:</strong>{" "}
+              <strong style={(submitterName != "Không") ? { color: "#007BFF" } : {}}>{submitterName}</strong>{" "}
+              <div className="ml-auto">
+                <SubmitterPicker onSelectThuMuc={onSelectSubmitter} renderAs={
+                  <a className="ml-auto" href="#">
+                    Sửa
+                  </a>
+                }/>
+              </div>
             </span>
             {/* <span className="d-flex mb-2">
               <i className="material-icons mr-1">calendar_today</i>

@@ -4,7 +4,7 @@ import moment from 'moment';
 import ReactQuill from "react-quill";
 import axios from "axios";
 import DeXuatButton from "../../components/post/DeXuatButton";
-import { useHistory } from "react-router-dom";
+import { useHistory, useParams } from "react-router-dom";
 
 import "react-quill/dist/quill.snow.css";
 import "../../assets/quill.css";
@@ -12,6 +12,9 @@ import "../../assets/quill.css";
 import PageTitle from "../../components/common/PageTitle";
 import SidebarActions from "../../components/add-new-post/SidebarActions";
 import SidebarCategories from "../../components/add-new-post/SidebarCategories";
+import PostReader from '../../components/post/PostReader';
+import { getPostById, getPostWSubmitterById } from '../../api/postAPI';
+import { getThuMucById } from '../../api/fileNopAPI';
 
 const CreateOrEditBaiDang = () => {
   const [ newPost, setNewPost ] = useState({
@@ -22,25 +25,35 @@ const CreateOrEditBaiDang = () => {
     isPosted: false,
     postedTime: moment().toISOString()
   });
+  const [ submitter, setSubmitter ] = useState(null);
   const [ content, setContent ] = useState('');
   const [ isShowPreview, setIsShowPreview ] = useState(false);
   let history = useHistory();
-  let isUpdate = (history.location.state != null && history.location.state.postId != null)
-                  ? true : false;
+  let { id } = useParams();
+  let isUpdate = (id != null);
+
   useEffect(() => {
+    console.log(isUpdate);
     if (isUpdate) {
-      console.log(history.location.state.postId);
-      const id = history.location.state.postId;
-      axios.get(`http://localhost:5000/posts/${id}`)
+      // console.log(history.location.state.postId);
+      // const id = history.location.state.postId;
+      getPostWSubmitterById(id)
         .then((res) => {
-          // isUpdate = true;
-          console.log('isUpdate: ' + isUpdate);
-          // console.log('***');
-          // console.log(res.data);
-          // console.log({ ...res.data });
-          // console.log('***');
-          setNewPost({ ...res.data });
-          setContent(res.data.content);
+          if (res.data != null) {
+            console.log('isUpdate: ' + isUpdate);
+            console.log(res.data);
+            setNewPost({ ...res.data });
+            setContent(res.data.content);
+            const thuMucId = res.data.submitter;
+            if (thuMucId != null) {
+              setSubmitter(res.data.submitterObj);
+              // getThuMucById(thuMucId)
+              //   .then((res2) => {
+              //     console.log(res2);
+              //     setSubmitter(res2.data);
+              //   })
+            }
+          }
         })
         .catch((err) => {
           console.log(err);
@@ -103,6 +116,11 @@ const CreateOrEditBaiDang = () => {
     // console.log("a..");
     setNewPost({ ...newPost, type: type });
   }
+
+  const onThuMucChange = (thuMucId) => {
+    console.log(thuMucId);
+    setNewPost({ ...newPost, submitter: thuMucId });
+  }
   // return (<div></div>);
   return (
     <Container fluid className="main-content-container px-4 pb-4">
@@ -120,6 +138,7 @@ const CreateOrEditBaiDang = () => {
                 <Form className="add-new-post">
                   <FormInput size="lg" className="mb-3" placeholder="Tên bài đăng"
                     value={newPost.title} onChange={(e) => { setNewPost({ ...newPost, title: e.target.value}) }}/>
+                    PreviewBaiDang
                   <ReactQuill className="add-new-post__editor mb-1"
                     value={content} onChange={(html) => { setContent(html) }}/>
                 </Form>
@@ -130,7 +149,8 @@ const CreateOrEditBaiDang = () => {
           {/* Sidebar Widgets */}
           <Col lg="3" md="12">
             <SidebarActions onSaveClick={onSaveClick} onPreviewClick={onPreviewClick}
-              post={newPost} onLoaiTinChange={onLoaiTinChange} onPostClick={onPostClick} />
+              post={newPost} onLoaiTinChange={onLoaiTinChange} onPostClick={onPostClick}
+              onThuMucChange={onThuMucChange} thuMuc={submitter}/>
             {/* <SidebarCategories /> */}
           </Col>
         </Row>
@@ -151,11 +171,12 @@ const CreateOrEditBaiDang = () => {
               </Form> */}
               {/* <ReactQuill className="add-new-post__editor mb-1"
                 value={newPost.content} readOnly={true} theme={"snow"}/> */}
-                <div style={{ border: 'none' }} class="ql-container ql-snow">
+                {/* <div style={{ border: 'none' }} class="ql-container ql-snow">
                   <div class="ql-editor">
                     <div dangerouslySetInnerHTML={{__html: content}} />
                   </div>
-                </div>
+                </div> */}
+                <PostReader post={newPost} />
             </CardBody>
           </Card>
         </Row>

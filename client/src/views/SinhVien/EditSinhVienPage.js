@@ -55,7 +55,7 @@ const EditSinhVienPage = () => {
       .catch((err) => {
         console.log(err);
       });
-    
+
   }
   return (
     <Container fluid className="main-content-container px-4">
@@ -138,10 +138,11 @@ const EditSinhVienPage = () => {
                         </Col>
                         {/* Password */}
                         <Col md="6" className="form-group">
-                          <label htmlFor="feStatus">Trạng thái thực hiện KL</label>
+                          <label htmlFor="feStatus">Trạng thái thực hiện Khóa luận</label>
                           <FormSelect value={sinhVien.status} id="feStatus"
                               onChange={(e) => { setSinhVien({ ...sinhVien, status: e.target.value }) }}>
                             <option value=''>Chọn...</option>
+                            <option value={Constants.SINH_VIEN_STATUS_NOT_STARTED}>Chưa đăng ký</option>
                             <option value={Constants.SINH_VIEN_STATUS_IN_PROGRESS}>Đang thực hiện</option>
                             <option value={Constants.SINH_VIEN_STATUS_DONE}>Đã hoàn thành</option>
                             <option value={Constants.SINH_VIEN_STATUS_ABANDONED}>Đã dừng</option>
