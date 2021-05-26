@@ -35,6 +35,21 @@ export default function() {
       htmlBefore: '<i class="material-icons">note_add</i>',
       to: "/bai-dang",
     },
+    {
+      title: "Quản lý File nộp",
+      htmlBefore: '<i class="material-icons">note_add</i>',
+      to: "/thu-muc",
+    },
+    {
+      title: "Quản lý Biểu mẫu",
+      htmlBefore: '<i class="material-icons">note_add</i>',
+      to: "/bieu-mau",
+    },
+    {
+      title: "Test",
+      htmlBefore: '<i class="material-icons">table_chart</i>',
+      to: "/test",
+    },
     // {
     //   title: "Blog Dashboard",
     //   to: "/blog-overview",
