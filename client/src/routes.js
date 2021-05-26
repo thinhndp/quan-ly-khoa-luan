@@ -27,6 +27,7 @@ import TestGAPI from './views/TestPage/TestGAPI';
 import LoginPage from './views/Login/LoginPage';
 import ListThuMuc from './views/ThuMuc/ListThuMuc';
 import ListFile from './views/ThuMuc/ListFile';
+import ListBieuMau from './views/BieuMau/ListBieuMau';
 
 export default [
   {
@@ -135,6 +136,11 @@ export default [
     path: "/thu-muc/:folderId/files",
     layout: DefaultLayout,
     component: ListFile
+  },
+  {
+    path: "/bieu-mau",
+    layout: DefaultLayout,
+    component: ListBieuMau
   },
   {
     path: "/test",

@@ -31,6 +31,11 @@ export default function() {
       to: "/thu-muc",
     },
     {
+      title: "Quản lý Biểu mẫu",
+      htmlBefore: '<i class="material-icons">note_add</i>',
+      to: "/bieu-mau",
+    },
+    {
       title: "Test",
       htmlBefore: '<i class="material-icons">table_chart</i>',
       to: "/test",

@@ -11,6 +11,7 @@ import deTaiRoutes from './routes/deTais.js';
 import systemSettingRoutes from './routes/systemSettings.js';
 import authRoutes from './routes/auths.js';
 import thuMucRoutes from './routes/thuMucs.js';
+import bieuMauRoutes from './routes/bieuMaus.js';
 
 const app = express();
 
@@ -26,6 +27,7 @@ app.use('/de-tais', deTaiRoutes);
 app.use('/system-setting', systemSettingRoutes);
 app.use('/auth', authRoutes);
 app.use('/thu-mucs', thuMucRoutes);
+app.use('/bieu-maus', bieuMauRoutes);
 
 const CONNECTION_URL = 'mongodb+srv://admin:admin123456@cluster0.cjuu6.mongodb.net/QLKL?retryWrites=true&w=majority';
 const PORT = process.env.PORT || 5000;
