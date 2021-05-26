@@ -2,18 +2,18 @@ import React, { useEffect, useState, useRef } from "react";
 import { Container, Row, Col, Card, CardHeader, CardBody, Button,
   Dropdown, DropdownToggle, DropdownMenu, DropdownItem, FormInput,
   FormGroup, FormSelect } from "shards-react";
-  import moment from 'moment';
-  import MomentUtils from '@date-io/moment';
-  import { DateTimePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
-  // import "moment/locale/vi";
+import moment from 'moment';
+import MomentUtils from '@date-io/moment';
+import { DateTimePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
+// import "moment/locale/vi";
 
-  import CustomModal from '../../components/common/CustomModal/CustomModal';
-  import * as Constants from '../../constants/constants';
-  import * as Utils from '../../utils/utils';
-  import * as API from '../../api/fileNopAPI';
-  import * as Services from '../../services/googleDriveServices';
+import CustomModal from '../../components/common/CustomModal/CustomModal';
+import * as Constants from '../../constants/constants';
+import * as Utils from '../../utils/utils';
+import * as API from '../../api/fileNopAPI';
+import * as Services from '../../services/googleDriveServices';
 
-const DeTailGiangVienModal = ({ isModalOpen, toggleModal, selected, onClose, onUpdate }) => {
+const CreateOrEditThuMucModal = ({ isModalOpen, toggleModal, selected, onClose, onUpdate }) => {
   // const [ giangVien, setGiangVien ] = useState(null);
   // let thuMuc;
   const [ thuMuc, setThuMuc ] = useState({});
@@ -167,4 +167,4 @@ const DeTailGiangVienModal = ({ isModalOpen, toggleModal, selected, onClose, onU
   );
 }
 
-export default DeTailGiangVienModal;
+export default CreateOrEditThuMucModal;

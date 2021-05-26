@@ -18,6 +18,10 @@ export const refreshPage = () => {
   window.location.reload();
 }
 
+export const getNewBieuMau = () => {
+  return ({ name: "", link: "" });
+}
+
 export const getFileLogo = (fileName) => {
   const extension = getFileExtension(fileName).toLowerCase();
   console.log(extension);

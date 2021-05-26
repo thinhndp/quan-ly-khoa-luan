@@ -8,17 +8,24 @@ import * as Utils from '../../utils/utils';
 
 import PageTitle from "../../components/common/PageTitle";
 import ActionButtons from '../../components/common/ActionButtons';
-// import EditBieuMauModal from './EditBieuMauModal';
+import CreateOrEditBieuMauModal from './CreateOrEditBieuMauModal';
 
 const ListBieuMau = () => {
   const [ bieuMaus, setBieuMaus ] = useState([]);
-  const [ isOpenEditModal, setIsOpenEditModal ] = useState(false);
+  const [ selectedBM, setSelectedBM ] = useState(Utils.getNewBieuMau);
+  const [ isOpenModal, setIsOpenModal ] = useState(false);
 
   let history = useHistory();
 
   useEffect(() => {
     getList();
   }, []);
+
+  useEffect(() => {
+    if (selectedBM._id != null) {
+      setIsOpenModal(true);
+    }
+  }, [selectedBM]);
 
   const getList = () => {
     getBieuMaus()
@@ -42,9 +49,28 @@ const ListBieuMau = () => {
       });
   }
 
-  const onEditClick = (id) => {
+  const onEditClick = (bieuMau) => {
     // history.push('/giang-vien/edit', { bieuMauId: id });
     // history.push(`/giang-vien/edit/${id}`);
+    setSelectedBM(bieuMau);
+  }
+
+  const onUpdated = () => {
+    setIsOpenModal(false);
+    getList();
+  }
+
+  const onCreated = () => {
+    setIsOpenModal(false);
+    getList();
+  }
+
+  const onClose = () => {
+    setSelectedBM(Utils.getNewBieuMau);
+  }
+
+  const toggleBModal = () => {
+    setIsOpenModal(!isOpenModal);
   }
 
   return (
@@ -58,7 +84,7 @@ const ListBieuMau = () => {
         <Col>
           <Card small className="mb-4">
             <CardHeader className="border-bottom">
-              <Button onClick={() => {}}>Thêm Biểu mẫu</Button>
+              <Button onClick={() => { setIsOpenModal(true) }}>Thêm Biểu mẫu</Button>
             </CardHeader>
             <CardBody className="p-0 pb-3">
               <table className="table mb-0">
@@ -84,7 +110,7 @@ const ListBieuMau = () => {
                         <td>
                           <ActionButtons
                             onDeleteClick={() => { onDeleteClick(bieuMau._id) }}
-                            onEditClick={() => { onEditClick(bieuMau._id) }} />
+                            onEditClick={() => { onEditClick(bieuMau) }} />
                         </td>
                       </tr>
                     ))
@@ -95,7 +121,9 @@ const ListBieuMau = () => {
           </Card>
         </Col>
       </Row>
-      {/* <EditBieuMauModal isOpen={isOpenEditModal}/> */}
+      <CreateOrEditBieuMauModal isModalOpen={isOpenModal} toggleModal={toggleBModal} selected={selectedBM} onClose={onClose} onUpdated={onUpdated}
+          onCreated={onCreated}/>
+      {/* <EditBieuMauModal isOpen={isOpenModal}/> */}
     </Container>
   )
 };
