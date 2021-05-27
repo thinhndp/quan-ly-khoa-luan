@@ -12,6 +12,7 @@ import systemSettingRoutes from './routes/systemSettings.js';
 import authRoutes from './routes/auths.js';
 import thuMucRoutes from './routes/thuMucs.js';
 import bieuMauRoutes from './routes/bieuMaus.js';
+import customSettingRoutes from './routes/customSetting.js';
 
 const app = express();
 
@@ -28,6 +29,7 @@ app.use('/system-setting', systemSettingRoutes);
 app.use('/auth', authRoutes);
 app.use('/thu-mucs', thuMucRoutes);
 app.use('/bieu-maus', bieuMauRoutes);
+app.use('/custom-setting', customSettingRoutes);
 
 const CONNECTION_URL = 'mongodb+srv://admin:admin123456@cluster0.cjuu6.mongodb.net/QLKL?retryWrites=true&w=majority';
 const PORT = process.env.PORT || 5000;
