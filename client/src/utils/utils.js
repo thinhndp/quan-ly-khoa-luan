@@ -22,6 +22,10 @@ export const getNewBieuMau = () => {
   return ({ name: "", link: "" });
 }
 
+export const getNewPhongHoc = () => {
+  return ({ name: "" });
+}
+
 export const getFileLogo = (fileName) => {
   const extension = getFileExtension(fileName).toLowerCase();
   console.log(extension);

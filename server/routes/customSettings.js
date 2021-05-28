@@ -1,6 +1,6 @@
 import express from 'express';
 
-import { getCustomSettingByName, updateCustomSettingByName } from '../controllers/customeSettingCtrl.js';
+import { getCustomSettingByName, updateCustomSettingByName } from '../controllers/customSettingCtrl.js';
 
 const router = express.Router();
 

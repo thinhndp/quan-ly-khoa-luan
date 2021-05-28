@@ -31,6 +31,11 @@ export default function() {
       to: "/thu-muc",
     },
     {
+      title: "Quản lý Hội đồng chấm",
+      htmlBefore: '<i class="material-icons">note_add</i>',
+      to: "/hoi-dong",
+    },
+    {
       title: "Quản lý Biểu mẫu",
       htmlBefore: '<i class="material-icons">note_add</i>',
       to: "/bieu-mau",

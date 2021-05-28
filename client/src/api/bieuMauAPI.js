@@ -16,6 +16,6 @@ export const deleteBieuMauById = (id) => {
   return axios.delete(`/bieu-maus/${id}`);
 }
 
-export const updateBieuMauById = (id, giangVien) => {
-  return axios.post(`/bieu-maus/${id}`, giangVien);
+export const updateBieuMauById = (id, bieuMau) => {
+  return axios.post(`/bieu-maus/${id}`, bieuMau);
 }
