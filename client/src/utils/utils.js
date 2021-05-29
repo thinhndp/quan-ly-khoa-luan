@@ -26,6 +26,21 @@ export const getNewPhongHoc = () => {
   return ({ name: "" });
 }
 
+export const getNewHoiDong = () => {
+  return ({
+    name: "",
+    phongHoc: "",
+    canBoPhanBien: "",
+    canBoHuongDan: "",
+    chuTich: "",
+    thuKy: "",
+    uyVien: "",
+    startAt: "",
+    endAt: "",
+    deTais: []
+  });
+}
+
 export const getFileLogo = (fileName) => {
   const extension = getFileExtension(fileName).toLowerCase();
   console.log(extension);
@@ -146,7 +161,7 @@ export const getSinhVienNumOfDeTai = (deTai) => {
 }
 
 export const getUser = () => {
-  let user = JSON.parse(localStorage.getItem('user'));
+  let user = JSON.parse(localStorage.getItem('current_user'));
   if (user == null) {
     user = {
       email: "guess",

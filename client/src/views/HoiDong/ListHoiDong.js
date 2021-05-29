@@ -57,6 +57,10 @@ const ListHoiDong = () => {
     setSelectedPH(phongHoc);
   }
 
+  const onCreateClick = () => {
+    history.push('/hoi-dong/create-or-edit/');
+  }
+
   const onUpdated = () => {
     setIsOpenPHModal(false);
     getList();
@@ -100,7 +104,7 @@ const ListHoiDong = () => {
         <Col>
           <Card small className="mb-4">
             <CardHeader className="border-bottom">
-              <Button onClick={() => {  }}>Thêm Biểu mẫu</Button>
+              <Button onClick={onCreateClick}>Tạo Hội đồng</Button>
               <span class="pr-05r"/>
               <Button onClick={() => { setIsOpenPHModal(true) }}>Thêm Phòng học</Button>
             </CardHeader>

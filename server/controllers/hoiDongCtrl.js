@@ -11,7 +11,10 @@ export const getHoiDongs = (req, res) => {
 }
 
 export const getHoiDongById = (req, res) => {
-  HoiDong.findOne({ _id: req.params.id }).populate('phongHoc').populate('deTai')
+  HoiDong.findOne({ _id: req.params.id })
+    .populate('phongHoc').populate('deTai').populate('canBoPhanBien')
+    .populate('canBoHuongDan').populate('chuTich').populate('thuKy')
+    .populate('uyVien')
     .then((hoiDong) => {
       res.status(201).json(hoiDong);
     })

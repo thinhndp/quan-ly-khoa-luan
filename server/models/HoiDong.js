@@ -9,27 +9,25 @@ const hoiDongSchema = mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'PhongHoc'
   },
-  canBo: {
-    canBoPhanBien: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'GiangVien'
-    },
-    canBoHuongDan: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'GiangVien'
-    },
-    chuTich: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'GiangVien'
-    },
-    thuKy: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'GiangVien'
-    },
-    uyVien: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'GiangVien'
-    },
+  canBoPhanBien: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'GiangVien'
+  },
+  canBoHuongDan: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'GiangVien'
+  },
+  chuTich: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'GiangVien'
+  },
+  thuKy: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'GiangVien'
+  },
+  uyVien: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'GiangVien'
   },
   startAt: {
     type: Date,
@@ -39,7 +37,7 @@ const hoiDongSchema = mongoose.Schema({
     type: Date,
     required: true,
   },
-  deTai: [{
+  deTais: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: 'DeTai'
   }]

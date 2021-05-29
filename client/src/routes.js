@@ -29,6 +29,7 @@ import ListThuMuc from './views/ThuMuc/ListThuMuc';
 import ListFile from './views/ThuMuc/ListFile';
 import ListBieuMau from './views/BieuMau/ListBieuMau';
 import ListHoiDong from './views/HoiDong/ListHoiDong';
+import CreateOrEditHoiDongPage from './views/HoiDong/CreateOrEditHoiDongPage';
 
 export default [
   {
@@ -146,7 +147,19 @@ export default [
   {
     path: "/hoi-dong",
     layout: DefaultLayout,
+    exact: true,
     component: ListHoiDong
+  },
+  {
+    path: "/hoi-dong/create-or-edit",
+    layout: DefaultLayout,
+    component: CreateOrEditHoiDongPage
+  },
+  {
+    path: "/hoi-dong/create-or-edit/:id",
+    layout: DefaultLayout,
+    exact: true,
+    component: CreateOrEditHoiDongPage
   },
   {
     path: "/test",
