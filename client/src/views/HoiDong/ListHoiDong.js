@@ -2,6 +2,8 @@ import React, { useEffect, useState, useRef } from "react";
 import axios from "axios";
 import { useHistory } from "react-router-dom";
 import { Container, Row, Col, Card, CardHeader, CardBody, Button } from "shards-react";
+import VisibilityIcon from '@material-ui/icons/Visibility';
+import LaunchIcon from '@material-ui/icons/Launch';
 
 import { getHoiDongs, createHoiDong } from '../../api/hoiDongAPI';
 import * as Utils from '../../utils/utils';
@@ -9,11 +11,14 @@ import * as Utils from '../../utils/utils';
 import PageTitle from "../../components/common/PageTitle";
 import ActionButtons from '../../components/common/ActionButtons';
 import CreateOrEditPhongHocModal from './CreateOrEditPhongHocModal';
+import ThanhPhanModal from './ThanhPhanModal';
 
 const ListHoiDong = () => {
   const [ hoiDongs, setHoiDongs ] = useState([]);
   const [ selectedPH, setSelectedPH ] = useState(Utils.getNewPhongHoc);
+  const [ selectedHD, setSelectedHD ] = useState(Utils.getNewHoiDong);
   const [ isOpenPHModal, setIsOpenPHModal ] = useState(false);
+  const [ isOpenTPModal, setIsOpenTPModal ] = useState(false);
 
   let history = useHistory();
 
@@ -26,6 +31,17 @@ const ListHoiDong = () => {
       setIsOpenPHModal(true);
     }
   }, [selectedPH]);
+
+  useEffect(() => {
+    console.log('selectedHD');
+    console.log(selectedHD);
+    if (selectedHD._id != null) {
+      setIsOpenTPModal(true);
+    }
+    else {
+      setIsOpenTPModal(false);
+    }
+  }, [selectedHD]);
 
   const getList = () => {
     getHoiDongs()
@@ -49,8 +65,8 @@ const ListHoiDong = () => {
     //   });
   }
 
-  const onEditClick = (bieuMau) => {
-    setSelectedPH(bieuMau);
+  const onEditClick = (hoiDong) => {
+    history.push(`/hoi-dong/create-or-edit/${hoiDong._id}`);
   }
 
   const onEditPHClick = (phongHoc) => {
@@ -93,6 +109,10 @@ const ListHoiDong = () => {
     setIsOpenPHModal(!isOpenPHModal);
   }
 
+  const toggleTPModal = () => {
+    setIsOpenTPModal(!isOpenTPModal);
+  }
+
   return (
     <Container fluid className="main-content-container px-4">
       {/* Page Header */}
@@ -113,7 +133,25 @@ const ListHoiDong = () => {
                 <thead className="bg-light">
                   <tr>
                     <th scope="col" className="border-0">
-                      Tên Biểu mẫu
+                      Tên Hội đồng
+                    </th>
+                    <th scope="col" className="border-0">
+                      Thành phần Hội đồng
+                    </th>
+                    <th scope="col" className="border-0">
+                      Địa điểm tổ chức phản biện
+                    </th>
+                    <th scope="col" className="border-0">
+                      Dự kiến bắt đầu
+                    </th>
+                    <th scope="col" className="border-0">
+                      Dự kiến kết thúc
+                    </th>
+                    <th scope="col" className="border-0">
+                      Các đề tài
+                    </th>
+                    <th scope="col" className="border-0">
+                      Action
                     </th>
                     {/* <th scope="col" className="border-0">
                       Link
@@ -128,12 +166,22 @@ const ListHoiDong = () => {
                     hoiDongs.map((hoiDong, index) => (
                       <tr key={`hoi-dong_${index}`}>
                         <td>{hoiDong.name}</td>
-                        {/* <td>{bieuMau.link}</td>
+                        <td>
+                          <LaunchIcon color="primary" className="icon-button"
+                            onClick={() => { setSelectedHD(hoiDong) }}/>
+                        </td>
+                        <td>{hoiDong.phongHoc.name}</td>
+                        <td>{hoiDong.startAt}</td>
+                        <td>{hoiDong.endAt}</td>
+                        <td>
+                          <LaunchIcon color="primary" className="icon-button"
+                            onClick={() => {}}/>
+                        </td>
                         <td>
                           <ActionButtons
-                            onDeleteClick={() => { onDeleteClick(bieuMau._id) }}
-                            onEditClick={() => { onEditClick(bieuMau) }} />
-                        </td> */}
+                            onDeleteClick={() => { onDeleteClick(hoiDong._id) }}
+                            onEditClick={() => { onEditClick(hoiDong) }} />
+                        </td>
                       </tr>
                     ))
                   }
@@ -145,6 +193,8 @@ const ListHoiDong = () => {
       </Row>
       <CreateOrEditPhongHocModal isModalOpen={isOpenPHModal} toggleModal={togglePHModal} selected={selectedPH} onClose={onPHClose} onUpdated={onPHUpdated}
           onCreated={onPHCreated}/>
+      <ThanhPhanModal isOpen={isOpenTPModal} toggle={toggleTPModal} selected={selectedHD}
+          onClose={() => { setSelectedHD(Utils.getNewHoiDong) }} />
       {/* <EditHoiDongModal isOpen={isOpenPHModal}/> */}
     </Container>
   )

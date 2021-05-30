@@ -1,7 +1,10 @@
 import HoiDong from '../models/HoiDong.js';
 
 export const getHoiDongs = (req, res) => {
-  HoiDong.find().populate('phongHoc')
+  HoiDong.find()
+    .populate('phongHoc').populate('deTai').populate('canBoPhanBien')
+    .populate('canBoHuongDan').populate('chuTich').populate('thuKy')
+    .populate('uyVien')
     .then((hoiDongs) => {
       res.status(200).json(hoiDongs);
     })

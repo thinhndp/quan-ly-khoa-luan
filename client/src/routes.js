@@ -153,12 +153,12 @@ export default [
   {
     path: "/hoi-dong/create-or-edit",
     layout: DefaultLayout,
+    exact: true,
     component: CreateOrEditHoiDongPage
   },
   {
     path: "/hoi-dong/create-or-edit/:id",
     layout: DefaultLayout,
-    exact: true,
     component: CreateOrEditHoiDongPage
   },
   {
