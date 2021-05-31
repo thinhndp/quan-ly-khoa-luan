@@ -5,20 +5,23 @@ import { Container, Row, Col, Card, CardHeader, CardBody, Button } from "shards-
 import VisibilityIcon from '@material-ui/icons/Visibility';
 import LaunchIcon from '@material-ui/icons/Launch';
 
-import { getHoiDongs, createHoiDong } from '../../api/hoiDongAPI';
+import { getHoiDongs, createHoiDong, deleteHoiDongById } from '../../api/hoiDongAPI';
 import * as Utils from '../../utils/utils';
 
 import PageTitle from "../../components/common/PageTitle";
 import ActionButtons from '../../components/common/ActionButtons';
 import CreateOrEditPhongHocModal from './CreateOrEditPhongHocModal';
 import ThanhPhanModal from './ThanhPhanModal';
+import DeTaiPhanBienListModal from './DeTaiPhanBienListModal';
 
 const ListHoiDong = () => {
   const [ hoiDongs, setHoiDongs ] = useState([]);
   const [ selectedPH, setSelectedPH ] = useState(Utils.getNewPhongHoc);
   const [ selectedHD, setSelectedHD ] = useState(Utils.getNewHoiDong);
+  const [ selectedDTHD, setSelectedDTHD ] = useState(Utils.getNewHoiDong);
   const [ isOpenPHModal, setIsOpenPHModal ] = useState(false);
   const [ isOpenTPModal, setIsOpenTPModal ] = useState(false);
+  const [ isOpenDTModal, setIsOpenDTModal ] = useState(false);
 
   let history = useHistory();
 
@@ -43,6 +46,16 @@ const ListHoiDong = () => {
     }
   }, [selectedHD]);
 
+  useEffect(() => {
+    console.log(selectedDTHD);
+    if (selectedDTHD._id != null) {
+      setIsOpenDTModal(true);
+    }
+    else {
+      setIsOpenDTModal(false);
+    }
+  }, [selectedDTHD]);
+
   const getList = () => {
     getHoiDongs()
       .then((res) => {
@@ -55,14 +68,14 @@ const ListHoiDong = () => {
   }
 
   const onDeleteClick = (id) => {
-    // deleteHoiDongById(id)
-    //   .then((res) => {
-    //     console.log(res);
-    //     getList();
-    //   })
-    //   .catch((err) => {
-    //     console.log(err);
-    //   });
+    deleteHoiDongById(id)
+      .then((res) => {
+        console.log(res);
+        getList();
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   }
 
   const onEditClick = (hoiDong) => {
@@ -111,6 +124,10 @@ const ListHoiDong = () => {
 
   const toggleTPModal = () => {
     setIsOpenTPModal(!isOpenTPModal);
+  }
+
+  const toggleDTModal = () => {
+    setIsOpenDTModal(!isOpenDTModal);
   }
 
   return (
@@ -175,7 +192,7 @@ const ListHoiDong = () => {
                         <td>{hoiDong.endAt}</td>
                         <td>
                           <LaunchIcon color="primary" className="icon-button"
-                            onClick={() => {}}/>
+                            onClick={() => { setSelectedDTHD(hoiDong) }}/>
                         </td>
                         <td>
                           <ActionButtons
@@ -195,6 +212,8 @@ const ListHoiDong = () => {
           onCreated={onPHCreated}/>
       <ThanhPhanModal isOpen={isOpenTPModal} toggle={toggleTPModal} selected={selectedHD}
           onClose={() => { setSelectedHD(Utils.getNewHoiDong) }} />
+      <DeTaiPhanBienListModal isOpen={isOpenDTModal} toggle={toggleDTModal} selected={selectedDTHD}
+          onClose={() => { setSelectedDTHD(Utils.getNewHoiDong) }} />
       {/* <EditHoiDongModal isOpen={isOpenPHModal}/> */}
     </Container>
   )

@@ -24,7 +24,7 @@ import MomentUtils from '@date-io/moment';
 import { DateTimePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
 
 // import fuzzySearch from '../../components/common/fuzzySearch';
-import { getHoiDongById, createHoiDong } from '../../api/hoiDongAPI';
+import { getHoiDongById, createHoiDong, updateHoiDongById } from '../../api/hoiDongAPI';
 import { getPhongHocs } from '../../api/phongHocAPI';
 import { getDeTais } from '../../api/deTaiAPI';
 import { getGiangViens } from '../../api/giangVienAPI';
@@ -91,16 +91,15 @@ const CreateOrEditHoiDongPage = () => {
         })
   }, []);
   const onUpdateClick = () => {
-    /* console.log(giangVien);
-    // TODO: Validation
-    updateGiangVienById(id, giangVien)
+    console.log(hoiDong);
+    updateHoiDongById(id, hoiDong)
       .then((res) => {
         console.log(res);
-        history.push('/giang-vien');
+        history.push('/hoi-dong');
       })
       .catch((err) => {
         console.log(err);
-      }); */
+      });
   }
 
   const onCreateClick = () => {
@@ -108,6 +107,7 @@ const CreateOrEditHoiDongPage = () => {
     createHoiDong(hoiDong)
       .then((res) => {
         console.log(res);
+        history.push('/hoi-dong');
       })
       .catch((err) => {
         console.log(err);

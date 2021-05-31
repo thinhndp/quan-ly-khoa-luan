@@ -12,10 +12,10 @@ export const createHoiDong = (hoiDong) => {
   return axios.post('/hoi-dongs', hoiDong);
 }
 
-// export const deletePhongHocById = (id) => {
-//   return axios.delete(`/phong-hocs/${id}`);
-// }
+export const deleteHoiDongById = (id) => {
+  return axios.delete(`/hoi-dongs/${id}`);
+}
 
-// export const updatePhongHocById = (id, phongHoc) => {
-//   return axios.post(`/phong-hocs/${id}`, phongHoc);
-// }
+export const updateHoiDongById = (id, hoiDong) => {
+  return axios.post(`/hoi-dongs/${id}`, hoiDong);
+}

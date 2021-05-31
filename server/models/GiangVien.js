@@ -7,7 +7,11 @@ export const GiangVienSchema = mongoose.Schema({
   hocHam: String,
   phone: String,
   email: String,
-  huongNghienCuu: String
+  huongNghienCuu: String,
+  hoiDong: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'HoiDong'
+  },
 });
 
 GiangVienSchema.plugin(upsertMany);
