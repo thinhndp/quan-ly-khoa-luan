@@ -2,7 +2,7 @@ import React from "react";
 import { Redirect } from "react-router-dom";
 
 // Layout Types
-import { DefaultLayout, None } from "./layouts";
+import { DefaultLayout, None, SV_Layout } from "./layouts";
 
 // Route Views
 import BlogOverview from "./views/BlogOverview";
@@ -30,6 +30,7 @@ import ListFile from './views/ThuMuc/ListFile';
 import ListBieuMau from './views/BieuMau/ListBieuMau';
 import ListHoiDong from './views/HoiDong/ListHoiDong';
 import CreateOrEditHoiDongPage from './views/HoiDong/CreateOrEditHoiDongPage';
+import SV_TinTuc from './views/SV_TinTuc/SV_TinTuc';
 
 export default [
   {
@@ -160,6 +161,11 @@ export default [
     path: "/hoi-dong/create-or-edit/:id",
     layout: DefaultLayout,
     component: CreateOrEditHoiDongPage
+  },
+  {
+    path: "/tin-tuc",
+    layout: SV_Layout,
+    component: SV_TinTuc
   },
   {
     path: "/test",

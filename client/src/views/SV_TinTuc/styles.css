@@ -1,0 +1,13 @@
+.tin_tuc_page-container {
+  padding: 2rem 0;
+  display: flex;
+}
+
+.posts-container {
+  flex: 2;
+}
+
+.calendar-container {
+  flex: 1;
+  padding: 0 1rem;
+}

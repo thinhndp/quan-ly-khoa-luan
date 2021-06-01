@@ -1,5 +1,9 @@
 import axios from 'axios';
 
+export const getAllPosts = () => {
+  return axios.get('/posts');
+}
+
 export const getPostById = (id) => {
   return axios.get(`/posts/${id}`);
 }
