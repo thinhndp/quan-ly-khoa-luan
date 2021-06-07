@@ -7,6 +7,10 @@ export const GIANG_VIEN_HOC_HAM_THS = 'ThS.';
 export const GIANG_VIEN_HOC_HAM_PGS_TS = 'PGS.TS.';
 export const GIANG_VIEN_HOC_HAM_TS = 'TS.';
 
+export const KY_THUC_HIEN_STATUS_NOT_STARTED = 'CBD';
+export const KY_THUC_HIEN_STATUS_ON_GOING = 'DDR';
+export const KY_THUC_HIEN_STATUS_FINISHED = 'DKT';
+
 export const DE_TAI_HDT_DAI_TRA = 'DT';
 export const DE_TAI_HDT_CHAT_LUONG_CAO = 'CLC';
 

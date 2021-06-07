@@ -20,6 +20,7 @@ import EditGiangVienPage from './views/GiangVien/EditGiangVienPage';
 import ListBaiDang from './views/BaiDang/ListBaiDang';
 import NewBaiDang from './views/BaiDang/NewBaiDang';
 import ListDeTai from './views/DeTai/ListDeTai';
+import EditDeTaiPage from './views/DeTai/EditDeTaiPage';
 import CreateOrEditBaiDang from './views/BaiDang/CreateOrEditBaiDang';
 import PreviewBaiDang from './views/BaiDang/PreviewBaiDang';
 import TestPage from './views/TestPage/TestPage';
@@ -28,6 +29,7 @@ import LoginPage from './views/Login/LoginPage';
 import ListThuMuc from './views/ThuMuc/ListThuMuc';
 import ListFile from './views/ThuMuc/ListFile';
 import ListBieuMau from './views/BieuMau/ListBieuMau';
+import ListKyThucHien from './views/KyThucHien/ListKyThucHien';
 import ListHoiDong from './views/HoiDong/ListHoiDong';
 import CreateOrEditHoiDongPage from './views/HoiDong/CreateOrEditHoiDongPage';
 import SV_TinTuc from './views/SV_TinTuc/SV_TinTuc';
@@ -131,6 +133,12 @@ export default [
     component: ListDeTai
   },
   {
+    path: "/de-tai/:id",
+    layout: DefaultLayout,
+    exact: true,
+    component: EditDeTaiPage
+  },
+  {
     path: "/thu-muc",
     layout: DefaultLayout,
     exact: true,
@@ -145,6 +153,11 @@ export default [
     path: "/bieu-mau",
     layout: DefaultLayout,
     component: ListBieuMau
+  },
+  {
+    path: "/ky-thuc-hien",
+    layout: DefaultLayout,
+    component: ListKyThucHien
   },
   {
     path: "/hoi-dong",

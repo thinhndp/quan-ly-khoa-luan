@@ -2,7 +2,8 @@ import DeTai from '../models/DeTai.js';
 import SinhVien from '../models/SinhVien.js';
 
 export const getDeTais = (req, res) => {
-  DeTai.find()
+  console.log('getDeTais');
+  DeTai.find().populate('giangVien').populate('sinhVienThucHien')
     .then((deTais) => {
       res.status(200).json(deTais);
     })
@@ -11,19 +12,47 @@ export const getDeTais = (req, res) => {
     })
 }
 
-export const createManyDeTais = (req, res) => {
-  const deTais = req.body;
-  console.log(deTais);
-  DeTai.insertMany(deTais)
-    .then(() => {
-      res.status(201).json(deTais);
+export const getDeTaiById = (req, res) => {
+  console.log('getDeTaiById');
+  const { id } = req.params;
+  DeTai.findOne({ _id: id }).populate('giangVien').populate('sinhVienThucHien')
+    .then((deTai) => {
+      res.status(200).json(deTai);
     })
     .catch((err) => {
       res.status(400).json({ message: err.message });
     })
 }
 
+export const updateDeTaiById = (req, res) => {
+  console.log('updateDeTaiById');
+  const { id } = req.params;
+  const deTai = req.body;
+
+  DeTai.findOneAndReplace({ _id: id }, deTai)
+    .then(() => {
+      res.status(200).json(deTai);
+    })
+    .catch((err) => {
+      res.status(400).json({ message: err.message });
+    })
+}
+
+export const createManyDeTais = (req, res) => {
+  console.log('createManyDeTais');
+  const deTais = req.body;
+  console.log(deTais);
+  DeTai.insertMany(deTais)
+    .then(() => {
+      res.status(201).json(deTais);
+    })
+    // .catch((err) => {
+    //   res.status(400).json({ message: err.message });
+    // })
+}
+
 export const deleteDeTaiById = (req, res) => {
+  console.log('deleteDeTaiById');
   DeTai.deleteOne({ _id: req.params.id })
     .then(() => {
       res.status(201).json(req.params.id);
@@ -34,6 +63,7 @@ export const deleteDeTaiById = (req, res) => {
 }
 
 export const applyForDeTai = (req, res) => {
+  console.log('applyForDeTai');
   const { sinhVienId, deTaiId } = req.body;
   const dtPromise = DeTai.findOne({ _id: deTaiId });
   const svPromise = SinhVien.findOne({ _id: sinhVienId });

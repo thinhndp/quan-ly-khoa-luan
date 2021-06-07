@@ -18,15 +18,13 @@ import userAtom from '../../recoil/user';
 import CustomModal from '../../components/common/CustomModal/CustomModal';
 import "./dx-button.css";
 
-const DeXuatButton = ({ renderAs }) => {
+const DeXuatButton = ({ renderAs, onCompleted }) => {
   const currentUser = useRecoilValue(userAtom);
   const [ isOpen, setIsOpen ] = useState(false);
   const [ deXuatCount, setDeXuatCount ] = useState(1);
   const [ deXuatList, setDeXuatList ] = useState([{
     tmpId: Utils.ID(),
-    deTaiName: '',
-    heDaoTao: '',
-    moTa: ''
+    ...Utils.getNewDeTai()
   }]);
   const [ selectedIndex, setSelectedIndex ] = useState(0);
   const [ giangVien, setGiangVien ] = useState({});
@@ -157,7 +155,7 @@ const DeXuatButton = ({ renderAs }) => {
     console.log(deXuatList);
   }, [deXuatList]);
   const onAddDeXuatClick = () => {
-    setDeXuatList([ ...deXuatList, { tmpId: Utils.ID(), deTaiName: '', heDaoTao: '' } ]);
+    setDeXuatList([ ...deXuatList, { tmpId: Utils.ID(), ...Utils.getNewDeTai() } ]);
   }
   const onRemoveClick = (id) => {
     if (deXuatCount <= 1) {
@@ -171,9 +169,9 @@ const DeXuatButton = ({ renderAs }) => {
     console.log(deXuatList);
     const deTais = [];
     deXuatList.map((deXuat) => {
-      const deTai = {};
+      const deTai = Utils.getNewDeTai();
       deTai.tenDeTai = deXuat.deTaiName;
-      deTai.giangVien = giangVien;
+      deTai.giangVien = giangVien._id;
       deTai.heDaoTao = deXuat.heDaoTao;
       deTai.moTa = deXuat.moTa;
       deTais.push(deTai);
@@ -185,11 +183,12 @@ const DeXuatButton = ({ renderAs }) => {
         console.log(res);
         // history.push('/de-tai');
         setIsOpen(false);
+        if (onCompleted) {
+          onCompleted();
+        }
         setDeXuatList([{
           tmpId: Utils.ID(),
-          deTaiName: '',
-          heDaoTao: '',
-          moTa: ''
+          ...Utils.getNewDeTai()
         }]);
       })
       .catch((err) => {

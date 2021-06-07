@@ -83,7 +83,7 @@ const ListDeTai = () => {
   }
 
   const onEditClick = (id) => {
-    // history.push('/bai-dang/create-or-edit', { postId: id });
+    history.push(`/de-tai/${id}`);
   }
   const onDeleteClick = (id) => {
     // console.log(id);
@@ -122,6 +122,10 @@ const ListDeTai = () => {
     getDeTaiList();
   }
 
+  const onCompleted = () => {
+    getDeTaiList();
+  }
+
   return (
     <Container fluid className="main-content-container px-4">
       {/* Page Header */}
@@ -138,7 +142,7 @@ const ListDeTai = () => {
                 <span class="pr-05r"/>
                 <Button onClick={toggleDKModal}>Tùy chỉnh điều kiện</Button>
                 <span class="pr-05r"/>
-                <DeXuatButton />
+                <DeXuatButton onCompleted={onCompleted}/>
                 <span class="pr-05r"/>
                 {/* <DangKyDTButton /> */}
               </Row>

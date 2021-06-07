@@ -7,7 +7,11 @@ const deTaiSchema = mongoose.Schema({
     type: String,
     required: true
   },
-  giangVien: GiangVienSchema,
+  // giangVien: GiangVienSchema,
+  giangVien: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'GiangVien'
+  },
   trangThaiDuyet: {
     type: String,
     enum: [ 'CD', 'DD', 'DTC' ],
@@ -32,13 +36,7 @@ const deTaiSchema = mongoose.Schema({
     type: [{
       type: mongoose.Schema.Types.ObjectId,
       ref: 'SinhVien'
-    }],
-    validate: {
-      validator: function(v) {
-        return !(this.sinhVienThucHien.length > 2);
-      },
-      message: props => `${props.value} exceeds the maximum array size (2)!`
-    }
+    }]
   },
   sinhVien1: SinhVienSchema,
   sinhVien2: SinhVienSchema,

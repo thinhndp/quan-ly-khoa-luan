@@ -1,6 +1,11 @@
 export default function() {
   return [
     {
+      title: "Quản lý Kỳ thực hiện Khóa luận",
+      htmlBefore: '<i class="material-icons">table_chart</i>',
+      to: "/ky-thuc-hien",
+    },
+    {
       title: "Quản lý Giảng viên",
       htmlBefore: '<i class="material-icons">person</i>',
       to: "/giang-vien",

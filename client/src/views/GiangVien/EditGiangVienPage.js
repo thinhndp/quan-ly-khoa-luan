@@ -115,7 +115,7 @@ const EditGiangVienPage = () => {
                             autoComplete="email"
                           />
                         </Col>
-                        {/* Password */}
+                        {/* Phone */}
                         <Col md="6" className="form-group">
                           <label htmlFor="fePhone">Số điện thoại</label>
                           <FormInput

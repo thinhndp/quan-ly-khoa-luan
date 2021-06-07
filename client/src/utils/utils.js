@@ -22,6 +22,10 @@ export const getNewBieuMau = () => {
   return ({ name: "", link: "" });
 }
 
+export const getNewKyThucHien = () => {
+  return ({ name: "", status: "CBD", startDate: null, endDate: null });
+}
+
 export const getNewPhongHoc = () => {
   return ({ name: "" });
 }
@@ -39,6 +43,7 @@ export const getNewPost = (userId) => {
     hasDKDTButton: false
   });
 }
+
 export const getNewHoiDong = () => {
   return ({
     name: "",
@@ -51,6 +56,19 @@ export const getNewHoiDong = () => {
     startAt: "",
     endAt: "",
     deTais: []
+  });
+}
+
+export const getNewDeTai = () => {
+  return ({
+    tenDeTai: "",
+    giangVien: "",
+    trangThaiDuyet: "CD",
+    trangThaiThucHien: "-",
+    heDaoTao: "",
+    diemSo: 0,
+    sinhVienThucHien: [],
+    moTa: "",
   });
 }
 
@@ -118,6 +136,19 @@ export const getSinhVienStatusText = (abbr) => {
       return "Đã hoàn thành";
     case Constants.SINH_VIEN_STATUS_ABANDONED:
       return "Đã dừng";
+    default:
+      return "-";
+  }
+}
+
+export const getKyThucHienStatusText = (abbr) => {
+  switch(abbr) {
+    case Constants.KY_THUC_HIEN_STATUS_NOT_STARTED:
+      return "Chưa bắt đầu";
+    case Constants.KY_THUC_HIEN_STATUS_ON_GOING:
+      return "Đang diễn ra";
+    case Constants.KY_THUC_HIEN_STATUS_FINISHED:
+      return "Đã hoàn thành";
     default:
       return "-";
   }

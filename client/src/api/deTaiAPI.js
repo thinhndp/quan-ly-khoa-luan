@@ -4,6 +4,14 @@ export const getDeTais = () => {
   return axios.get('/de-tais');
 }
 
+export const getDeTaiById = (id) => {
+  return axios.get(`/de-tais/${id}`);
+}
+
+export const updateDeTaiById = (id, deTai) => {
+  return axios.post(`/de-tais/update/${id}`, deTai);
+}
+
 export const createManyDeTais = (deTais) => {
   return axios.post('/de-tais/create-many', deTais);
 }
