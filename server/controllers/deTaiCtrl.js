@@ -42,15 +42,17 @@ export const applyForDeTai = (req, res) => {
       let deTai = prRes[0];
       let sinhVien = prRes[1];
       console.log('alo');
-      console.log(deTai);
-      console.log(sinhVien);
+      // console.log(deTai);
+      // console.log(sinhVien);
       if (sinhVien != null) {
-        if (sinhVien.status != 'CDK') {
+        /* if (sinhVien.status != 'CDK') {
           console.log("Sinh viên đã đăng ký");
           throw new Error("Sinh viên đã đăng ký");
-        }
+        } */
 
         sinhVien.status = 'DTH';
+        deTai.sinhVienThucHien = [ ...deTai.sinhVienThucHien, sinhVienId ];
+        console.log(deTai);
         if (deTai.sinhVien1 == null) {
           deTai.sinhVien1 = sinhVien;
         }
@@ -65,6 +67,7 @@ export const applyForDeTai = (req, res) => {
         const dtUpdatePromise = DeTai.findByIdAndUpdate({ _id: deTai._id }, deTai);
         Promise.all([ svUpdatePromise, dtUpdatePromise ])
           .then((pr2Res) => {
+            console.log('pr2Res');
             res.status(201).json(pr2Res);
           })
       }

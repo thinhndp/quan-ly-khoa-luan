@@ -1,12 +1,25 @@
 import mongoose from 'mongoose';
 
 const postSchema = mongoose.Schema({
-  title: String,
-  content: String,
+  title: {
+    type: String,
+    required: true
+  },
+  content: {
+    type: String,
+    default: ""
+  },
   creator: String,
   // category: [ String ],
-  type: String,
-  isPosted: Boolean,
+  type: {
+    type: String,
+    enum: ['NB', 'CK'],
+    default: 'NB'
+  },
+  isPosted: {
+    type: Boolean,
+    default: false
+  },
   postedTime: {
     type: Date,
     default: new Date()
@@ -15,7 +28,15 @@ const postSchema = mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'ThuMuc'
   },
-  submitterObj: {
+  hasDeXuatButton: {
+    type: Boolean,
+    default: false
+  },
+  hasDKDTButton: {
+    type: Boolean,
+    default: false
+  },
+  /* submitterObj: {
     name: {
       type: String,
       required: true
@@ -27,7 +48,7 @@ const postSchema = mongoose.Schema({
       type: String,
       required: true
     }
-  },
+  }, */
 });
 
 const Post = mongoose.model('Post', postSchema, 'Post');

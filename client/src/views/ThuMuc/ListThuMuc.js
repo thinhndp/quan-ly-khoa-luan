@@ -158,12 +158,12 @@ const ListThuMuc = () => {
                     style={{ display: 'none' }} onChange={(e) => handleImportList(e)} on />
                 </div>
               } */}
-              <ButtonGroup className="mr-2">
+              <ButtonGroup className="mr-2 btn-group">
                 <Button onClick={() => { switchView(1) }}>
-                  <ViewListIcon />
+                  <ViewListIcon fontSize="small"/>
                 </Button>
                 <Button onClick={() => { switchView(0) }}>
-                  <ViewModuleIcon />
+                  <ViewModuleIcon fontSize="small"/>
                 </Button>
               </ButtonGroup>
               <Button onClick={toggleModal}>Tạo mới</Button>

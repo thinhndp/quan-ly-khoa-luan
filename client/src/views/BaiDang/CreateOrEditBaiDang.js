@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Container, Row, Col, Card, CardBody, Form, FormInput, Button } from "shards-react";
+import { useRecoilValue } from 'recoil';
 import moment from 'moment';
 import ReactQuill from "react-quill";
 import axios from "axios";
@@ -15,16 +16,12 @@ import SidebarCategories from "../../components/add-new-post/SidebarCategories";
 import PostReader from '../../components/post/PostReader';
 import { getPostById, getPostWSubmitterById } from '../../api/postAPI';
 import { getThuMucById } from '../../api/fileNopAPI';
+import * as Utils from '../../utils/utils';
+import userAtom from '../../recoil/user';
 
 const CreateOrEditBaiDang = () => {
-  const [ newPost, setNewPost ] = useState({
-    title: '',
-    content: '',
-    creator: '01234',
-    type: 'NB',
-    isPosted: false,
-    postedTime: moment().toISOString()
-  });
+  const currentUser = useRecoilValue(userAtom);
+  const [ newPost, setNewPost ] = useState(Utils.getNewPost(currentUser._id));
   const [ submitter, setSubmitter ] = useState(null);
   const [ content, setContent ] = useState('');
   const [ isShowPreview, setIsShowPreview ] = useState(false);
@@ -116,6 +113,13 @@ const CreateOrEditBaiDang = () => {
     // console.log("a..");
     setNewPost({ ...newPost, type: type });
   }
+  const onHasDXButtonChange = (val) => {
+    setNewPost({ ...newPost, hasDeXuatButton: val });
+  }
+
+  const onHasDKDTButtonChange = (val) => {
+    setNewPost({ ...newPost, hasDKDTButton: val });
+  }
 
   const onThuMucChange = (thuMucId) => {
     console.log(thuMucId);
@@ -138,7 +142,6 @@ const CreateOrEditBaiDang = () => {
                 <Form className="add-new-post">
                   <FormInput size="lg" className="mb-3" placeholder="Tên bài đăng"
                     value={newPost.title} onChange={(e) => { setNewPost({ ...newPost, title: e.target.value}) }}/>
-                    PreviewBaiDang
                   <ReactQuill className="add-new-post__editor mb-1"
                     value={content} onChange={(html) => { setContent(html) }}/>
                 </Form>
@@ -150,7 +153,8 @@ const CreateOrEditBaiDang = () => {
           <Col lg="3" md="12">
             <SidebarActions onSaveClick={onSaveClick} onPreviewClick={onPreviewClick}
               post={newPost} onLoaiTinChange={onLoaiTinChange} onPostClick={onPostClick}
-              onThuMucChange={onThuMucChange} thuMuc={submitter}/>
+              onThuMucChange={onThuMucChange} thuMuc={submitter}
+              onHasDXButtonChange={onHasDXButtonChange} onHasDKDTButtonChange={onHasDKDTButtonChange}/>
             {/* <SidebarCategories /> */}
           </Col>
         </Row>

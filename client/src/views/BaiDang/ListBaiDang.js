@@ -70,7 +70,7 @@ const ListBaiDang = () => {
             <CardBody>
               <div className="relative_wrap">
                 <h5>{post.title}</h5>
-                <PostReader post={post}/>
+                <PostReader post={post} asPreview/>
                 {/* <ReactQuill className="card-text text-muted"
                     value={post.content} readOnly={true} theme={"bubble"}/> */}
                 {/* <p className="card-text text-muted">{post.content}</p> */}
@@ -112,7 +112,7 @@ const ListBaiDang = () => {
     <Container fluid className="main-content-container px-4">
       {/* Page Header */}
       <Row noGutters className="page-header py-4">
-        <PageTitle sm="4" title="Danh sách Bài đăng" subtitle="QUẢN LÝ BÀI ĐĂNG" className="text-sm-left" />
+        <PageTitle sm="4" title="Danh sách Thông báo" subtitle="QUẢN LÝ THÔNG BÁO" className="text-sm-left" />
       </Row>
 
       {/* Table */}
@@ -121,12 +121,12 @@ const ListBaiDang = () => {
           <Card small className="mb-4">
             <CardHeader className="border-bottom">
               {/* <h6 className="m-0">Active Users</h6> */}
-              <ButtonGroup className="mr-2">
+              <ButtonGroup className="mr-2 btn-group">
                 <Button onClick={() => { switchView(1) }}>
-                  <ViewListIcon />
+                  <ViewListIcon fontSize="small"/>
                 </Button>
                 <Button onClick={() => { switchView(0) }}>
-                  <ViewModuleIcon />
+                  <ViewModuleIcon fontSize="small"/>
                 </Button>
               </ButtonGroup>
               <Button onClick={onNewPostClick}>Bài đăng mới</Button>

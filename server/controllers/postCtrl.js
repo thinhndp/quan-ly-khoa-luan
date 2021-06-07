@@ -11,6 +11,26 @@ export const getPosts = (req, res) => {
     });
 };
 
+export const getPublicPosts = (req, res) => {
+  Post.find({ type: 'CK', isPosted: true  })
+    .then((posts) => {
+      res.status(200).json(posts);
+    })
+    .catch((err) => {
+      res.status(400).json({ message: err.message });
+    });
+};
+
+export const getPrivatePosts = (req, res) => {
+  Post.find({ isPosted: true })
+    .then((posts) => {
+      res.status(200).json(posts);
+    })
+    .catch((err) => {
+      res.status(400).json({ message: err.message });
+    });
+};
+
 export const getPostById = (req, res) => {
   Post.findOne({ _id: req.params.id })
     .then((post) => {
@@ -22,16 +42,18 @@ export const getPostById = (req, res) => {
 }
 
 export const getPostWSubmitterById = (req, res) => {
-  Post.findOne({ _id: req.params.id })
+  console.log(req.params.id);
+  Post.findOne({ _id: req.params.id }).populate('submitter')
     .then((post) => {
-      if (post.submitter != null) {
+      res.status(201).json(post);
+      /* if (post.submitter != null) {
         ThuMuc.findOne({ _id: post.submitter })
           .then((thuMuc) => {
             let returnedPost = post;
             returnedPost.submitterObj = thuMuc;
             res.status(201).json(returnedPost);
           })
-      }
+      } */
     })
     .catch((err) => {
       res.status(400).json({ message: err.message });
@@ -42,13 +64,15 @@ export const createPost = (req, res) => {
   const post = req.body;
   const newPost = new Post(post);
 
+  console.log(post);
+
   newPost.save()
     .then(() => {
       res.status(201).json(newPost);
     })
-    .catch((err) => {
-      res.status(400).json({ message: err.message });
-    });
+    // .catch((err) => {
+    //   res.status(400).json({ message: err.message });
+    // });
 };
 
 export const updatePostById = (req, res) => {

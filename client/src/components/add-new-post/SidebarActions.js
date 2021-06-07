@@ -8,8 +8,11 @@ import {
 } from "shards-react";
 import SubmitterPicker from "../SubmitterPicker/SubmitterPicker";
 
-const SidebarActions = ({ title, onSaveClick, onPreviewClick, post, onLoaiTinChange, onPostClick, onThuMucChange, thuMuc }) => {
+const SidebarActions = ({ title, onSaveClick, onPreviewClick, post, onLoaiTinChange, onHasDXButtonChange,
+    onHasDKDTButtonChange, onPostClick, onThuMucChange, thuMuc }) => {
   const [ isOpenLoaiTin, setIsOpenLoaiTin ] = useState(false);
+  const [ isOpenDXButton, setIsOpenDXButton ] = useState(false);
+  const [ isOpenDKDTButton, setIsOpenDKDTButton ] = useState(false);
   const [ submitter, setSubmitter ] = useState(null);
   const [ submitterName, setSubmitterName ] = useState("Không");
 
@@ -32,6 +35,12 @@ const SidebarActions = ({ title, onSaveClick, onPreviewClick, post, onLoaiTinCha
   }, [submitter]);
   const toggleLoaiTin = () => {
     setIsOpenLoaiTin(!isOpenLoaiTin);
+  }
+  const toggleDX = () => {
+    setIsOpenDXButton(!isOpenDXButton);
+  }
+  const toggleDKDT = () => {
+    setIsOpenDKDTButton(!isOpenDKDTButton);
   }
   const onSelectSubmitter = (thuMuc) => {
     setSubmitter(thuMuc);
@@ -84,6 +93,36 @@ const SidebarActions = ({ title, onSaveClick, onPreviewClick, post, onLoaiTinCha
                 }/>
               </div>
             </span>
+            <span className="d-flex mb-2">
+              <i className="material-icons mr-1">assignment</i>
+              <strong className="mr-1">Thêm nút đề xuất:</strong>{" "}
+              <strong style={post.hasDeXuatButton ? { color: "#007BFF" } : {}}
+                  >{post.hasDeXuatButton ? ' Có ' : ' Không '}</strong>{" "}
+              <Dropdown className="ml-auto" open={isOpenDXButton} toggle={toggleDX}>
+                <a href="#" onClick={toggleDX}>
+                  Sửa
+                </a>
+                <DropdownMenu right>
+                  <DropdownItem onClick={() => onHasDXButtonChange(true)}>Có</DropdownItem>
+                  <DropdownItem onClick={() => onHasDXButtonChange(false)}>Không</DropdownItem>
+                </DropdownMenu>
+              </Dropdown>
+            </span>
+            <span className="d-flex mb-2">
+              <i className="material-icons mr-1">assignment_ind</i>
+              <strong className="mr-1">Thêm nút Đăng ký Đề tài:</strong>{" "}
+              <strong style={post.hasDKDTButton ? { color: "#007BFF" } : {}}
+                  >{post.hasDKDTButton ? ' Có ' : ' Không '}</strong>{" "}
+              <Dropdown className="ml-auto" open={isOpenDKDTButton} toggle={toggleDKDT}>
+                <a href="#" onClick={toggleDKDT}>
+                  Sửa
+                </a>
+                <DropdownMenu right>
+                  <DropdownItem onClick={() => onHasDKDTButtonChange(true)}>Có</DropdownItem>
+                  <DropdownItem onClick={() => onHasDKDTButtonChange(false)}>Không</DropdownItem>
+                </DropdownMenu>
+              </Dropdown>
+            </span>
             {/* <span className="d-flex mb-2">
               <i className="material-icons mr-1">calendar_today</i>
               <strong className="mr-1">Lịch đăng:</strong> Bây giờ{" "}
@@ -122,7 +161,7 @@ SidebarActions.propTypes = {
 };
 
 SidebarActions.defaultProps = {
-  title: "Actions"
+  title: "Thuộc tính"
 };
 
 export default SidebarActions;

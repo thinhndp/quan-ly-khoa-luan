@@ -140,7 +140,7 @@ const ListDeTai = () => {
                 <span class="pr-05r"/>
                 <DeXuatButton />
                 <span class="pr-05r"/>
-                <DangKyDTButton />
+                {/* <DangKyDTButton /> */}
               </Row>
             </CardHeader>
             <CardBody className="p-0 pb-3">

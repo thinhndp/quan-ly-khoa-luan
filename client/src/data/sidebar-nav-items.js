@@ -2,12 +2,12 @@ export default function() {
   return [
     {
       title: "Quản lý Giảng viên",
-      htmlBefore: '<i class="material-icons">table_chart</i>',
+      htmlBefore: '<i class="material-icons">person</i>',
       to: "/giang-vien",
     },
     {
       title: "Quản lý Sinh viên",
-      htmlBefore: '<i class="material-icons">table_chart</i>',
+      htmlBefore: '<i class="material-icons">person</i>',
       to: "/sinh-vien",
     },
     {
@@ -21,23 +21,23 @@ export default function() {
     //   to: "/add-new-post",
     // },
     {
-      title: "Quản lý Bài đăng",
-      htmlBefore: '<i class="material-icons">note_add</i>',
+      title: "Quản lý Thông báo",
+      htmlBefore: '<i class="material-icons">library_books</i>',
       to: "/bai-dang",
     },
     {
       title: "Quản lý File nộp",
-      htmlBefore: '<i class="material-icons">note_add</i>',
+      htmlBefore: '<i class="material-icons">file_copy</i>',
       to: "/thu-muc",
     },
     {
       title: "Quản lý Hội đồng chấm",
-      htmlBefore: '<i class="material-icons">note_add</i>',
+      htmlBefore: '<i class="material-icons">people_alt</i>',
       to: "/hoi-dong",
     },
     {
       title: "Quản lý Biểu mẫu",
-      htmlBefore: '<i class="material-icons">note_add</i>',
+      htmlBefore: '<i class="material-icons">description</i>',
       to: "/bieu-mau",
     },
     {

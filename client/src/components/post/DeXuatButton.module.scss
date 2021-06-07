@@ -14,15 +14,15 @@
     text-shadow: 0 0 10px white;
   }
 
-  .close-button {
-    position: absolute;
-    right: 20px;
-    top: 10px;
-    cursor: pointer;
-  }
-  .close-button:hover {
-    opacity: 0.7;
-  }
+}
+.close-button {
+  position: absolute;
+  right: 20px;
+  top: 10px;
+  cursor: pointer;
+}
+.close-button:hover {
+  opacity: 0.7;
 }
 .list-de-tai-container {
   margin-top: -20px;

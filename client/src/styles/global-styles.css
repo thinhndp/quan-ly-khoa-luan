@@ -58,6 +58,13 @@
   position: relative;
 }
 
+.absolute_child {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  top: 0;
+  left: 0;
+}
 .absolute_child-rb {
   position: absolute;
   right: 0;
@@ -72,4 +79,36 @@
 .nav-bar-icon {
   font-size: 2.25rem !important;
   margin: 0 0.75rem;
+}
+
+.c-fade {
+  position: relative;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  max-height: 200px;
+}
+.c-fade:after {
+  content: "";
+  text-align: right;
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 100%;
+  height: 1.2em;
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0), rgba(255, 255, 255, 1) 50%);
+}
+
+.clickable {
+  cursor: pointer;
+}
+
+.min_height_100 {
+  /* min-height: 100%; */
+  min-height: calc(100vh - 120px);
+}
+
+.btn-group .MuiSvgIcon-fontSizeSmall {
+  font-size: 0.75rem;
 }

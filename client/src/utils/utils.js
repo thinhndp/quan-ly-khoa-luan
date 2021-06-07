@@ -26,6 +26,19 @@ export const getNewPhongHoc = () => {
   return ({ name: "" });
 }
 
+export const getNewPost = (userId) => {
+  return ({
+    title: "",
+    content: "",
+    creator: userId,
+    type: "NB",
+    isPosted: false,
+    postedTime: (new Date()).toISOString(),
+    submitter: null,
+    hasDeXuatButton: false,
+    hasDKDTButton: false
+  });
+}
 export const getNewHoiDong = () => {
   return ({
     name: "",
@@ -39,6 +52,19 @@ export const getNewHoiDong = () => {
     endAt: "",
     deTais: []
   });
+}
+
+export const getUserTier = (user) => {
+  switch(user.role) {
+    case 'GiangVien':
+    case 'CanBoKhoa':
+    case 'ChuNhiemKhoa':
+      return 0;
+    case 'Khach':
+    case 'SinhVien':
+    default:
+      return 1;
+  }
 }
 
 export const getFileLogo = (fileName) => {
@@ -190,4 +216,8 @@ export const getUniqueUploader = (files) => {
   console.log('@@@retArr');
   console.log(retArr);
   return retArr;
+}
+
+export const getContentAsPreview = (content) => {
+  return content.substr(0, 200);
 }

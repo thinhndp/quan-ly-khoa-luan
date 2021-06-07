@@ -31,6 +31,7 @@ import ListBieuMau from './views/BieuMau/ListBieuMau';
 import ListHoiDong from './views/HoiDong/ListHoiDong';
 import CreateOrEditHoiDongPage from './views/HoiDong/CreateOrEditHoiDongPage';
 import SV_TinTuc from './views/SV_TinTuc/SV_TinTuc';
+import SV_ChiTietTinTuc from './views/SV_TinTuc/SV_ChiTietTinTuc';
 
 export default [
   {
@@ -163,9 +164,15 @@ export default [
     component: CreateOrEditHoiDongPage
   },
   {
-    path: "/tin-tuc",
+    path: "/thong-bao",
     layout: SV_Layout,
+    exact: true,
     component: SV_TinTuc
+  },
+  {
+    path: "/thong-bao/:id",
+    layout: SV_Layout,
+    component: SV_ChiTietTinTuc
   },
   {
     path: "/test",

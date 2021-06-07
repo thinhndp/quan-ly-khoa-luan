@@ -1,10 +1,13 @@
 import express from 'express';
 
 import { getPosts, createPost, deletePost, getPostById, getPostWSubmitterById,
-    updatePostById } from '../controllers/postCtrl.js';
+    updatePostById, getPublicPosts, getPrivatePosts } from '../controllers/postCtrl.js';
 
 const router = express.Router();
 
+router.get('/', getPosts);
+router.get('/public', getPublicPosts);
+router.get('/private', getPrivatePosts);
 router.get('/', getPosts);
 router.get('/:id', getPostById);
 router.get('/with-submitter/:id', getPostWSubmitterById);

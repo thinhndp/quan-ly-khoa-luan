@@ -8,7 +8,7 @@ import * as Utils from '../../utils/utils';
 
 import "./dang-ki-btn.css";
 
-const DangKyDTButton = () => {
+const DangKyDTButton = ({ renderAs }) => {
   const [ isOpen, setIsOpen ] = useState(false);
   const [ deTais, setDeTais ] = useState([]);
   const user = Utils.getUser();
@@ -38,6 +38,7 @@ const DangKyDTButton = () => {
     applyForDeTai(deTaiId, sinhVienId)
       .then((res) => {
         console.log(res);
+        setIsOpen(false);
       })
       .catch((err) => {
         console.log(err);
@@ -46,7 +47,15 @@ const DangKyDTButton = () => {
 
   return (
     <div>
-      <Button onClick={toggleModal}>DKDT</Button>
+      {
+        renderAs == null
+        ? (
+          <Button onClick={toggleModal}>Đăng ký Đề tài</Button>
+        )
+        : (
+          React.cloneElement( renderAs, { onClick: toggleModal } )
+        )
+      }
       <CustomModal
         isOpen={isOpen}
         toggle={toggleModal}
