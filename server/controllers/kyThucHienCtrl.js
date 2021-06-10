@@ -10,6 +10,16 @@ export const getKyThucHiens = (req, res) => {
     });
 };
 
+export const getOneActiveKyThucHien = (req, res) => {
+  KyThucHien.findOne({ status: 'DDR' })
+    .then((kyThucHien) => {
+      res.status(201).json(kyThucHien);
+    })
+    .catch((err) => {
+      res.status(400).json({ message: err.message });
+    });
+}
+
 export const getKyThucHienById = (req, res) => {
   KyThucHien.findOne({ _id: req.params.id })
     .then((kyThucHien) => {
@@ -37,13 +47,40 @@ export const updateKyThucHienById = (req, res) => {
   const kyThucHien = req.body;
   const id = req.params.id;
 
-  KyThucHien.updateOne({ _id: id }, kyThucHien)
-    .then(() => {
-      res.status(201).json(kyThucHien);
-    })
-    .catch((err) => {
-      res.status(400).json({ message: err.message });
-    });
+  if (kyThucHien.status == 'DDR') {
+    KyThucHien.findOne({ status: 'DDR' })
+      .then((activeKTH) => {
+        if (activeKTH != null && (activeKTH._id != kyThucHien._id)) {
+          var msg = 'Không thể có 2 Kỳ thực hiện Khóa luận diễn ra cùng lúc';
+          console.log(msg);
+          res.status(400).json({ message: msg });
+        }
+        else {
+          KyThucHien.updateOne({ _id: id }, kyThucHien)
+            .then(() => {
+              res.status(201).json(kyThucHien);
+            })
+            .catch((err) => {
+              console.log(err);
+              res.status(400).json({ message: err.message });
+            });
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+        res.status(400).json({ message: err.message });
+      });
+  }
+  else {
+    KyThucHien.updateOne({ _id: id }, kyThucHien)
+      .then(() => {
+        res.status(201).json(kyThucHien);
+      })
+      .catch((err) => {
+        console.log(err);
+        res.status(400).json({ message: err.message });
+      });
+  }
 }
 
 export const deleteKyThucHien = (req, res) => {

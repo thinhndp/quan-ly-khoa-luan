@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
-import { Button, FormInput, FormGroup, Row, Col } from "shards-react";
+import { Button, FormInput, FormGroup, Row, Col, FormSelect } from "shards-react";
 import MomentUtils from '@date-io/moment';
 import { DateTimePicker, MuiPickersUtilsProvider, DatePicker } from '@material-ui/pickers';
 
@@ -53,7 +53,7 @@ const CreateOrEditKyThucHienModal = ({ isModalOpen, toggleModal, selected, onClo
           console.log(res);
         })
         .catch((err) => {
-          console.log(err);
+          console.log(err.response);
         })
     }
   }
@@ -82,6 +82,20 @@ const CreateOrEditKyThucHienModal = ({ isModalOpen, toggleModal, selected, onClo
                 onChange={(e) => { setKyThucHien({ ...kyThucHien, name: e.target.value }) }}
               />
             </FormGroup>
+            {
+              (kyThucHien != null && kyThucHien._id != null) && (
+                <FormGroup>
+                  <label htmlFor="feKTHStatus">Trạng thái Kỳ thực hiện</label>
+                  <FormSelect value={kyThucHien.status} id="feKTHStatus"
+                      onChange={(e) => { setKyThucHien({ ...kyThucHien, status: e.target.value }) }}>
+                    <option value=''>Chọn...</option>
+                    <option value={Constants.KY_THUC_HIEN_STATUS_NOT_STARTED}>Chưa bắt đầu</option>
+                    <option value={Constants.KY_THUC_HIEN_STATUS_ON_GOING}>Đang diễn ra</option>
+                    <option value={Constants.KY_THUC_HIEN_STATUS_FINISHED}>Đã hoàn thành</option>
+                  </FormSelect>
+                </FormGroup>
+              )
+            }
             <Row form>
               <Col md="6" className="form-group">
                 <FormGroup>

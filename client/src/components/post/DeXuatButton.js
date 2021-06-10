@@ -12,6 +12,7 @@ import * as Utils from '../../utils/utils';
 import * as Constants from '../../constants/constants';
 import { MOCK_DATA } from '../../data/mock-data';
 import { getGiangVienByEmail } from '../../api/giangVienAPI';
+import { getOneActiveKyThucHien } from '../../api/kyThucHienAPI';
 import { createManyDeTais } from '../../api/deTaiAPI';
 import styles from './DeXuatButton.module.scss';
 import userAtom from '../../recoil/user';
@@ -28,6 +29,7 @@ const DeXuatButton = ({ renderAs, onCompleted }) => {
   }]);
   const [ selectedIndex, setSelectedIndex ] = useState(0);
   const [ giangVien, setGiangVien ] = useState({});
+  const [ kyThucHien, setKyThucHien ] = useState();
   let history = useHistory();
   useEffect(() => {
     getGiangVienByEmail({ email: currentUser.email })
@@ -41,7 +43,14 @@ const DeXuatButton = ({ renderAs, onCompleted }) => {
       })
       .catch((err) => {
         console.log(err);
+      });
+    getOneActiveKyThucHien()
+      .then((res) => {
+        setKyThucHien(res.data);
       })
+      .catch((err) => {
+        console.log(err.response);
+      });
   }, []);
   const toggleModal = () => {
     setIsOpen(!isOpen);
@@ -174,6 +183,7 @@ const DeXuatButton = ({ renderAs, onCompleted }) => {
       deTai.giangVien = giangVien._id;
       deTai.heDaoTao = deXuat.heDaoTao;
       deTai.moTa = deXuat.moTa;
+      deTai.kyThucHien = kyThucHien._id;
       deTais.push(deTai);
     });
     // console.log('de tai');

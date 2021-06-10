@@ -8,6 +8,10 @@ export const getKyThucHienById = (id) => {
   return axios.get(`/ky-thuc-hiens/${id}`);
 }
 
+export const getOneActiveKyThucHien = () => {
+  return axios.get('/ky-thuc-hiens/active');
+}
+
 export const createKyThucHien = (kyThucHien) => {
   return axios.post('/ky-thuc-hiens', kyThucHien);
 }

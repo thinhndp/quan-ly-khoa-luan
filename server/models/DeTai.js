@@ -40,7 +40,11 @@ const deTaiSchema = mongoose.Schema({
   },
   sinhVien1: SinhVienSchema,
   sinhVien2: SinhVienSchema,
-  moTa: String
+  moTa: String,
+  kyThucHien: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'KyThucHien'
+  }
 });
 
 const DeTai = mongoose.model('DeTai', deTaiSchema, 'DeTai');

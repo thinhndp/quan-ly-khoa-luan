@@ -4,6 +4,14 @@ export const getDeTais = () => {
   return axios.get('/de-tais');
 }
 
+export const getDeTaisWithQuery = (search = '') => {
+  const query = {
+    search: search
+  };
+  console.log(query);
+  return axios.post('/de-tais/q', query);
+}
+
 export const getDeTaiById = (id) => {
   return axios.get(`/de-tais/${id}`);
 }

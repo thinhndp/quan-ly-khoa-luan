@@ -24,6 +24,7 @@ import {
 import { getDeTaiById, updateDeTaiById } from '../../api/deTaiAPI';
 import { getGiangViens } from '../../api/giangVienAPI';
 import { getSinhViens } from '../../api/sinhVienAPI';
+import { getKyThucHiens } from '../../api/kyThucHienAPI';
 import * as Constants from '../../constants/constants';
 import * as Utils from '../../utils/utils';
 import PageTitle from "../../components/common/PageTitle";
@@ -34,6 +35,7 @@ const EditDeTaiPage = () => {
   const [ deTai, setDeTai ] = useState(Utils.getNewDeTai());
   const [ giangViens, setGiangViens ] = useState([]);
   const [ sinhViens, setSinhViens ] = useState([]);
+  const [ kyThucHiens, setKyThucHiens ] = useState([]);
 
   useEffect(() => {
     /* getDeTaiById(id)
@@ -52,7 +54,7 @@ const EditDeTaiPage = () => {
         })
         .catch((err) => {
           console.log(err);
-        })
+        });
       getGiangViens()
         .then((res) => {
           console.log(res);
@@ -60,7 +62,7 @@ const EditDeTaiPage = () => {
         })
         .catch((err) => {
           console.log(err);
-        })
+        });
       getSinhViens()
         .then((res) => {
           console.log(res);
@@ -68,6 +70,14 @@ const EditDeTaiPage = () => {
         })
         .catch((err) => {
           console.log(err);
+        });
+      getKyThucHiens()
+        .then((res) => {
+          console.log(res);
+          setKyThucHiens(res.data);
+        })
+        .catch((err) => {
+          console.log(err.response);
         })
   }, []);
   const onUpdateClick = () => {
@@ -109,16 +119,37 @@ const EditDeTaiPage = () => {
                         />
                       </FormGroup>
                       <FormGroup>
-                        <label>Giảng viên Hướng dẫn</label>
-                        <SelectSearch
-                          value={deTai.giangVien._id}
-                          search
-                          filterOptions={fuzzySearch}
-                          onChange={(e) => { setDeTai({ ...deTai, giangVien: e }) }}
-                          placeholder="Chọn Giảng viên Hướng dẫn"
-                          options={giangViens.map((gv) => ({ value: gv._id, name: gv.name }))}
+                        <label htmlFor={`feMoTa`}>Mô tả</label>
+                        <FormTextarea
+                          id={`feMoTa`}
+                          value={deTai.moTa}
+                          onChange={(e) => { setDeTai({ ...deTai, moTa: e.target.value }) }}
                         />
                       </FormGroup>
+                      <Row form>
+                        <Col md="6" className="form-group">
+                          <label>Kỳ thực hiện</label>
+                          <SelectSearch
+                            value={deTai.kyThucHien != null ? deTai.kyThucHien._id : null}
+                            search
+                            filterOptions={fuzzySearch}
+                            onChange={(e) => { setDeTai({ ...deTai, kyThucHien: e }) }}
+                            placeholder="Chọn Kỳ thực hiện Khóa luận"
+                            options={kyThucHiens.map((kth) => ({ value: kth._id, name: kth.name }))}
+                          />
+                        </Col>
+                        <Col md="6" className="form-group">
+                          <label>Giảng viên Hướng dẫn</label>
+                          <SelectSearch
+                            value={deTai.giangVien._id}
+                            search
+                            filterOptions={fuzzySearch}
+                            onChange={(e) => { setDeTai({ ...deTai, giangVien: e }) }}
+                            placeholder="Chọn Giảng viên Hướng dẫn"
+                            options={giangViens.map((gv) => ({ value: gv._id, name: gv.name }))}
+                          />
+                        </Col>
+                      </Row>
                       <Row form>
                         <Col md="6" className="form-group">
                           <label>Sinh viên 1</label>

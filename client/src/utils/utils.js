@@ -69,6 +69,7 @@ export const getNewDeTai = () => {
     diemSo: 0,
     sinhVienThucHien: [],
     moTa: "",
+    kyThucHien: "",
   });
 }
 

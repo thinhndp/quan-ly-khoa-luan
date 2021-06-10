@@ -1,9 +1,10 @@
 import DeTai from '../models/DeTai.js';
 import SinhVien from '../models/SinhVien.js';
+import KyThucHien from '../models/KyThucHien.js';
 
 export const getDeTais = (req, res) => {
   console.log('getDeTais');
-  DeTai.find().populate('giangVien').populate('sinhVienThucHien')
+  DeTai.find().populate('giangVien').populate('sinhVienThucHien').populate('kyThucHien')
     .then((deTais) => {
       res.status(200).json(deTais);
     })
@@ -12,10 +13,75 @@ export const getDeTais = (req, res) => {
     })
 }
 
+export const getDeTaisWithQuery = (req, res) => {
+  // const { filter, search } = req;
+  const search = new RegExp("^" + req.body.search);
+  console.log(search);
+  DeTai.find({ tenDeTai: { $regex: search, $options: "i" } }).populate('giangVien').populate('sinhVienThucHien').populate('kyThucHien')
+    .then((deTais) => {
+      var sortedDeTais = deTais.sort((dt1, dt2) => {
+        if (!dt1.kyThucHien && !dt2.kyThucHien) {
+          return 0;
+        }
+        if (!dt1.kyThucHien) {
+          return 1;
+        }
+        if (!dt2.kyThucHien) {
+          return -1;
+        }
+        if (!dt1.kyThucHien.startDate && !dt2.kyThucHien.startDate) {
+          return ('' + dt1.kyThucHien.name).localeCompare(dt2.kyThucHien.name);
+        }
+        if (!dt1.kyThucHien.startDate) {
+          return 1;
+        }
+        if (!dt2.kyThucHien.startDate) {
+          return -1;
+        }
+        return new Date(dt2.kyThucHien.startDate) - new Date(dt1.kyThucHien.startDate);
+      })
+      res.status(200).json(sortedDeTais);
+    })
+    .catch((err) => {
+      res.status(400).json({ message: err.message });
+    })
+  /* KyThucHien.findOne({ status: 'DDR' })
+    .then((kyThucHien) => {
+      var promises = [];
+      if (kyThucHien != null) {
+        console.log(kyThucHien._id);
+        const p1 = DeTai.find({ kyThucHien: kyThucHien._id }).populate('giangVien').populate('sinhVienThucHien').populate('kyThucHien');
+        const p2 = DeTai.find({ kyThucHien: { $ne: kyThucHien._id } }).populate('giangVien').populate('sinhVienThucHien').populate('kyThucHien');
+        promises = [ p1, p2 ];
+        console.log('2');
+      }
+      else {
+        const p = DeTai.find().populate('giangVien').populate('sinhVienThucHien').populate('kyThucHien');
+        promises = [ p ];
+        console.log('1');
+      }
+      Promise.all(promises)
+        .then((results) => {
+          var deTais = [];
+          for (var result of results) {
+            console.log(result);
+            deTais = [ ...deTais, ...result ];
+          }
+          res.status(200).json(deTais);
+        })
+        .catch((err) => {
+          res.status(400).json({ message: err.message });
+        })
+    })
+    .catch((err) => {
+      res.status(400).json({ message: err.message });
+    }); */
+}
+
 export const getDeTaiById = (req, res) => {
   console.log('getDeTaiById');
   const { id } = req.params;
-  DeTai.findOne({ _id: id }).populate('giangVien').populate('sinhVienThucHien')
+  DeTai.findOne({ _id: id }).populate('giangVien').populate('sinhVienThucHien').populate('kyThucHien')
     .then((deTai) => {
       res.status(200).json(deTai);
     })

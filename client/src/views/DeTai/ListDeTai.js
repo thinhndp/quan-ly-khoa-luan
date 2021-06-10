@@ -12,7 +12,7 @@ import commonStyles from '../../styles/CommonStyles.module.scss';
 import styles from './styles.module.scss';
 import PageTitle from "../../components/common/PageTitle";
 import ActionButtons from '../../components/common/ActionButtons';
-import { getDeTais, deleteDeTaiById } from '../../api/deTaiAPI';
+import { getDeTais, getDeTaisWithQuery, deleteDeTaiById } from '../../api/deTaiAPI';
 import { getSystemSettings, updateSystemSetting } from '../../api/systemSettingAPI';
 import CustomModal from '../../components/common/CustomModal/CustomModal';
 import { FormGroup } from "@material-ui/core";
@@ -47,13 +47,13 @@ const ListDeTai = () => {
   }, [selectedGV]);
 
   const getDeTaiList = () => {
-    getDeTais()
+    getDeTaisWithQuery()
       .then((res) => {
         console.log(res);
         setDeTais(res.data);
       })
       .catch((err) => {
-        console.log(err);
+        console.log(err.response);
       });
   }
 
@@ -158,6 +158,12 @@ const ListDeTai = () => {
                       Giảng viên Hướng dẫn
                     </th>
                     <th scope="col" className="border-0">
+                      Mô tả
+                    </th>
+                    <th scope="col" className="border-0">
+                      Kỳ thực hiện
+                    </th>
+                    <th scope="col" className="border-0">
                       Trạng thái duyệt
                     </th>
                     <th scope="col" className="border-0">
@@ -187,6 +193,8 @@ const ListDeTai = () => {
                           style={{ fontSize: '1rem' }} onClick={() => { onGVClick(deTai.giangVien) }}/>
                         </span>
                       </td>
+                      <td>{deTai.moTa}</td>
+                      <td>{(deTai.kyThucHien != null) ? deTai.kyThucHien.name : ''}</td>
                       <td>{Utils.getDeTaiApproveStatusText(deTai.trangThaiDuyet)}</td>
                       <td>{Utils.getDeTaiProgressStatusText(deTai.trangThaiThucHien)}</td>
                       <td>{deTai.heDaoTao}</td>
