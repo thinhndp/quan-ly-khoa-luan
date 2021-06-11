@@ -4,33 +4,41 @@ import { useHistory } from "react-router-dom";
 import xlsxParser from 'xlsx-parse-json';
 import { Container, Row, Col, Card, CardHeader, CardBody, Button } from "shards-react";
 
-import { getGiangViens, deleteGiangVienById, upsertGiangViens } from '../../api/giangVienAPI';
+import { getGiangViens, deleteGiangVienById, upsertGiangViens, getGiangViensWithQuery } from '../../api/giangVienAPI';
 import * as Utils from '../../utils/utils';
 
 import PageTitle from "../../components/common/PageTitle";
 import ActionButtons from '../../components/common/ActionButtons';
+import Pagination from '../../components/common/Pagination/Pagination';
 // import EditGiangVienModal from './EditGiangVienModal';
 
 const ListGiangVien = () => {
   const [ giangViens, setGiangViens ] = useState([]);
   const [ isFileResetting, setIsFileResetting ] = useState(false);
   const [ isOpenEditModal, setIsOpenEditModal ] = useState(false);
+  const [ resData, setResData ] = useState(Utils.getNewPageData());
   const inputFile = useRef(null);
   let history = useHistory();
   useEffect(() => {
     getList();
   }, []);
+
+  useEffect(() => {
+    setGiangViens(resData.docs);
+  }, [resData]);
+
   useEffect(() => {
     if (isFileResetting) {
       setIsFileResetting(false);
     }
   }, [isFileResetting]);
 
-  const getList = () => {
-    getGiangViens()
+  const getList = (search = '', pagingOptions = Utils.getNewPagingOptions()) => {
+    getGiangViensWithQuery(search, pagingOptions)
       .then((res) => {
         console.log(res);
-        setGiangViens(res.data);
+        // setGiangViens(res.data);
+        setResData(res.data);
       })
       .catch((err) => {
         console.log(err);
@@ -97,8 +105,8 @@ const ListGiangVien = () => {
                 </div>
               }
             </CardHeader>
-            <CardBody className="p-0 pb-3">
-              <table className="table mb-0">
+            <CardBody className="p-0 pb-3 c-table_container">
+              <table className="table mb-0 c-table">
                 <thead className="bg-light">
                   <tr>
                     <th scope="col" className="border-0">
@@ -144,6 +152,7 @@ const ListGiangVien = () => {
                   }
                 </tbody>
               </table>
+              <Pagination pageData={resData} getData={getList}/>
             </CardBody>
           </Card>
         </Col>

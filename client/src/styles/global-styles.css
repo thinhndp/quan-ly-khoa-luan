@@ -112,3 +112,53 @@
 .btn-group .MuiSvgIcon-fontSizeSmall {
   font-size: 0.75rem;
 }
+
+.c-table_container {
+  padding: 10px !important;
+}
+
+.c-table {
+  border: 1px solid rgba(0,0,0,.1);
+}
+
+.c-table tbody tr:hover {
+  background: #e0f3ff;
+}
+
+.c-table th {
+  text-align: center;
+  border-right: 1px solid #dee2e6 !important;
+  cursor: pointer;
+  color: #007bff;
+  background-color: rgba(0,0,0,.03);
+}
+
+.c-table td {
+  border-right: 1px solid #dee2e6 !important;
+}
+
+.c-table tbody tr:nth-child(2n) {
+  background-color: rgba(0,0,0,.03);
+}
+
+.t-button {
+  background: #fff;
+  transition: all .2s ease;
+  font-weight: 700;
+  font-size: 1em;
+  color: #007bff;
+}
+
+.t-button:hover {
+  background: #007bff;
+  color: #eee;
+}
+
+.t-button:disabled {
+  opacity: .5;
+  cursor: default;
+  border: none;
+  background: #f8f9fa;
+  color: #007bff;
+
+}

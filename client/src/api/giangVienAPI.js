@@ -1,7 +1,18 @@
 import axios from 'axios';
+import * as Utils from '../utils/utils';
 
 export const getGiangViens = () => {
   return axios.get('/giang-viens');
+}
+
+export const getGiangViensWithQuery = (search = '', pagingOptions = Utils.getNewPagingOptions()) => {
+  var options = {
+    search: search,
+    pagingOptions: pagingOptions,
+  };
+  console.log(options);
+  console.log(pagingOptions);
+  return axios.post('/giang-viens/q', options);
 }
 
 export const getGiangVienById = (id) => {

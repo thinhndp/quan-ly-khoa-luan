@@ -18,6 +18,28 @@ export const refreshPage = () => {
   window.location.reload();
 }
 
+export const getNewPagingOptions = (page = 1, limit = 10) => {
+  return ({
+    page: page,
+    limit: limit,
+  });
+}
+
+export const getNewPageData = () => {
+  return ({
+    docs: [],
+    totalDocs: 1,
+    limit: 10,
+    totalPages: 1,
+    page: 1,
+    pagingCounter: 1,
+    hasPrevPage: false,
+    hasNextPage: false,
+    prevPage: null,
+    nextPage: null
+  });
+}
+
 export const getNewBieuMau = () => {
   return ({ name: "", link: "" });
 }

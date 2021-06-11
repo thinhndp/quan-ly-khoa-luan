@@ -1,12 +1,14 @@
 import express from 'express';
 
 import { getGiangViens, createGiangVien, createManyGiangViens, updateGiangVienById,
-  deleteGiangVienById, upsertManyGiangViens, getGiangVienById, getGiangVienByEmail }
+  deleteGiangVienById, upsertManyGiangViens, getGiangVienById, getGiangVienByEmail,
+  getGiangViensWithQuery }
   from '../controllers/giangVienCtrl.js';
 
 const router = express.Router();
 
 router.get('/', getGiangViens);
+router.post('/q', getGiangViensWithQuery);
 router.get('/:id', getGiangVienById);
 router.post('/get-by-email', getGiangVienByEmail);
 router.post('/', createGiangVien);

@@ -11,6 +11,21 @@ export const getGiangViens = (req, res) => {
     })
 }
 
+export const getGiangViensWithQuery = (req, res) => {
+  console.log('pagingOptions');
+  console.log(req.body);
+  const { pagingOptions } = req.body;
+  console.log(pagingOptions);
+  GiangVien.paginate({}, pagingOptions)
+    .then((giangViens) => {
+      console.log(giangViens);
+      res.status(200).json(giangViens);
+    })
+    .catch((err) => {
+      res.status(400).json({ message: err.message });
+    })
+}
+
 export const getGiangVienById = (req, res) => {
   GiangVien.findOne({ _id: req.params.id })
     .then((giangVien) => {
