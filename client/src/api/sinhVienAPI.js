@@ -1,7 +1,16 @@
 import axios from 'axios';
+import * as Utils from '../utils/utils';
 
 export const getSinhViens = () => {
   return axios.get('/sinh-viens');
+}
+
+export const getSinhViensWithQuery = (search = '', pagingOptions = Utils.getNewPagingOptions()) => {
+  var options = {
+    search: search,
+    pagingOptions: pagingOptions,
+  };
+  return axios.post('/sinh-viens/q', options);
 }
 
 export const getSinhVienById = (id) => {

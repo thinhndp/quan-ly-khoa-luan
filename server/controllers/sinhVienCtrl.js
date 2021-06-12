@@ -10,6 +10,18 @@ export const getSinhViens = (req, res) => {
     })
 }
 
+export const getSinhViensWithQuery = (req, res) => {
+  const { search, pagingOptions } = req.body;
+  const searchRegex = new RegExp("^.*" + search + ".*");
+  SinhVien.paginate({ name: { $regex: searchRegex, $options: "i" } }, pagingOptions)
+    .then((sinhViens) => {
+      res.status(200).json(sinhViens);
+    })
+    .catch((err) => {
+      res.status(400).json({ message: err.message });
+    })
+}
+
 export const getSinhVienById = (req, res) => {
   SinhVien.findOne({ _id: req.params.id })
     .then((sinhVien) => {

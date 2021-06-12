@@ -1,0 +1,16 @@
+.l-table .header {
+  display: flex;
+  align-items: center;
+}
+
+.l-table .button-section {
+  flex: 1;
+}
+
+.l-table .query-options {
+  flex: 1;
+}
+
+.l-table .query-options .mb-3 {
+  margin-bottom: 0 !important;
+}

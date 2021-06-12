@@ -10,6 +10,7 @@ import * as Utils from '../../utils/utils';
 import PageTitle from "../../components/common/PageTitle";
 import ActionButtons from '../../components/common/ActionButtons';
 import Pagination from '../../components/common/Pagination/Pagination';
+import LyrTable from '../../components/common/LyrTable/LyrTable';
 // import EditGiangVienModal from './EditGiangVienModal';
 
 const ListGiangVien = () => {
@@ -94,7 +95,66 @@ const ListGiangVien = () => {
 
       <Row>
         <Col>
-          <Card small className="mb-4">
+          <LyrTable
+            buttonSection={
+              !isFileResetting &&
+              <div>
+                <Button onClick={onImportButtonClick}>Nhập danh sách</Button>
+                <input type="file" id="file" ref={inputFile}
+                  style={{ display: 'none' }} onChange={(e) => handleImportList(e)} on />
+              </div>
+            }
+            data={resData}
+            getList={getList}
+          >
+            <table className="table mb-0 c-table">
+              <thead className="bg-light">
+                <tr>
+                  <th scope="col" className="border-0">
+                    Mã Giảng viên
+                  </th>
+                  <th scope="col" className="border-0">
+                    Họ Tên
+                  </th>
+                  <th scope="col" className="border-0">
+                    Học hàm
+                  </th>
+                  <th scope="col" className="border-0">
+                    Số điện thoại
+                  </th>
+                  <th scope="col" className="border-0">
+                    Email
+                  </th>
+                  <th scope="col" className="border-0">
+                    Hướng nghiên cứu
+                  </th>
+                  <th scope="col" className="border-0">
+                    Action
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {
+                  giangViens.map((giangVien, index) => (
+                    <tr key={`giang-vien_${index}`}>
+                      <td>{giangVien.maGV}</td>
+                      <td>{giangVien.name}</td>
+                      <td>{giangVien.hocHam}</td>
+                      <td>{giangVien.phone}</td>
+                      <td>{giangVien.email}</td>
+                      <td>{giangVien.huongNghienCuu}</td>
+                      <td>
+                        <ActionButtons
+                          onDeleteClick={() => { onDeleteClick(giangVien._id) }}
+                          onEditClick={() => { onEditClick(giangVien._id) }} />
+                      </td>
+                    </tr>
+                  ))
+                }
+              </tbody>
+            </table>
+          </LyrTable>
+          {/* <Card small className="mb-4">
             <CardHeader className="border-bottom">
               {
                 !isFileResetting &&
@@ -154,7 +214,7 @@ const ListGiangVien = () => {
               </table>
               <Pagination pageData={resData} getData={getList}/>
             </CardBody>
-          </Card>
+          </Card> */}
         </Col>
       </Row>
       {/* <EditGiangVienModal isOpen={isOpenEditModal}/> */}

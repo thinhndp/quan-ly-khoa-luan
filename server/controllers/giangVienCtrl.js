@@ -12,11 +12,9 @@ export const getGiangViens = (req, res) => {
 }
 
 export const getGiangViensWithQuery = (req, res) => {
-  console.log('pagingOptions');
-  console.log(req.body);
-  const { pagingOptions } = req.body;
-  console.log(pagingOptions);
-  GiangVien.paginate({}, pagingOptions)
+  const { search, pagingOptions } = req.body;
+  const searchRegex = new RegExp("^.*" + search + ".*");
+  GiangVien.paginate({ name: { $regex: searchRegex, $options: "i" } }, pagingOptions)
     .then((giangViens) => {
       console.log(giangViens);
       res.status(200).json(giangViens);

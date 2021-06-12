@@ -4,12 +4,7 @@ import { Button, FormInput, FormGroup, Row, Col, FormSelect } from "shards-react
 import './styles.css';
 import * as Utils from '../../../utils/utils';
 
-const DATA_LIST = [
-  "foo", "foo", "foo", "foo", "foo", "foo", "foo", "foo", "foo", "foo", "foo", "foo", "foo", "foo", "foo", "foo",
-  "foo", "foo", "foo", "foo", "foo", "foo", "foo", "foo", "foo", "foo", "foo", "foo", "foo", "foo", "foo", "foo",
-]
-
-const Pagination = ({ dataList = DATA_LIST, pageData, getData }) => {
+const Pagination = ({ pageData, onChangePagingOptions }) => {
   const [ pageSize, setPageSize ] = useState(10);
   const [ currentPage, setCurrentPage ] = useState(1);
   const [ totalPages, setTotalPages ] = useState(1);
@@ -34,21 +29,21 @@ const Pagination = ({ dataList = DATA_LIST, pageData, getData }) => {
       setCurrentPage(currentPage + 1);
     } */
     if (pageData.hasNextPage) {
-      getData('', Utils.getNewPagingOptions(pageData.nextPage, pageSize));
+      onChangePagingOptions(Utils.getNewPagingOptions(pageData.nextPage, pageSize));
     }
   }
 
   const onPreviousClick = () => {
     /* if (currentPage > 1) {
-      getData('', Utils.getNewPagingOptions(currentPage + 1, pageSize));
+      onChangePagingOptions('', Utils.getNewPagingOptions(currentPage + 1, pageSize));
     } */
     if (pageData.hasPrevPage) {
-      getData('', Utils.getNewPagingOptions(pageData.prevPage, pageSize));
+      onChangePagingOptions(Utils.getNewPagingOptions(pageData.prevPage, pageSize));
     }
   }
 
   const onTotalPageChange = (e) => {
-    getData('', Utils.getNewPagingOptions(pageData.page, e.target.value));
+    onChangePagingOptions(Utils.getNewPagingOptions(pageData.page, e.target.value));
   }
 
   return (

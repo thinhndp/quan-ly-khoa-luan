@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
 import upsertMany from '@meanie/mongoose-upsert-many';
+import mongoosePaginate from 'mongoose-paginate-v2';
 
 export const SinhVienSchema = mongoose.Schema({
   maSV: String,
@@ -20,6 +21,7 @@ export const SinhVienSchema = mongoose.Schema({
 });
 
 SinhVienSchema.plugin(upsertMany);
+SinhVienSchema.plugin(mongoosePaginate);
 
 const SinhVien = mongoose.model('SinhVien', SinhVienSchema, 'SinhVien');
 
