@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import mongoosePaginate from 'mongoose-paginate-v2';
 
 const kyThucHien = mongoose.Schema({
   name: {
@@ -17,6 +18,8 @@ const kyThucHien = mongoose.Schema({
     type: Date
   },
 });
+
+kyThucHien.plugin(mongoosePaginate);
 
 const KyThucHien = mongoose.model('KyThucHien', kyThucHien, 'KyThucHien');
 

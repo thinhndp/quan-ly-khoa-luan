@@ -15,11 +15,20 @@ export const getDeTais = (req, res) => {
 
 export const getDeTaisWithQuery = (req, res) => {
   // const { filter, search } = req;
-  const search = new RegExp("^" + req.body.search);
+  const { search, pagingOptions } = req.body;
+  const searchRegex = new RegExp("^.*" + (search ? search : '') + ".*");
+  const filter = {
+    tenDeTai: { $regex: searchRegex, $options: "i" }
+  };
   console.log(search);
-  DeTai.find({ tenDeTai: { $regex: search, $options: "i" } }).populate('giangVien').populate('sinhVienThucHien').populate('kyThucHien')
-    .then((deTais) => {
-      var sortedDeTais = deTais.sort((dt1, dt2) => {
+  // DeTai.find({ tenDeTai: { $regex: search, $options: "i" } }).populate('giangVien').populate('sinhVienThucHien').populate('kyThucHien')
+  DeTai.paginate(filter, {
+    ...pagingOptions,
+    populate: 'giangVien sinhVienThucHien kyThucHien'
+  }).then((deTais) => {
+      // console.log('deTais');
+      // console.log(deTais);
+      var sortedDeTais = deTais.docs.sort((dt1, dt2) => {
         if (!dt1.kyThucHien && !dt2.kyThucHien) {
           return 0;
         }
@@ -40,7 +49,7 @@ export const getDeTaisWithQuery = (req, res) => {
         }
         return new Date(dt2.kyThucHien.startDate) - new Date(dt1.kyThucHien.startDate);
       })
-      res.status(200).json(sortedDeTais);
+      res.status(200).json({ ...deTais, docs: sortedDeTais});
     })
     .catch((err) => {
       res.status(400).json({ message: err.message });

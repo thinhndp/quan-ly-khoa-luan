@@ -21,6 +21,7 @@ import * as Utils from '../../utils/utils';
 import GiangVienModal from './DetailGiangVienModal';
 import DeXuatButton from '../../components/post/DeXuatButton';
 import DangKyDTButton from '../../components/post/DangKyDTButton';
+import LyrTable from '../../components/common/LyrTable/LyrTable';
 
 const ListDeTai = () => {
   const [ deTais, setDeTais ] = useState([]);
@@ -29,12 +30,17 @@ const ListDeTai = () => {
   const [ isGVModalOpen, setIsGVModalOpen ] = useState(false);
   const [ deXuatToiDa, setDeXuatToiDa ] = useState(0);
   const [ selectedGV, setSelectedGV ] = useState(null);
+  const [ resData, setResData ] = useState(Utils.getNewPageData());
   let history = useHistory();
 
   useEffect(() => {
     getDeTaiList();
     getDeXuatToiDa();
   }, []);
+
+  useEffect(() => {
+    setDeTais(resData.docs);
+  }, [resData]);
 
   useEffect(() => {
     // toggleGVModal();
@@ -46,11 +52,22 @@ const ListDeTai = () => {
     }
   }, [selectedGV]);
 
-  const getDeTaiList = () => {
+  /* const getDeTaiList = () => {
     getDeTaisWithQuery()
       .then((res) => {
         console.log(res);
         setDeTais(res.data);
+      })
+      .catch((err) => {
+        console.log(err.response);
+      });
+  } */
+
+  const getDeTaiList = (search = '', pagingOptions = Utils.getNewPagingOptions()) => {
+    getDeTaisWithQuery(search, pagingOptions)
+      .then((res) => {
+        console.log(res);
+        setResData(res.data);
       })
       .catch((err) => {
         console.log(err.response);
@@ -136,7 +153,82 @@ const ListDeTai = () => {
       {/* Table */}
       <Row>
         <Col>
-          <Card small className="mb-4">
+          <LyrTable
+            buttonSection={
+              <Row>
+                <span class="pr-05r"/>
+                <Button onClick={toggleDKModal}>Tùy chỉnh điều kiện</Button>
+                <span class="pr-05r"/>
+                <DeXuatButton onCompleted={onCompleted}/>
+                <span class="pr-05r"/>
+              </Row>
+            }
+            data={resData}
+            getList={getDeTaiList}
+          >
+            <table className="table mb-0 c-table">
+              <thead className="bg-light">
+                <tr>
+                  <th scope="col" className="border-0">
+                    Tên Đề tài
+                  </th>
+                  <th scope="col" className="border-0">
+                    Giảng viên Hướng dẫn
+                  </th>
+                  <th scope="col" className="border-0">
+                    Mô tả
+                  </th>
+                  <th scope="col" className="border-0">
+                    Kỳ thực hiện
+                  </th>
+                  <th scope="col" className="border-0">
+                    Trạng thái duyệt
+                  </th>
+                  <th scope="col" className="border-0">
+                    Trạng thái thực hiện
+                  </th>
+                  <th scope="col" className="border-0">
+                    Hệ đào tạo
+                  </th>
+                  <th scope="col" className="border-0">
+                    Điểm số
+                  </th>
+                  <th scope="col" className="border-0">
+                    Số SV Thực hiện
+                  </th>
+                  <th scope="col" className="border-0">
+                    Action
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+              {
+                deTais.map((deTai, index) => (
+                  <tr key={`de-tai_${index}`}>
+                    <td>{deTai.tenDeTai}</td>
+                    <td>{deTai.giangVien.name}<span className={styles['small-icon-span']}>
+                      <LaunchIcon className={commonStyles['icon-button']} color="primary"
+                        style={{ fontSize: '1rem' }} onClick={() => { onGVClick(deTai.giangVien) }}/>
+                      </span>
+                    </td>
+                    <td>{deTai.moTa}</td>
+                    <td>{(deTai.kyThucHien != null) ? deTai.kyThucHien.name : ''}</td>
+                    <td>{Utils.getDeTaiApproveStatusText(deTai.trangThaiDuyet)}</td>
+                    <td>{Utils.getDeTaiProgressStatusText(deTai.trangThaiThucHien)}</td>
+                    <td>{deTai.heDaoTao}</td>
+                    <td>{deTai.diemSo}</td>
+                    <td>{Utils.getSinhVienNumOfDeTai(deTai)}</td>
+                    <td>
+                      <ActionButtons onEditClick={() => onEditClick(deTai._id)}
+                          onDeleteClick={() => onDeleteClick(deTai._id)} />
+                    </td>
+                  </tr>
+                ))
+              }
+              </tbody>
+            </table>
+          </LyrTable>
+          {/* <Card small className="mb-4">
             <CardHeader className="border-bottom">
               <Row>
                 <span class="pr-05r"/>
@@ -144,7 +236,6 @@ const ListDeTai = () => {
                 <span class="pr-05r"/>
                 <DeXuatButton onCompleted={onCompleted}/>
                 <span class="pr-05r"/>
-                {/* <DangKyDTButton /> */}
               </Row>
             </CardHeader>
             <CardBody className="p-0 pb-3">
@@ -210,7 +301,7 @@ const ListDeTai = () => {
                 </tbody>
               </table>
             </CardBody>
-          </Card>
+          </Card> */}
         </Col>
       </Row>
       {/* Dieu kien de xuat Modal */}

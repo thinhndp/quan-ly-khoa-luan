@@ -10,6 +10,22 @@ export const getBieuMaus = (req, res) => {
     });
 };
 
+export const getBieuMausWithQuery = (req, res) => {
+  const { search, pagingOptions } = req.body;
+  const searchRegex = new RegExp("^.*" + (search ? search : '') + ".*");
+  const filter = {
+    name: { $regex: searchRegex, $options: "i" },
+  };
+  BieuMau.paginate(filter, {
+    ...pagingOptions,
+  }).then((bieuMaus) => {
+      res.status(200).json(bieuMaus);
+    })
+    .catch((err) => {
+      res.status(400).json({ message: err.message });
+    });
+}
+
 export const getBieuMauById = (req, res) => {
   BieuMau.findOne({ _id: req.params.id })
     .then((bieuMau) => {

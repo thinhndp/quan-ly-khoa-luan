@@ -40,6 +40,18 @@ export const getNewPageData = () => {
   });
 }
 
+export const getNewUser = () => {
+  return ({
+    name: '',
+    role: 'Khach',
+    email: '',
+    picture: 'https://genslerzudansdentistry.com/wp-content/uploads/2015/11/anonymous-user.png',
+    canApprove: false,
+    relatedInfoSV: null,
+    relatedInfoGV: null,
+  });
+}
+
 export const getNewBieuMau = () => {
   return ({ name: "", link: "" });
 }
@@ -198,6 +210,23 @@ export const getDeTaiApproveStatusText = (abbr) => {
       return "Đã từ chối";
     default:
       return "-";
+  }
+}
+
+export const getUserRoleText = (abbr) => {
+  switch(abbr) {
+    case Constants.USER_ROLE_GUEST:
+      return "Khách";
+    case Constants.USER_ROLE_SINH_VIEN:
+      return "Sinh viên";
+    case Constants.USER_ROLE_GIANG_VIEN:
+      return "Giảng viên";
+    case Constants.USER_ROLE_CB_KHOA:
+      return "Cán bộ Khoa";
+    case Constants.USER_ROLE_CN_KHOA:
+      return "Chủ nhiệm Khoa";
+    default:
+      return "Khách";
   }
 }
 

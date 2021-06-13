@@ -32,6 +32,7 @@ import ListBieuMau from './views/BieuMau/ListBieuMau';
 import ListKyThucHien from './views/KyThucHien/ListKyThucHien';
 import ListHoiDong from './views/HoiDong/ListHoiDong';
 import CreateOrEditHoiDongPage from './views/HoiDong/CreateOrEditHoiDongPage';
+import ListUser from './views/User/ListUser';
 import SV_TinTuc from './views/SV_TinTuc/SV_TinTuc';
 import SV_ChiTietTinTuc from './views/SV_TinTuc/SV_ChiTietTinTuc';
 
@@ -153,6 +154,11 @@ export default [
     path: "/bieu-mau",
     layout: DefaultLayout,
     component: ListBieuMau
+  },
+  {
+    path: "/user",
+    layout: DefaultLayout,
+    component: ListUser
   },
   {
     path: "/ky-thuc-hien",

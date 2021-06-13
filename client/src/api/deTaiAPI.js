@@ -1,15 +1,16 @@
 import axios from 'axios';
+import * as Utils from '../utils/utils';
 
 export const getDeTais = () => {
   return axios.get('/de-tais');
 }
 
-export const getDeTaisWithQuery = (search = '') => {
-  const query = {
-    search: search
+export const getDeTaisWithQuery = (search = '', pagingOptions = Utils.getNewPagingOptions()) => {
+  var options = {
+    search: search,
+    pagingOptions: pagingOptions,
   };
-  console.log(query);
-  return axios.post('/de-tais/q', query);
+  return axios.post('/de-tais/q', options);
 }
 
 export const getDeTaiById = (id) => {

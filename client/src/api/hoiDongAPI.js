@@ -1,7 +1,16 @@
 import axios from 'axios';
+import * as Utils from '../utils/utils';
 
 export const getHoiDongs = () => {
   return axios.get('/hoi-dongs');
+}
+
+export const getHoiDongsWithQuery = (search = '', pagingOptions = Utils.getNewPagingOptions()) => {
+  var options = {
+    search: search,
+    pagingOptions: pagingOptions,
+  };
+  return axios.post('/hoi-dongs/q', options);
 }
 
 export const getHoiDongById = (id) => {

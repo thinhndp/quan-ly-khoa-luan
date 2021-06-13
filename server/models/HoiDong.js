@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import mongoosePaginate from 'mongoose-paginate-v2';
 
 const hoiDongSchema = mongoose.Schema({
   name: {
@@ -42,6 +43,8 @@ const hoiDongSchema = mongoose.Schema({
     ref: 'DeTai'
   }]
 });
+
+hoiDongSchema.plugin(mongoosePaginate);
 
 const HoiDong = mongoose.model('HoiDong', hoiDongSchema, 'HoiDong');
 

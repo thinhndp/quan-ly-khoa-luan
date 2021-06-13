@@ -10,6 +10,18 @@ export const getKyThucHiens = (req, res) => {
     });
 };
 
+export const getKyThucHiensWithQuery = (req, res) => {
+  const { search, pagingOptions } = req.body;
+  const searchRegex = new RegExp("^.*" + search + ".*");
+  KyThucHien.paginate({ name: { $regex: searchRegex, $options: "i" } }, pagingOptions)
+    .then((kyThucHiens) => {
+      res.status(200).json(kyThucHiens);
+    })
+    .catch((err) => {
+      res.status(400).json({ message: err.message });
+    });
+};
+
 export const getOneActiveKyThucHien = (req, res) => {
   KyThucHien.findOne({ status: 'DDR' })
     .then((kyThucHien) => {

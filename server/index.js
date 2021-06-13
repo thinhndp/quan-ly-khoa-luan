@@ -16,6 +16,7 @@ import customSettingRoutes from './routes/customSettings.js';
 import phongHocRoutes from './routes/phongHocs.js';
 import hoiDongRoutes from './routes/hoiDongs.js';
 import kyThucHienRoutes from './routes/kyThucHiens.js';
+import userRoutes from './routes/users.js';
 
 const app = express();
 
@@ -36,6 +37,7 @@ app.use('/custom-setting', customSettingRoutes);
 app.use('/phong-hocs', phongHocRoutes);
 app.use('/hoi-dongs', hoiDongRoutes);
 app.use('/ky-thuc-hiens', kyThucHienRoutes);
+app.use('/users', userRoutes);
 
 const CONNECTION_URL = 'mongodb+srv://admin:admin123456@cluster0.cjuu6.mongodb.net/QLKL?retryWrites=true&w=majority';
 const PORT = process.env.PORT || 5000;

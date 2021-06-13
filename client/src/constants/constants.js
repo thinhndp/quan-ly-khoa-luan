@@ -32,6 +32,10 @@ export const DETAIL_MODE_VIEW = 'VIEW';
 export const DETAIL_MODE_EDIT = 'EDIT';
 
 export const USER_ROLE_GUEST = 'Khach';
+export const USER_ROLE_SINH_VIEN = 'SinhVien';
+export const USER_ROLE_GIANG_VIEN = 'GiangVien';
+export const USER_ROLE_CB_KHOA = 'CanBoKhoa';
+export const USER_ROLE_CN_KHOA = 'ChuNhiemKhoa';
 export const DEFAULT_USER = {
   email: "guest",
   name: "Khách",

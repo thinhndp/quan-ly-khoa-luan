@@ -131,15 +131,21 @@
   cursor: pointer;
   color: #007bff;
   background-color: rgba(0,0,0,.03);
+  /* background-color: white; */
 }
 
 .c-table td {
   border-right: 1px solid #dee2e6 !important;
+  font-weight: 400;
 }
 
 .c-table tbody tr:nth-child(2n) {
   background-color: rgba(0,0,0,.03);
 }
+
+/* .c-table tbody tr:nth-child(2n - 1) {
+  background-color: rgba(0,0,0,.03);
+} */
 
 .t-button {
   background: #fff;
@@ -160,5 +166,9 @@
   border: none;
   background: #f8f9fa;
   color: #007bff;
+}
 
+.avatar-pic {
+  max-width: 2.5rem;
+  border-radius: 50%!important;
 }

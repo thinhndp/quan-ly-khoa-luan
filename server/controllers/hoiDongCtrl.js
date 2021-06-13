@@ -13,6 +13,20 @@ export const getHoiDongs = (req, res) => {
     });
 }
 
+export const getHoiDongsWithQuery = (req, res) => {
+  const { search, pagingOptions } = req.body;
+  const searchRegex = new RegExp("^.*" + search + ".*");
+  HoiDong.paginate({ name: { $regex: searchRegex, $options: "i" } }, {
+    ...pagingOptions,
+    populate: 'phongHoc deTais canBoPhanBien canBoHuongDan chuTich thuKy uyVien'
+  }).then((hoiDongs) => {
+      res.status(200).json(hoiDongs);
+    })
+    .catch((err) => {
+      res.status(400).json({ message: err.message });
+    });
+}
+
 export const getHoiDongById = (req, res) => {
   HoiDong.findOne({ _id: req.params.id })
     .populate('phongHoc').populate('deTais').populate('canBoPhanBien')

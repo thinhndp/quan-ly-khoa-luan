@@ -1,6 +1,7 @@
 import mongoose from 'mongoose';
 import { GiangVienSchema } from './GiangVien.js';
 import { SinhVienSchema } from './SinhVien.js';
+import mongoosePaginate from 'mongoose-paginate-v2';
 
 const deTaiSchema = mongoose.Schema({
   tenDeTai: {
@@ -46,6 +47,8 @@ const deTaiSchema = mongoose.Schema({
     ref: 'KyThucHien'
   }
 });
+
+deTaiSchema.plugin(mongoosePaginate);
 
 const DeTai = mongoose.model('DeTai', deTaiSchema, 'DeTai');
 

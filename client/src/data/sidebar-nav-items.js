@@ -46,6 +46,11 @@ export default function() {
       to: "/bieu-mau",
     },
     {
+      title: "Quản lý User",
+      htmlBefore: '<i class="material-icons">person</i>',
+      to: "/user",
+    },
+    {
       title: "Test",
       htmlBefore: '<i class="material-icons">table_chart</i>',
       to: "/test",

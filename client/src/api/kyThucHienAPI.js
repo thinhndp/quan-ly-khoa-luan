@@ -1,7 +1,16 @@
 import axios from 'axios';
+import * as Utils from '../utils/utils';
 
 export const getKyThucHiens = () => {
   return axios.get('/ky-thuc-hiens');
+}
+
+export const getKyThucHiensWithQuery = (search = '', pagingOptions = Utils.getNewPagingOptions()) => {
+  var options = {
+    search: search,
+    pagingOptions: pagingOptions,
+  };
+  return axios.post('/ky-thuc-hiens/q', options);
 }
 
 export const getKyThucHienById = (id) => {

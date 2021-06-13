@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import mongoosePaginate from 'mongoose-paginate-v2';
 
 export const BieuMauSchema = mongoose.Schema({
   name: {
@@ -10,6 +11,8 @@ export const BieuMauSchema = mongoose.Schema({
     required: true
   }
 });
+
+BieuMauSchema.plugin(mongoosePaginate);
 
 const BieuMau = mongoose.model('BieuMau', BieuMauSchema, 'BieuMau');
 
