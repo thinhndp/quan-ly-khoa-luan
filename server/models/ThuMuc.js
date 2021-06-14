@@ -10,6 +10,13 @@ const thuMucSchema = mongoose.Schema({
     type: [ FileNopSchema ],
     default: []
   },
+  /* files: {
+    type: [{
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'FileNop'
+    }],
+    default: []
+  }, */
   deadline: {
     type: Date,
     default: new Date((new Date()).getTime() + (10 * 86400000))

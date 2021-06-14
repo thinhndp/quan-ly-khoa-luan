@@ -7,7 +7,7 @@ import ViewListIcon from '@material-ui/icons/ViewList';
 import ViewModuleIcon from '@material-ui/icons/ViewModule';
 import FolderIcon from '@material-ui/icons/Folder';
 
-import { getFilesByThuMucId } from '../../api/fileNopAPI';
+import { getFilesByThuMucId, getFilesOfFolderWithQuery } from '../../api/fileNopAPI';
 import * as Utils from '../../utils/utils';
 
 import PageTitle from "../../components/common/PageTitle";
@@ -38,7 +38,7 @@ const ListFile = () => {
         setFileNops(res.data);
       })
       .catch((err) => {
-        console.log(err);
+        console.log(err.response);
       });
   }
 

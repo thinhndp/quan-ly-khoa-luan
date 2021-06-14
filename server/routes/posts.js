@@ -1,11 +1,12 @@
 import express from 'express';
 
 import { getPosts, createPost, deletePost, getPostById, getPostWSubmitterById,
-    updatePostById, getPublicPosts, getPrivatePosts } from '../controllers/postCtrl.js';
+    updatePostById, getPublicPosts, getPrivatePosts, getPostsWithQuery } from '../controllers/postCtrl.js';
 
 const router = express.Router();
 
 router.get('/', getPosts);
+router.post('/q', getPostsWithQuery);
 router.get('/public', getPublicPosts);
 router.get('/private', getPrivatePosts);
 router.get('/', getPosts);

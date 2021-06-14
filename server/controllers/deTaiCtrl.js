@@ -1,6 +1,12 @@
+import { OAuth2Client } from 'google-auth-library';
 import DeTai from '../models/DeTai.js';
 import SinhVien from '../models/SinhVien.js';
+import User from '../models/User.js';
 import KyThucHien from '../models/KyThucHien.js';
+
+const CLIENT_ID = process.env.GOOGLE_DRIVE_CLIENT_ID;
+
+const client = new OAuth2Client(CLIENT_ID);
 
 export const getDeTais = (req, res) => {
   console.log('getDeTais');
@@ -102,15 +108,52 @@ export const getDeTaiById = (req, res) => {
 export const updateDeTaiById = (req, res) => {
   console.log('updateDeTaiById');
   const { id } = req.params;
-  const deTai = req.body;
+  const { token, deTai } = req.body;
 
-  DeTai.findOneAndReplace({ _id: id }, deTai)
+  console.log(token);
+
+  client.verifyIdToken({
+    idToken: token,
+    audience: CLIENT_ID
+  }).then((ticket) => {
+    const userInfo = ticket.getPayload();
+    console.log('**userInfo**');
+    console.log(userInfo);
+    User.findOne({ email: userInfo.email })
+      .then((user) => {
+        DeTai.findOne({ _id: id })
+          .then((resDeTai) => {
+            console.log('**user**');
+            console.log(user);
+            if (resDeTai.trangThaiDuyet != deTai.trangThaiDuyet && !user.canApprove) {
+              res.status(400).json({ message: 'User hiện tại không có quyền duyệt' });
+            }
+            console.log('11');
+            var newDeTai = new DeTai(deTai);
+            newDeTai.isNew = false;
+            newDeTai.save()
+              .then((savedDetai) => {
+                res.status(200).json(savedDetai);
+              })
+          })
+          .catch((err) => {
+            res.status(400).json({ message: err.message });
+          })
+      })
+      .catch((err) => {
+        res.status(400).json({ message: err.message });
+      })
+  }).catch((err) => {
+    res.status(400).json({ message: err.message });
+  });
+
+/*   DeTai.findOneAndReplace({ _id: id }, deTai)
     .then(() => {
       res.status(200).json(deTai);
     })
     .catch((err) => {
       res.status(400).json({ message: err.message });
-    })
+    }) */
 }
 
 export const createManyDeTais = (req, res) => {

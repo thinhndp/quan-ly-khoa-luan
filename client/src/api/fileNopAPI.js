@@ -35,6 +35,10 @@ export const getFilesByThuMucId = (folderId) => {
   return axios.get(`/thu-mucs/${folderId}/get-files`);
 }
 
+export const getFilesOfFolderWithQuery = (folderId) => {
+  return axios.post(`/thu-mucs/${folderId}/get-files/q`);
+}
+
 // export const createManyDeTais = (deTais) => {
 //   return axios.post('/de-tais/create-many', deTais);
 // }

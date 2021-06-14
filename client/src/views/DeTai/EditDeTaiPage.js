@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import { useParams, useHistory } from "react-router-dom";
+import { useRecoilValue } from 'recoil';
 import SelectSearch, { fuzzySearch } from 'react-select-search';
 import '../../styles/select-search-styles.css';
 import PropTypes from "prop-types";
@@ -28,6 +29,7 @@ import { getKyThucHiens } from '../../api/kyThucHienAPI';
 import * as Constants from '../../constants/constants';
 import * as Utils from '../../utils/utils';
 import PageTitle from "../../components/common/PageTitle";
+import userAtom from '../../recoil/user';
 
 const EditDeTaiPage = () => {
   let { id } = useParams();
@@ -36,6 +38,7 @@ const EditDeTaiPage = () => {
   const [ giangViens, setGiangViens ] = useState([]);
   const [ sinhViens, setSinhViens ] = useState([]);
   const [ kyThucHiens, setKyThucHiens ] = useState([]);
+  const currentUser = useRecoilValue(userAtom);
 
   useEffect(() => {
     /* getDeTaiById(id)
@@ -53,7 +56,7 @@ const EditDeTaiPage = () => {
           setDeTai(res.data);
         })
         .catch((err) => {
-          console.log(err);
+          console.log(err.response);
         });
       getGiangViens()
         .then((res) => {
@@ -61,7 +64,7 @@ const EditDeTaiPage = () => {
           setGiangViens(res.data);
         })
         .catch((err) => {
-          console.log(err);
+          console.log(err.response);
         });
       getSinhViens()
         .then((res) => {
@@ -69,7 +72,7 @@ const EditDeTaiPage = () => {
           setSinhViens(res.data);
         })
         .catch((err) => {
-          console.log(err);
+          console.log(err.response);
         });
       getKyThucHiens()
         .then((res) => {
@@ -88,7 +91,7 @@ const EditDeTaiPage = () => {
         history.push('/de-tai');
       })
       .catch((err) => {
-        console.log(err);
+        console.log(err.response);
       });
   }
 
@@ -177,7 +180,7 @@ const EditDeTaiPage = () => {
                       <Row form>
                         <Col md="6" className="form-group">
                           <label htmlFor="feTTDuyet">Trạng thái Duyệt</label>
-                          <FormSelect value={deTai.trangThaiDuyet} id="feTTDuyet"
+                          <FormSelect value={deTai.trangThaiDuyet} id="feTTDuyet" disabled={!currentUser.canApprove}
                               onChange={(e) => { setDeTai({ ...deTai, trangThaiDuyet: e.target.value }) }}>
                             <option value=''>Chọn...</option>
                             <option value={Constants.DE_TAI_APPROVE_STATUS_NOT_APPROVED}>Chưa duyệt</option>

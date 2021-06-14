@@ -21,7 +21,7 @@ const LoginPage = () => {
       .then((res) => {
         console.log(res);
         // setUser(res.data);
-        // localStorage.setItem('user', JSON.stringify(res.data));
+        localStorage.setItem('token', token);
         setUser({ ...res.data });
         history.push('/');
       })

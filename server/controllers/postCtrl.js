@@ -11,6 +11,18 @@ export const getPosts = (req, res) => {
     });
 };
 
+export const getPostsWithQuery = (req, res) => {
+  const { search, pagingOptions } = req.body;
+  const searchRegex = new RegExp("^.*" + search + ".*");
+  Post.paginate({ title: { $regex: searchRegex, $options: "i" } }, pagingOptions)
+    .then((posts) => {
+      res.status(200).json(posts);
+    })
+    .catch((err) => {
+      res.status(400).json({ message: err.message });
+    });
+};
+
 export const getPublicPosts = (req, res) => {
   Post.find({ type: 'CK', isPosted: true  })
     .then((posts) => {

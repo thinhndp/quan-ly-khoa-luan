@@ -1,3 +1,4 @@
+import mongoose from 'mongoose';
 import ThuMuc from '../models/ThuMuc.js';
 import FileNop from '../models/FileNop.js';
 
@@ -83,7 +84,25 @@ export const getFilesOfFolder = (req, res) => {
   const id = req.params.id;
   ThuMuc.findById(id)
     .then((thuMuc) => {
+      console.log(thuMuc);
       res.status(201).json(thuMuc.files);
+    })
+    .catch((err) => {
+      res.status(400).json({ message: err.message });
+    });
+}
+
+export const getFilesOfFolderWithQuery = (req, res) => {
+  const id = req.params.id;
+  ThuMuc.findById(id)
+    .then((thuMuc) => {
+      const fileIds = thuMuc.files.map((file) => (new mongoose.Types.ObjectId(file._id)));
+      console.log(fileIds);
+      // FileNop.find({ '_id': { $in: fileIds } })
+      FileNop.find()
+        .then((files) => {
+          res.status(201).json(files);
+        })
     })
     .catch((err) => {
       res.status(400).json({ message: err.message });
@@ -98,15 +117,13 @@ export const createFilesInFolder = (req, res) => {
       for (let file of files) {
         thuMuc.files.push(file);
       }
-      console.log('@tmmm');
-      console.log(thuMuc);
       thuMuc.save()
         .then((saveRes) => {
           res.status(201).json(saveRes);
         })
-        // .catch((err) => {
-        //   res.status(400).json({ message: err.message });
-        // });
+        .catch((err) => {
+          res.status(400).json({ message: err.message });
+        });
     })
     .catch((err) => {
       res.status(400).json({ message: err.message });

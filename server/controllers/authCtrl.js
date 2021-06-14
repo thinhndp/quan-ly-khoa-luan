@@ -47,7 +47,16 @@ export const authGoogle = async (req, res) => {
             upsert: true
           }
         ).then((user) => {
-          res.status(201).json(user);
+          // console.log('** user **');
+          // console.log(user);
+          User.findById(user._id).populate('relatedInfoSV').populate('relatedInfoGV')
+            .then((fUser) => {
+              console.log('** fUser **');
+              console.log(fUser);
+              res.status(201).json(fUser);
+            }).catch((err) => {
+              res.status(400).json({ message: err.message });
+            });
         });
       })
   }).catch((err) => {

@@ -1,5 +1,7 @@
 import mongoose from 'mongoose';
 import { UserSchema } from './User.js';
+import upsertMany from '@meanie/mongoose-upsert-many';
+import mongoosePaginate from 'mongoose-paginate-v2';
 
 export const FileNopSchema = mongoose.Schema({
   name: {
@@ -46,6 +48,9 @@ export const FileNopSchema = mongoose.Schema({
     required: true
   }
 });
+
+FileNopSchema.plugin(upsertMany);
+FileNopSchema.plugin(mongoosePaginate);
 
 const FileNop = mongoose.model('FileNop', FileNopSchema, 'FileNop');
 

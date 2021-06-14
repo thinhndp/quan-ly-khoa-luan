@@ -57,6 +57,10 @@ export const createUser = (req, res) => {
   const user = req.body;
   const newUser = new User(user);
 
+  if (newUser.role == 'ChuNhiemKhoa') {
+    newUser.canApprove = true;
+  }
+
   newUser.save()
     .then(() => {
       res.status(201).json(newUser);

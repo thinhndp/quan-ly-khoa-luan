@@ -83,7 +83,9 @@ const CreateOrEditUserModal = ({ isModalOpen, toggleModal, selected, onClose, on
                 <FormGroup>
                   <label htmlFor="feRole">Vai trò</label>
                   <FormSelect value={user.role} id="feRole"
-                      onChange={(e) => { setUser({ ...user, role: e.target.value }) }}>
+                      onChange={(e) => {
+                        setUser({ ...user, role: e.target.value, canApprove: e.target.value == Constants.USER_ROLE_CN_KHOA ? true : user.canApprove })
+                      }}>
                     <option value=''>Chọn...</option>
                     <option value={Constants.USER_ROLE_SINH_VIEN}>Sinh viên</option>
                     <option value={Constants.USER_ROLE_GIANG_VIEN}>Giảng viên</option>
@@ -96,6 +98,7 @@ const CreateOrEditUserModal = ({ isModalOpen, toggleModal, selected, onClose, on
                 <FormGroup>
                   <label htmlFor="feCanApprove">Quyền duyệt đề xuất</label>
                   <FormSelect value={user.canApprove} id="feCanApprove"
+                      disabled={ user.role == Constants.USER_ROLE_CN_KHOA ? true : false }
                       onChange={(e) => { setUser({ ...user, canApprove: e.target.value }) }}>
                     <option value={false}>Không</option>
                     <option value={true}>Có</option>
