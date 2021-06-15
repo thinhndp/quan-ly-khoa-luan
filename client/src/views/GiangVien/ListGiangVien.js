@@ -106,53 +106,28 @@ const ListGiangVien = () => {
             }
             data={resData}
             getList={getList}
+            tableMode={true}
+            headers={["Mã Giảng viên", "Họ Tên", "Học hàm", "Số điện thoại", "Email", "Hướng nghiên cứu", "Thao tác"]}
           >
-            <table className="table mb-0 c-table">
-              <thead className="bg-light">
-                <tr>
-                  <th scope="col" className="border-0">
-                    Mã Giảng viên
-                  </th>
-                  <th scope="col" className="border-0">
-                    Họ Tên
-                  </th>
-                  <th scope="col" className="border-0">
-                    Học hàm
-                  </th>
-                  <th scope="col" className="border-0">
-                    Số điện thoại
-                  </th>
-                  <th scope="col" className="border-0">
-                    Email
-                  </th>
-                  <th scope="col" className="border-0">
-                    Hướng nghiên cứu
-                  </th>
-                  <th scope="col" className="border-0">
-                    Action
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {
-                  giangViens.map((giangVien, index) => (
-                    <tr key={`giang-vien_${index}`}>
-                      <td>{giangVien.maGV}</td>
-                      <td>{giangVien.name}</td>
-                      <td>{giangVien.hocHam}</td>
-                      <td>{giangVien.phone}</td>
-                      <td>{giangVien.email}</td>
-                      <td>{giangVien.huongNghienCuu}</td>
-                      <td>
-                        <ActionButtons
-                          onDeleteClick={() => { onDeleteClick(giangVien._id) }}
-                          onEditClick={() => { onEditClick(giangVien._id) }} />
-                      </td>
-                    </tr>
-                  ))
-                }
-              </tbody>
-            </table>
+            <tbody>
+              {
+                giangViens.map((giangVien, index) => (
+                  <tr key={`giang-vien_${index}`}>
+                    <td>{giangVien.maGV}</td>
+                    <td>{giangVien.name}</td>
+                    <td>{giangVien.hocHam}</td>
+                    <td>{giangVien.phone}</td>
+                    <td>{giangVien.email}</td>
+                    <td>{giangVien.huongNghienCuu}</td>
+                    <td>
+                      <ActionButtons
+                        onDeleteClick={() => { onDeleteClick(giangVien._id) }}
+                        onEditClick={() => { onEditClick(giangVien._id) }} />
+                    </td>
+                  </tr>
+                ))
+              }
+            </tbody>
           </LyrTable>
           {/* <Card small className="mb-4">
             <CardHeader className="border-bottom">

@@ -172,3 +172,11 @@
   max-width: 2.5rem;
   border-radius: 50%!important;
 }
+
+.ml-l {
+  margin-left: 5px;
+}
+
+.small-icon {
+  font-size: 1.1rem !important;
+}

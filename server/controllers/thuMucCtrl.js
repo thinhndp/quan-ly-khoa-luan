@@ -134,12 +134,13 @@ export const getFilesOfFolderWithQuery = (req, res) => {
       let { page, limit } = pagingOptions;
       console.log('paging options before');
       console.log(returnData);
+      returnData.totalPages = Math.ceil(matchFiles.length / limit);
+      // page = page <=
       returnData.docs = matchFiles.slice((page - 1) * limit, page * limit);
       returnData.totalDocs = matchFiles.length;
-      returnData.totalPages = Math.floor(matchFiles.length / limit);
       returnData.pagingCounter = (page - 1) * limit + 1;
       returnData.prevPage = page - 1 > 0 ? page - 1 : null;
-      returnData.nextPage = page + 1 < returnData.totalPages ? page + 1 : null;
+      returnData.nextPage = page + 1 <= returnData.totalPages ? page + 1 : null;
       returnData.hasPrevPage = returnData.prevPage != null;
       returnData.hasNextPage = returnData.nextPage != null;
       console.log('paging options after');
