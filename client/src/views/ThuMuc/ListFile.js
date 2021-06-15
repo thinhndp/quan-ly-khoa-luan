@@ -14,24 +14,28 @@ import PageTitle from "../../components/common/PageTitle";
 import ActionButtons from '../../components/common/ActionButtons';
 import CreateOrEditThuMucModal from './CreateOrEditThuMucModal';
 import FileSubmitterButton from '../../components/FileSubmitter/FileSubmitterButton';
+import LyrTable from '../../components/common/LyrTable/LyrTable';
 
 import './styles.css';
 
 const ListFile = () => {
   const [ fileNops, setFileNops ] = useState([]);
-  const [ viewMode, setViewMode ] = useState(1);
-  // const [ isFileResetting, setIsFileResetting ] = useState(false);
   const [ isOpenModal, setIsOpenModal ] = useState(false);
   const [ selectedFileNop, setSelectedThuMuc ] = useState({});
   let { folderId } = useParams();
   let history = useHistory();
   let thuMuc = history.location.state;
+  const [ resData, setResData ] = useState(Utils.getNewPageData());
 
   useEffect(() => {
     getList();
   }, []);
 
-  const getList = () => {
+  useEffect(() => {
+    setFileNops(resData.docs);
+  }, [resData]);
+
+  /* const getList = () => {
     getFilesByThuMucId(folderId)
       .then((res) => {
         console.log(res);
@@ -40,26 +44,17 @@ const ListFile = () => {
       .catch((err) => {
         console.log(err.response);
       });
-  }
+  } */
 
-  const switchView = (mode) => {
-    setViewMode(mode);
-  }
-
-  const onDeleteClick = (id) => {
-    // deleteSinhVienById(id)
-    //   .then((res) => {
-    //     console.log(res);
-    //     getList();
-    //   })
-    //   .catch((err) => {
-    //     console.log(err);
-    //   });
-  }
-
-  const onEditClick = (id) => {
-    // history.push('/sinh-vien/edit', { sinhVienId: id });
-    // history.push(`/sinh-vien/edit/${id}`);
+  const getList = (search = '', pagingOptions = Utils.getNewPagingOptions()) => {
+    getFilesOfFolderWithQuery(folderId, search, pagingOptions)
+      .then((res) => {
+        console.log(res);
+        setResData(res.data);
+      })
+      .catch((err) => {
+        console.log(err.response);
+      });
   }
 
   const toggleModal = () => {
@@ -89,40 +84,6 @@ const ListFile = () => {
     window.history.back();
   }
 
-  const renderFoldersView = () => {
-    return (
-      <div className="folders-view">
-        {
-          fileNops.map((thuMuc) => (
-            <div className="folder">
-              <FolderIcon fontSize="large" />
-              <div className="folder-info">
-                <div className="info-container truncate">
-                  <div className="submitted">
-                    {/* <div>ĐÃ NỘP</div> */}
-                    <div>
-                      {thuMuc.files.slice(0, 4).map((file) => (
-                        <img src={file.user.picture}/>
-                      ))}
-                    </div>
-                  </div>
-                  <div className="flex-filler"/>
-                  <div className="folder-name">
-                    {/* <div>FOLDER</div> */}
-                    <div className="main-text truncate">{thuMuc.name}</div>
-                    <div className="sub-text">{Utils.getThuMucStatusText(thuMuc.status)}</div>
-                    <div className="sub-text">{thuMuc.files.length} files</div>
-                  </div>
-                  <div></div>
-                </div>
-              </div>
-            </div>
-          ))
-        }
-      </div>
-    );
-  }
-
   return (
     <Container fluid className="main-content-container px-4">
       {/* Page Header */}
@@ -132,24 +93,56 @@ const ListFile = () => {
 
       <Row>
         <Col>
-          <Card small className="mb-4">
-            <CardHeader className="border-bottom">
-              {/* {
-                !isFileResetting &&
-                <div>
-                  <Button onClick={onImportButtonClick}>Nhập danh sách</Button>
-                  <input type="file" id="file" ref={inputFile}
-                    style={{ display: 'none' }} onChange={(e) => handleImportList(e)} on />
+          <LyrTable
+            buttonSection={
+              <div className="flex-row">
+                <div className="mr-05r">
+                  <FileSubmitterButton onUploaded={onFileUploaded} folderId={thuMuc._id}
+                    folderDriveId={thuMuc.driveId} />
                 </div>
-              } */}
-              {/* <ButtonGroup className="mr-2">
-                <Button onClick={() => { switchView(1) }}>
-                  <ViewListIcon />
-                </Button>
-                <Button onClick={() => { switchView(0) }}>
-                  <ViewModuleIcon />
-                </Button>
-              </ButtonGroup> */}
+                <Button onClick={onBack}>Trở về</Button>
+              </div>
+            }
+            data={resData}
+            getList={getList}
+          >
+            <table className="table mb-0 c-table">
+              <thead className="bg-light">
+                <tr>
+                  <th scope="col" className="border-0">
+                    Tên file
+                  </th>
+                  <th scope="col" className="border-0">
+                    Người nộp
+                  </th>
+                  <th scope="col" className="border-0">
+                    Ngày nộp
+                  </th>
+                  <th scope="col" className="border-0">
+                    Xem
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {
+                  fileNops.map((fileNop, index) => (
+                    <tr key={`thu-muc_${index}`}>
+                      <td><span><img className="small-logo" src={Utils.getFileLogo(fileNop.name)}/></span>{fileNop.name}</td>
+                      {/* <td>-</td> */}
+                      <td>{fileNop.user.name}</td>
+                      <td>{fileNop.ngayNop}</td>
+                      <td>
+                        <LinkIcon color="primary" className="icon-button"
+                          onClick={() => { onLinkClick(fileNop.driveId) }}/>
+                      </td>
+                    </tr>
+                  ))
+                }
+              </tbody>
+            </table>
+          </LyrTable>
+          {/* <Card small className="mb-4">
+            <CardHeader className="border-bottom">
               <div className="flex-row">
                 <div className="mr-05r">
                   <FileSubmitterButton onUploaded={onFileUploaded} folderId={thuMuc._id}
@@ -159,55 +152,41 @@ const ListFile = () => {
               </div>
             </CardHeader>
             <CardBody className="p-0 pb-3">
-              { viewMode == 0 && (
-                renderFoldersView()
-              ) }
-              { viewMode == 1 && (
-                <table className="table mb-0">
-                  <thead className="bg-light">
-                    <tr>
-                      <th scope="col" className="border-0">
-                        Tên file
-                      </th>
-                      <th scope="col" className="border-0">
-                        Người nộp
-                      </th>
-                      <th scope="col" className="border-0">
-                        Ngày nộp
-                      </th>
-                      <th scope="col" className="border-0">
-                        Xem
-                      </th>
-                      {/* <th scope="col" className="border-0">
-                        Action
-                      </th> */}
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {
-                      fileNops.map((fileNop, index) => (
-                        <tr key={`thu-muc_${index}`}>
-                          <td><span><img className="small-logo" src={Utils.getFileLogo(fileNop.name)}/></span>{fileNop.name}</td>
-                          {/* <td>-</td> */}
-                          <td>{fileNop.user.name}</td>
-                          <td>{fileNop.ngayNop}</td>
-                          <td>
-                            <LinkIcon color="primary" className="icon-button"
-                              onClick={() => { onLinkClick(fileNop.driveId) }}/>
-                          </td>
-                          {/* <td>
-                            <ActionButtons
-                              onDeleteClick={() => { onDeleteClick(fileNop._id) }}
-                              onEditClick={() => { onEditClick(fileNop._id) }} />
-                          </td> */}
-                        </tr>
-                      ))
-                    }
-                  </tbody>
-                </table>
-              ) }
+              <table className="table mb-0">
+                <thead className="bg-light">
+                  <tr>
+                    <th scope="col" className="border-0">
+                      Tên file
+                    </th>
+                    <th scope="col" className="border-0">
+                      Người nộp
+                    </th>
+                    <th scope="col" className="border-0">
+                      Ngày nộp
+                    </th>
+                    <th scope="col" className="border-0">
+                      Xem
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {
+                    fileNops.map((fileNop, index) => (
+                      <tr key={`thu-muc_${index}`}>
+                        <td><span><img className="small-logo" src={Utils.getFileLogo(fileNop.name)}/></span>{fileNop.name}</td>
+                        <td>{fileNop.user.name}</td>
+                        <td>{fileNop.ngayNop}</td>
+                        <td>
+                          <LinkIcon color="primary" className="icon-button"
+                            onClick={() => { onLinkClick(fileNop.driveId) }}/>
+                        </td>
+                      </tr>
+                    ))
+                  }
+                </tbody>
+              </table>
             </CardBody>
-          </Card>
+          </Card> */}
         </Col>
       </Row>
       <CreateOrEditThuMucModal selected={selectedFileNop} isModalOpen={isOpenModal}

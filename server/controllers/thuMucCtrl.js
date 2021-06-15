@@ -28,6 +28,36 @@ export const getThuMucs = (req, res) => {
     });
 };
 
+export const getThuMucsWithQuery = (req, res) => {
+  const { search, pagingOptions } = req.body;
+  const searchRegex = new RegExp("^.*" + search + ".*");
+  ThuMuc.paginate({ name: { $regex: searchRegex, $options: "i" } }, pagingOptions)
+    .then((pageData) => {
+      let thuMucs = pageData.docs;
+      let bulkArr = [];
+      let returnedThuMucs = [];
+      for (let thuMuc of thuMucs) {
+        const status = (thuMuc.deadline < Date.now()) ? 'Closed' : 'Open';
+        bulkArr.push({
+          updateOne: {
+            "filter": { "_id": thuMuc._id },
+            "update": { $set: { "status": status } }
+          }
+        });
+        // returnedThuMucs.push({ ...thuMuc, status: status });
+        let thuMucWNewStatus = thuMuc;
+        thuMucWNewStatus.status = status;
+        returnedThuMucs.push(thuMucWNewStatus);
+      }
+      ThuMuc.bulkWrite(bulkArr);
+      // res.status(200).json(returnedThuMucs);
+      res.status(200).json({ ...pageData, docs: returnedThuMucs});
+    })
+    .catch((err) => {
+      res.status(400).json({ message: err.message });
+    });
+};
+
 export const getThuMucById = (req, res) => {
   ThuMuc.findOne({ _id: req.params.id })
     .then((thuMuc) => {
@@ -94,15 +124,27 @@ export const getFilesOfFolder = (req, res) => {
 
 export const getFilesOfFolderWithQuery = (req, res) => {
   const id = req.params.id;
+  const { search, pagingOptions } = req.body;
+  const searchRegex = new RegExp("^.*" + search + ".*");
   ThuMuc.findById(id)
     .then((thuMuc) => {
-      const fileIds = thuMuc.files.map((file) => (new mongoose.Types.ObjectId(file._id)));
-      console.log(fileIds);
-      // FileNop.find({ '_id': { $in: fileIds } })
-      FileNop.find()
-        .then((files) => {
-          res.status(201).json(files);
-        })
+      console.log(thuMuc);
+      let matchFiles = thuMuc.files.filter((tm) => (tm.name.toLowerCase().includes(search.toLowerCase())));
+      let returnData = { ...pagingOptions };
+      let { page, limit } = pagingOptions;
+      console.log('paging options before');
+      console.log(returnData);
+      returnData.docs = matchFiles.slice((page - 1) * limit, page * limit);
+      returnData.totalDocs = matchFiles.length;
+      returnData.totalPages = Math.floor(matchFiles.length / limit);
+      returnData.pagingCounter = (page - 1) * limit + 1;
+      returnData.prevPage = page - 1 > 0 ? page - 1 : null;
+      returnData.nextPage = page + 1 < returnData.totalPages ? page + 1 : null;
+      returnData.hasPrevPage = returnData.prevPage != null;
+      returnData.hasNextPage = returnData.nextPage != null;
+      console.log('paging options after');
+      console.log(returnData);
+      res.status(201).json(returnData);
     })
     .catch((err) => {
       res.status(400).json({ message: err.message });

@@ -9,13 +9,14 @@ import FolderIcon from '@material-ui/icons/Folder';
 import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
 
-import { getThuMucs } from '../../api/fileNopAPI';
+import { getThuMucs, getThuMucsWithQuery } from '../../api/fileNopAPI';
 import * as Utils from '../../utils/utils';
 
 import PageTitle from "../../components/common/PageTitle";
 import ActionButtons from '../../components/common/ActionButtons';
 import CreateOrEditThuMucModal from './CreateOrEditThuMucModal';
 import FileSubmitterButton from '../../components/FileSubmitter/FileSubmitterButton';
+import LyrTable from '../../components/common/LyrTable/LyrTable';
 
 import './styles.css';
 
@@ -25,13 +26,18 @@ const ListThuMuc = () => {
   // const [ isFileResetting, setIsFileResetting ] = useState(false);
   const [ isOpenModal, setIsOpenModal ] = useState(false);
   const [ selectedThuMuc, setSelectedThuMuc ] = useState({});
+  const [ resData, setResData ] = useState(Utils.getNewPageData());
 
   let history = useHistory();
   useEffect(() => {
     getList();
   }, []);
 
-  const getList = () => {
+  useEffect(() => {
+    setThuMucs(resData.docs);
+  }, [resData]);
+
+  /* const getList = () => {
     getThuMucs()
       .then((res) => {
         console.log(res);
@@ -39,6 +45,17 @@ const ListThuMuc = () => {
       })
       .catch((err) => {
         console.log(err);
+      });
+  } */
+
+  const getList = (search = '', pagingOptions = Utils.getNewPagingOptions()) => {
+    getThuMucsWithQuery(search, pagingOptions)
+      .then((res) => {
+        console.log(res);
+        setResData(res.data);
+      })
+      .catch((err) => {
+        console.log(err.response);
       });
   }
 
@@ -148,16 +165,8 @@ const ListThuMuc = () => {
 
       <Row>
         <Col>
-          <Card small className="mb-4">
-            <CardHeader className="border-bottom">
-              {/* {
-                !isFileResetting &&
-                <div>
-                  <Button onClick={onImportButtonClick}>Nhập danh sách</Button>
-                  <input type="file" id="file" ref={inputFile}
-                    style={{ display: 'none' }} onChange={(e) => handleImportList(e)} on />
-                </div>
-              } */}
+          <LyrTable
+            buttonSection={
               <ButtonGroup className="mr-2 btn-group">
                 <Button onClick={() => { switchView(1) }}>
                   <ViewListIcon fontSize="small"/>
@@ -166,14 +175,16 @@ const ListThuMuc = () => {
                   <ViewModuleIcon fontSize="small"/>
                 </Button>
               </ButtonGroup>
-              <Button onClick={toggleModal}>Tạo mới</Button>
-            </CardHeader>
-            <CardBody className="p-0 pb-3">
+            }
+            data={resData}
+            getList={getList}
+          >
+            <div>
               { viewMode == 0 && (
                 renderFoldersView()
               ) }
               { viewMode == 1 && (
-                <table className="table mb-0">
+                <table className="table mb-0 c-table">
                   <thead className="bg-light">
                     <tr>
                       <th scope="col" className="border-0">
@@ -226,8 +237,75 @@ const ListThuMuc = () => {
                   </tbody>
                 </table>
               ) }
+            </div>
+          </LyrTable>
+          {/* <Card small className="mb-4">
+            <CardHeader className="border-bottom">
+              <ButtonGroup className="mr-2 btn-group">
+                <Button onClick={() => { switchView(1) }}>
+                  <ViewListIcon fontSize="small"/>
+                </Button>
+                <Button onClick={() => { switchView(0) }}>
+                  <ViewModuleIcon fontSize="small"/>
+                </Button>
+              </ButtonGroup>
+              <Button onClick={toggleModal}>Tạo mới</Button>
+            </CardHeader>
+            <CardBody className="p-0 pb-3">
+              { viewMode == 0 && (
+                renderFoldersView()
+              ) }
+              { viewMode == 1 && (
+                <table className="table mb-0">
+                  <thead className="bg-light">
+                    <tr>
+                      <th scope="col" className="border-0">
+                        Tên
+                      </th>
+                      <th scope="col" className="border-0">
+                        Số file đã nộp
+                      </th>
+                      <th scope="col" className="border-0">
+                        Hạn nộp
+                      </th>
+                      <th scope="col" className="border-0">
+                        Trạng thái
+                      </th>
+                      <th scope="col" className="border-0">
+                        Upload file
+                      </th>
+                      <th scope="col" className="border-0">
+                        Action
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {
+                      thuMucs.map((thuMuc, index) => (
+                        <tr key={`thu-muc_${index}`}>
+                          <td>{thuMuc.name}</td>
+                          <td>{thuMuc.files.length}</td>
+                          <td>{thuMuc.deadline}</td>
+                          <td>{Utils.getThuMucStatusText(thuMuc.status)}</td>
+                          <td>
+                            <FileSubmitterButton onUploaded={onFileUploaded} folderId={thuMuc._id} renderAs={
+                              <PublishIcon color="primary" className="icon-button"
+                                onClick={onEditClick}/>
+                            }/>
+                          </td>
+                          <td>
+                            <ActionButtons
+                              onDeleteClick={() => { onDeleteClick(thuMuc._id) }}
+                              onEditClick={() => { onEditClick(thuMuc._id) }} />
+                          </td>
+                        </tr>
+                      ))
+                    }
+                  </tbody>
+                </table>
+              ) }
             </CardBody>
-          </Card>
+          </Card> */}
         </Col>
       </Row>
       <CreateOrEditThuMucModal selected={selectedThuMuc} isModalOpen={isOpenModal}

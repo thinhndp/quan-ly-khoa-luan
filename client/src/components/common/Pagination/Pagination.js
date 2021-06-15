@@ -29,7 +29,7 @@ const Pagination = ({ pageData, onChangePagingOptions }) => {
       setCurrentPage(currentPage + 1);
     } */
     if (pageData.hasNextPage) {
-      onChangePagingOptions(Utils.getNewPagingOptions(pageData.nextPage, pageSize));
+      onChangePagingOptions({ ...pageData, ...Utils.getNewPagingOptions(pageData.nextPage, pageSize)});
     }
   }
 
@@ -38,12 +38,12 @@ const Pagination = ({ pageData, onChangePagingOptions }) => {
       onChangePagingOptions('', Utils.getNewPagingOptions(currentPage + 1, pageSize));
     } */
     if (pageData.hasPrevPage) {
-      onChangePagingOptions(Utils.getNewPagingOptions(pageData.prevPage, pageSize));
+      onChangePagingOptions({ ...pageData, ...Utils.getNewPagingOptions(pageData.prevPage, pageSize) });
     }
   }
 
   const onTotalPageChange = (e) => {
-    onChangePagingOptions(Utils.getNewPagingOptions(pageData.page, e.target.value));
+    onChangePagingOptions({ ...pageData, ...Utils.getNewPagingOptions(pageData.page, e.target.value) });
   }
 
   return (

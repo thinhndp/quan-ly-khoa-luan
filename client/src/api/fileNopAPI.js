@@ -1,4 +1,5 @@
 import axios from 'axios';
+import * as Utils from '../utils/utils';
 import { MOCK_DATA, MOCK_FILES } from '../data/mock-data';
 
 export const getThuMucs = () => {
@@ -8,6 +9,14 @@ export const getThuMucs = () => {
   //   }, 500);
   // })
   return axios.get('/thu-mucs');
+}
+
+export const getThuMucsWithQuery = (search = '', pagingOptions = Utils.getNewPagingOptions()) => {
+  var options = {
+    search: search,
+    pagingOptions: pagingOptions,
+  };
+  return axios.post('/thu-mucs/q', options);
 }
 
 export const getThuMucById = (id) => {
@@ -35,8 +44,12 @@ export const getFilesByThuMucId = (folderId) => {
   return axios.get(`/thu-mucs/${folderId}/get-files`);
 }
 
-export const getFilesOfFolderWithQuery = (folderId) => {
-  return axios.post(`/thu-mucs/${folderId}/get-files/q`);
+export const getFilesOfFolderWithQuery = (folderId, search = '', pagingOptions = Utils.getNewPagingOptions()) => {
+  var options = {
+    search: search,
+    pagingOptions: pagingOptions,
+  };
+  return axios.post(`/thu-mucs/${folderId}/get-files/q`, options);
 }
 
 // export const createManyDeTais = (deTais) => {

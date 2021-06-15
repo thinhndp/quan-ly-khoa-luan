@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
 import { FileNopSchema } from './FileNop.js';
+import mongoosePaginate from 'mongoose-paginate-v2';
 
 const thuMucSchema = mongoose.Schema({
   name: {
@@ -34,6 +35,8 @@ const thuMucSchema = mongoose.Schema({
     required: true
   }
 });
+
+thuMucSchema.plugin(mongoosePaginate);
 
 const ThuMuc = mongoose.model('ThuMuc', thuMucSchema, 'ThuMuc');
 
