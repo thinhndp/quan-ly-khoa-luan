@@ -10,6 +10,11 @@ import FilterListIcon from '@material-ui/icons/FilterList';
 const LyrTable = ({ children, buttonSection, data, getList, tableMode = false, headers = [] }) => {
   const [ searchInput, setSearchInput ] = useState('');
   const [ pagingOptions, setPagingOptions ] = useState(Utils.getNewPagingOptions());
+  const [ filters, setFilters ] = useState([]);
+
+  useEffect(() => {
+
+  }, []);
 
   useEffect(() => {
     setPagingOptions({ ...pagingOptions, page: 1 });
@@ -47,7 +52,7 @@ const LyrTable = ({ children, buttonSection, data, getList, tableMode = false, h
                 <tr>
                   { headers.map((header) => (
                     <th scope="col" className="border-0">
-                      { header }
+                      { header.label }
                       <FilterListIcon color="action" className="icon-button ml-l small-icon"
                         onClick={() => { console.log('filter click') }}/>
                     </th>

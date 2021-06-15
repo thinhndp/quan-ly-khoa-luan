@@ -107,7 +107,36 @@ const ListGiangVien = () => {
             data={resData}
             getList={getList}
             tableMode={true}
-            headers={["Mã Giảng viên", "Họ Tên", "Học hàm", "Số điện thoại", "Email", "Hướng nghiên cứu", "Thao tác"]}
+            headers={[
+              {
+                label: "Mã Giảng viên",
+                type: "eq"
+              },
+              {
+                label: "Họ Tên",
+                type: "eq"
+              },
+              {
+                label: "Học hàm",
+                type: "sl"
+              },
+              {
+                label: "Số điện thoại",
+                type: "eq"
+              },
+              {
+                label: "Email",
+                type: "eq"
+              },
+              {
+                label: "Hướng nghiên cứu",
+                type: "sl"
+              },
+              {
+                label: "Thao tác",
+                type: "at"
+              },
+            ]}
           >
             <tbody>
               {
