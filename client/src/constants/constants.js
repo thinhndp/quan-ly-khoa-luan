@@ -45,3 +45,9 @@ export const DEFAULT_USER = {
   role: USER_ROLE_GUEST,
   _id: "guest"
 };
+
+export const FILTER_TYPE_EQ = 'EQ';
+export const FILTER_TYPE_SL = 'SL';
+export const FILTER_TYPE_FTD = 'FTD';
+export const FILTER_TYPE_FTN = 'FTN';
+export const FILTER_TYPE_NL = 'NL';

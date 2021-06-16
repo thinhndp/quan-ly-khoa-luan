@@ -161,6 +161,14 @@ export const getHocHamText = (abbr) => {
   }
 }
 
+export const getHocHamSL = () => {
+  return ([
+    { value: Constants.GIANG_VIEN_HOC_HAM_PGS_TS, label: getHocHamText(Constants.GIANG_VIEN_HOC_HAM_PGS_TS) },
+    { value: Constants.GIANG_VIEN_HOC_HAM_TS, label: getHocHamText(Constants.GIANG_VIEN_HOC_HAM_TS) },
+    { value: Constants.GIANG_VIEN_HOC_HAM_THS, label: getHocHamText(Constants.GIANG_VIEN_HOC_HAM_THS) },
+  ]);
+}
+
 export const getSinhVienStatusText = (abbr) => {
   switch(abbr) {
     case Constants.SINH_VIEN_STATUS_NOT_STARTED:
@@ -198,6 +206,13 @@ export const getHeDaoTaoText = (abbr) => {
     default:
       return "-";
   }
+}
+
+export const getHeDaoTaoSL = () => {
+  return ([
+    { value: Constants.DE_TAI_HDT_DAI_TRA, label: getHeDaoTaoText(Constants.DE_TAI_HDT_DAI_TRA) },
+    { value: Constants.DE_TAI_HDT_CHAT_LUONG_CAO, label: getHeDaoTaoText(Constants.DE_TAI_HDT_CHAT_LUONG_CAO) },
+  ]);
 }
 
 export const getDeTaiApproveStatusText = (abbr) => {

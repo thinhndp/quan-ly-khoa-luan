@@ -6,6 +6,7 @@ import { Container, Row, Col, Card, CardHeader, CardBody, Button } from "shards-
 
 import { getGiangViens, deleteGiangVienById, upsertGiangViens, getGiangViensWithQuery } from '../../api/giangVienAPI';
 import * as Utils from '../../utils/utils';
+import * as Constants from '../../constants/constants';
 
 import PageTitle from "../../components/common/PageTitle";
 import ActionButtons from '../../components/common/ActionButtons';
@@ -110,31 +111,32 @@ const ListGiangVien = () => {
             headers={[
               {
                 label: "Mã Giảng viên",
-                type: "eq"
+                type: Constants.FILTER_TYPE_EQ,
               },
               {
                 label: "Họ Tên",
-                type: "eq"
+                type: Constants.FILTER_TYPE_EQ,
               },
               {
                 label: "Học hàm",
-                type: "sl"
+                type: Constants.FILTER_TYPE_SL,
+                selectList: Utils.getHocHamSL(),
               },
               {
                 label: "Số điện thoại",
-                type: "eq"
+                type: Constants.FILTER_TYPE_EQ,
               },
               {
                 label: "Email",
-                type: "eq"
+                type: Constants.FILTER_TYPE_FTD,
               },
               {
                 label: "Hướng nghiên cứu",
-                type: "sl"
+                type: Constants.FILTER_TYPE_EQ,
               },
               {
                 label: "Thao tác",
-                type: "at"
+                type: Constants.FILTER_TYPE_NL,
               },
             ]}
           >

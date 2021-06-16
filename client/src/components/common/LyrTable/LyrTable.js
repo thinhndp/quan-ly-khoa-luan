@@ -6,6 +6,7 @@ import Pagination from '../Pagination/Pagination';
 import SearchBar from '../SearchBar/SearchBar';
 import * as Utils from '../../../utils/utils';
 import FilterListIcon from '@material-ui/icons/FilterList';
+import FilterButton from './FilterButton';
 
 const LyrTable = ({ children, buttonSection, data, getList, tableMode = false, headers = [] }) => {
   const [ searchInput, setSearchInput ] = useState('');
@@ -53,8 +54,9 @@ const LyrTable = ({ children, buttonSection, data, getList, tableMode = false, h
                   { headers.map((header) => (
                     <th scope="col" className="border-0">
                       { header.label }
-                      <FilterListIcon color="action" className="icon-button ml-l small-icon"
-                        onClick={() => { console.log('filter click') }}/>
+                      <FilterButton headerData={header} />
+                      {/* <FilterListIcon color="action" className="icon-button ml-l small-icon"
+                        onClick={() => { console.log('filter click') }}/> */}
                     </th>
                   )) }
                 </tr>
