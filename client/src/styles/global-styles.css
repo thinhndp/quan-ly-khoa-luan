@@ -168,6 +168,10 @@
   color: #007bff;
 }
 
+.t-button-group {
+  display: flex;
+}
+
 .avatar-pic {
   max-width: 2.5rem;
   border-radius: 50%!important;

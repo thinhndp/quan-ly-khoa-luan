@@ -35,8 +35,8 @@ const ListGiangVien = () => {
     }
   }, [isFileResetting]);
 
-  const getList = (search = '', pagingOptions = Utils.getNewPagingOptions()) => {
-    getGiangViensWithQuery(search, pagingOptions)
+  const getList = (search = '', pagingOptions = Utils.getNewPagingOptions(), filters = {}) => {
+    getGiangViensWithQuery(search, pagingOptions, filters)
       .then((res) => {
         console.log(res);
         // setGiangViens(res.data);
@@ -112,27 +112,33 @@ const ListGiangVien = () => {
               {
                 label: "Mã Giảng viên",
                 type: Constants.FILTER_TYPE_EQ,
+                field: 'maGV',
               },
               {
                 label: "Họ Tên",
                 type: Constants.FILTER_TYPE_EQ,
+                field: 'name',
               },
               {
                 label: "Học hàm",
                 type: Constants.FILTER_TYPE_SL,
                 selectList: Utils.getHocHamSL(),
+                field: 'hocHam',
               },
               {
                 label: "Số điện thoại",
                 type: Constants.FILTER_TYPE_EQ,
+                field: 'phone',
               },
               {
                 label: "Email",
                 type: Constants.FILTER_TYPE_FTD,
+                field: 'email',
               },
               {
                 label: "Hướng nghiên cứu",
                 type: Constants.FILTER_TYPE_EQ,
+                field: 'huongNghienCuu',
               },
               {
                 label: "Thao tác",

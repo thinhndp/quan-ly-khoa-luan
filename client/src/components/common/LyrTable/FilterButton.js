@@ -25,10 +25,10 @@ import * as Constants from '../../../constants/constants';
 import CustomModal from '../CustomModal/CustomModal';
 import FilterListIcon from '@material-ui/icons/FilterList';
 
-const FilterButton = ({ headerData }) => {
+const FilterButton = ({ headerData, onFilter, isActive }) => {
   const [ isOpen, setIsOpen ] = useState(false);
-  const [ eqValue, setEQValue ] = useState(null);
-  const [ slValue, setSLValue ] = useState(null);
+  const [ eqValue, setEQValue ] = useState('');
+  const [ slValue, setSLValue ] = useState('');
   const [ ftdFromValue, setFTDFromValue ] = useState(null);
   const [ ftdToValue, setFTDToValue ] = useState(null);
   const [ ftnFromValue, setFTNFromValue ] = useState(null);
@@ -41,6 +41,39 @@ const FilterButton = ({ headerData }) => {
 
   const toggleModal = () => {
     setIsOpen(!isOpen);
+  }
+
+  const onClearClick = () => {
+    setEQValue('');
+    setSLValue('');
+    setFTDFromValue(null);
+    setFTDToValue(null);
+    setFTNFromValue(null);
+    setFTNToValue(null);
+  }
+
+  const onFilterClick = () => {
+    if (headerData.type == Constants.FILTER_TYPE_EQ) {
+      onFilter(headerData.field, { [headerData.field]: {
+          value: eqValue,
+          type: Constants.FILTER_TYPE_EQ
+        }
+      });
+    }
+    else if (headerData.type == Constants.FILTER_TYPE_SL) {
+      onFilter({ [headerData.field]: {
+          value: slValue,
+          type: Constants.FILTER_TYPE_SL
+        }
+      });
+    }
+    else if (headerData.type == Constants.FILTER_TYPE_FTD) {
+
+    }
+    else if (headerData.type == Constants.FILTER_TYPE_FTN) {
+
+    }
+    setIsOpen(false);
   }
 
   const renderTypeEQForm = () => {
@@ -131,22 +164,13 @@ const FilterButton = ({ headerData }) => {
     
   }
 
-  const onClearClick = () => {
-    setEQValue(null);
-    setSLValue(null);
-    setFTDFromValue(null);
-    setFTDToValue(null);
-    setFTNFromValue(null);
-    setFTNToValue(null);
-  }
-
   if (headerData.type == Constants.FILTER_TYPE_NL) {
     return null;
   }
 
   return (
-    <div className="dis-inline">
-      <FilterListIcon color="action" className="icon-button ml-l small-icon"
+    <div className="dis-inline filter-button">
+      <FilterListIcon color={ isActive ? "primary" : "action" } className="icon-button ml-l small-icon"
           onClick={toggleModal}/>
       <CustomModal
           isOpen={isOpen}
@@ -160,9 +184,10 @@ const FilterButton = ({ headerData }) => {
             </div>
           }
           footer={
-            <div>
+            <div className="t-button-group">
               <Button onClick={onClearClick}>Xóa</Button>
-              <Button onClick={() => {}}>Lọc</Button>
+              <div className="mr-05r"/>
+              <Button onClick={onFilterClick}>Lọc</Button>
             </div>
           }
       />

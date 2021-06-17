@@ -319,3 +319,13 @@ export const getUniqueUploader = (files) => {
 export const getContentAsPreview = (content) => {
   return content.substr(0, 200);
 }
+
+export const getFilterString = (filters) => {
+  var res = '';
+  Object.keys(filters).forEach((key) => {
+    if (filters[key].type == Constants.FILTER_TYPE_EQ || filters[key].type == Constants.FILTER_TYPE_SL) {
+      res += `&${key}=${filters[key].value}`;
+    }
+  });
+  return res;
+}

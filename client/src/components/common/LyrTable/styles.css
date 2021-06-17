@@ -14,3 +14,7 @@
 .l-table .query-options .mb-3 {
   margin-bottom: 0 !important;
 }
+
+.filter-button .MuiSvgIcon-colorPrimary {
+    color: #007bff;
+}

@@ -1,5 +1,6 @@
 import GiangVien from '../models/GiangVien.js';
 import DeTai from '../models/DeTai.js';
+import * as Utils from '../utils/utils.js';
 
 export const getGiangViens = (req, res) => {
   GiangVien.find()
@@ -12,11 +13,30 @@ export const getGiangViens = (req, res) => {
 }
 
 export const getGiangViensWithQuery = (req, res) => {
+  console.log(req.query);
+  var rawFilters = {
+    maGV: '',
+    name: '',
+    hocHam: '',
+    phone: '',
+    email: '',
+    huongNghienCuu: '',
+  }
+  rawFilters = { ...rawFilters, ...req.query };
+  console.log(rawFilters);
   const { search, pagingOptions } = req.body;
   const searchRegex = new RegExp("^.*" + search + ".*");
-  GiangVien.paginate({ name: { $regex: searchRegex, $options: "i" } }, pagingOptions)
+  const filter = {
+    name: rawFilters.name == '' ? Utils.getIncludeFilter(search) : Utils.getIncludeFilter(rawFilters.name),
+    maGV: Utils.getIncludeFilter(rawFilters.maGV),
+    hocHam: Utils.getIncludeFilter(rawFilters.hocHam),
+    phone: Utils.getIncludeFilter(rawFilters.phone),
+    email: Utils.getIncludeFilter(rawFilters.email),
+    huongNghienCuu: Utils.getIncludeFilter(rawFilters.huongNghienCuu),
+  };
+  GiangVien.paginate(filter, pagingOptions)
     .then((giangViens) => {
-      console.log(giangViens);
+      // console.log(giangViens);
       res.status(200).json(giangViens);
     })
     .catch((err) => {

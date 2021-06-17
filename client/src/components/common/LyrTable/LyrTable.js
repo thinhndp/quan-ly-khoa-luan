@@ -11,7 +11,7 @@ import FilterButton from './FilterButton';
 const LyrTable = ({ children, buttonSection, data, getList, tableMode = false, headers = [] }) => {
   const [ searchInput, setSearchInput ] = useState('');
   const [ pagingOptions, setPagingOptions ] = useState(Utils.getNewPagingOptions());
-  const [ filters, setFilters ] = useState([]);
+  const [ filters, setFilters ] = useState({});
 
   useEffect(() => {
 
@@ -22,8 +22,10 @@ const LyrTable = ({ children, buttonSection, data, getList, tableMode = false, h
   }, [searchInput]);
 
   useEffect(() => {
-    getList(searchInput, pagingOptions);
-  }, [pagingOptions]);
+    console.log('onFilterChange');
+    console.log(filters);
+    getList(searchInput, pagingOptions, filters);
+  }, [pagingOptions, filters]);
 
   const onSearch = (value) => {
     setSearchInput(value);
@@ -32,6 +34,17 @@ const LyrTable = ({ children, buttonSection, data, getList, tableMode = false, h
   const onChangePagingOptions = (pagingOptions) => {
     setPagingOptions(pagingOptions);
     // getList(searchInput, pagingOptions);
+  }
+
+  const onFilter = (fieldName, filter) => {
+    var filtersAfter = { ...filters };
+    if (filters[fieldName] && (!filter[fieldName].value || filter[fieldName].value == '')) {
+      delete filtersAfter[fieldName];
+    }
+    else {
+      filtersAfter = { ...filtersAfter, ...filter };
+    }
+    setFilters({ ...filtersAfter });
   }
 
   return (
@@ -54,7 +67,10 @@ const LyrTable = ({ children, buttonSection, data, getList, tableMode = false, h
                   { headers.map((header) => (
                     <th scope="col" className="border-0">
                       { header.label }
-                      <FilterButton headerData={header} />
+                      <FilterButton headerData={header}
+                          onFilter={onFilter}
+                          isActive={filters[header.field] != null}
+                      />
                       {/* <FilterListIcon color="action" className="icon-button ml-l small-icon"
                         onClick={() => { console.log('filter click') }}/> */}
                     </th>

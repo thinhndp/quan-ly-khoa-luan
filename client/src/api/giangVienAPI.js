@@ -5,14 +5,13 @@ export const getGiangViens = () => {
   return axios.get('/giang-viens');
 }
 
-export const getGiangViensWithQuery = (search = '', pagingOptions = Utils.getNewPagingOptions()) => {
+export const getGiangViensWithQuery = (search = '', pagingOptions = Utils.getNewPagingOptions(), filters = {}) => {
   var options = {
     search: search,
     pagingOptions: pagingOptions,
   };
-  console.log(options);
-  console.log(pagingOptions);
-  return axios.post('/giang-viens/q', options);
+  const filterStr = Utils.getFilterString(filters);
+  return axios.post(`/giang-viens/q?${filterStr}`, options);
 }
 
 export const getGiangVienById = (id) => {

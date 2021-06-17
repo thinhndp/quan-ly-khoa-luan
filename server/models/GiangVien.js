@@ -5,7 +5,11 @@ import mongoosePaginate from 'mongoose-paginate-v2';
 export const GiangVienSchema = mongoose.Schema({
   maGV: String,
   name: String,
-  hocHam: String,
+  hocHam: {
+    type: String,
+    enum: [ '-', 'ThS.', 'PGS.TS.', 'TS.' ],
+    default: '-'
+  },
   phone: String,
   email: String,
   huongNghienCuu: String,
