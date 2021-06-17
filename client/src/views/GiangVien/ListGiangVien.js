@@ -132,7 +132,7 @@ const ListGiangVien = () => {
               },
               {
                 label: "Email",
-                type: Constants.FILTER_TYPE_FTD,
+                type: Constants.FILTER_TYPE_EQ,
                 field: 'email',
               },
               {

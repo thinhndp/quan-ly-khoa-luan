@@ -61,7 +61,7 @@ const FilterButton = ({ headerData, onFilter, isActive }) => {
       });
     }
     else if (headerData.type == Constants.FILTER_TYPE_SL) {
-      onFilter({ [headerData.field]: {
+      onFilter(headerData.field, { [headerData.field]: {
           value: slValue,
           type: Constants.FILTER_TYPE_SL
         }
