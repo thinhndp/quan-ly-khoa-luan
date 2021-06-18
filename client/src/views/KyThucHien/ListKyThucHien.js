@@ -6,6 +6,7 @@ import { Container, Row, Col, Card, CardHeader, CardBody, Button } from "shards-
 import { getKyThucHiens, deleteKyThucHienById, updateKyThucHienById, createKyThucHien, getKyThucHiensWithQuery
   } from '../../api/kyThucHienAPI';
 import * as Utils from '../../utils/utils';
+import * as Constants from '../../constants/constants';
 
 import PageTitle from "../../components/common/PageTitle";
 import ActionButtons from '../../components/common/ActionButtons';
@@ -45,14 +46,14 @@ const ListKyThucHien = () => {
       });
   } */
 
-  const getList = (search = '', pagingOptions = Utils.getNewPagingOptions()) => {
-    getKyThucHiensWithQuery(search, pagingOptions)
+  const getList = (search = '', pagingOptions = Utils.getNewPagingOptions(), filters = {}) => {
+    getKyThucHiensWithQuery(search, pagingOptions, filters)
       .then((res) => {
         console.log(res);
         setResData(res.data);
       })
       .catch((err) => {
-        console.log(err);
+        console.log(err.response);
       });
   }
 
@@ -106,45 +107,52 @@ const ListKyThucHien = () => {
             }
             data={resData}
             getList={getList}
+            tableMode={true}
+            headers={[
+              {
+                label: "Tên",
+                type: Constants.FILTER_TYPE_EQ,
+                field: 'name',
+              },
+              {
+                label: "Trạng thái",
+                type: Constants.FILTER_TYPE_SL,
+                selectList: Utils.getKyThucHienStatusSL(),
+                field: 'status',
+              },
+              {
+                label: "Ngày bắt đầu",
+                type: Constants.FILTER_TYPE_FTD,
+                field: 'startDate',
+              },
+              {
+                label: "Ngày kết thúc",
+                type: Constants.FILTER_TYPE_FTD,
+                field: 'endDate',
+              },
+              {
+                label: "Thao tác",
+                type: Constants.FILTER_TYPE_NL,
+              },
+            ]}
           >
-            <table className="table mb-0 c-table">
-              <thead className="bg-light">
-                <tr>
-                  <th scope="col" className="border-0">
-                    Tên
-                  </th>
-                  <th scope="col" className="border-0">
-                    Trạng thái
-                  </th>
-                  <th scope="col" className="border-0">
-                    Ngày bắt đầu
-                  </th>
-                  <th scope="col" className="border-0">
-                    Ngày kết thúc
-                  </th>
-                  <th scope="col" className="border-0">
-                    Thao tác
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {
-                  kyThucHiens.map((kyThucHien, index) => (
-                    <tr key={`ky-thuc-hien_${index}`}>
-                      <td>{kyThucHien.name}</td>
-                      <td>{Utils.getKyThucHienStatusText(kyThucHien.status)}</td>
-                      <td>{kyThucHien.startDate}</td>
-                      <td>{kyThucHien.endDate}</td>
-                      <td>
-                        <ActionButtons
-                          onDeleteClick={() => { onDeleteClick(kyThucHien._id) }}
-                          onEditClick={() => { onEditClick(kyThucHien) }} />
-                      </td>
-                    </tr>
-                  ))
-                }
-              </tbody>
-            </table>
+            <tbody>
+              {
+                kyThucHiens.map((kyThucHien, index) => (
+                  <tr key={`ky-thuc-hien_${index}`}>
+                    <td>{kyThucHien.name}</td>
+                    <td>{Utils.getKyThucHienStatusText(kyThucHien.status)}</td>
+                    <td>{kyThucHien.startDate}</td>
+                    <td>{kyThucHien.endDate}</td>
+                    <td>
+                      <ActionButtons
+                        onDeleteClick={() => { onDeleteClick(kyThucHien._id) }}
+                        onEditClick={() => { onEditClick(kyThucHien) }} />
+                    </td>
+                  </tr>
+                ))
+              }
+            </tbody>
           </LyrTable>
           {/* <Card small className="mb-4">
             <CardHeader className="border-bottom">

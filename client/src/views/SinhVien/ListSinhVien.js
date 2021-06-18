@@ -6,6 +6,7 @@ import { Container, Row, Col, Card, CardHeader, CardBody, Button } from "shards-
 
 import { getSinhViens, deleteSinhVienById, upsertSinhViens, getSinhViensWithQuery } from '../../api/sinhVienAPI';
 import * as Utils from '../../utils/utils';
+import * as Constants from '../../constants/constants';
 
 import PageTitle from "../../components/common/PageTitle";
 import ActionButtons from '../../components/common/ActionButtons';
@@ -45,8 +46,8 @@ const ListSinhVien = () => {
       });
   } */
 
-  const getList = (search = '', pagingOptions = Utils.getNewPagingOptions()) => {
-    getSinhViensWithQuery(search, pagingOptions)
+  const getList = (search = '', pagingOptions = Utils.getNewPagingOptions(), filters = {}) => {
+    getSinhViensWithQuery(search, pagingOptions, filters)
       .then((res) => {
         console.log(res);
         setResData(res.data);
@@ -116,58 +117,71 @@ const ListSinhVien = () => {
             }
             data={resData}
             getList={getList}
+            tableMode={true}
+            headers={[
+              {
+                label: "MSSV",
+                type: Constants.FILTER_TYPE_EQ,
+                field: 'maSV',
+              },
+              {
+                label: "Họ Tên",
+                type: Constants.FILTER_TYPE_EQ,
+                field: 'name',
+              },
+              {
+                label: "Lớp Sinh hoạt",
+                type: Constants.FILTER_TYPE_EQ,
+                field: 'lopSH',
+              },
+              {
+                label: "Số điện thoại",
+                type: Constants.FILTER_TYPE_EQ,
+                field: 'phone',
+              },
+              {
+                label: "Email",
+                type: Constants.FILTER_TYPE_EQ,
+                field: 'email',
+              },
+              {
+                label: "Trạng thái thực hiện Khóa luận",
+                type: Constants.FILTER_TYPE_SL,
+                selectList: Utils.getSinhVienStatusSL(),
+                field: 'status',
+              },
+              {
+                label: "Điểm TBCTL",
+                type: Constants.FILTER_TYPE_FTN,
+                field: 'diemTB',
+              },
+              {
+                label: "Thao tác",
+                type: Constants.FILTER_TYPE_NL,
+              },
+            ]}
           >
-            <table className="table mb-0 c-table">
-              <thead className="bg-light">
-                <tr>
-                  <th scope="col" className="border-0">
-                    MSSV
-                  </th>
-                  <th scope="col" className="border-0">
-                    Họ Tên
-                  </th>
-                  <th scope="col" className="border-0">
-                    Lớp Sinh hoạt
-                  </th>
-                  <th scope="col" className="border-0">
-                    Số điện thoại
-                  </th>
-                  <th scope="col" className="border-0">
-                    Email
-                  </th>
-                  <th scope="col" className="border-0">
-                    Trạng thái thực hiện Khóa luận
-                  </th>
-                  <th scope="col" className="border-0">
-                    Điểm TBCTL
-                  </th>
-                  <th scope="col" className="border-0">
-                    Action
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {
-                  sinhViens.map((sinhVien, index) => (
-                    <tr key={`sinh-vien_${index}`}>
-                      <td>{sinhVien.maSV}</td>
-                      {/* <td>-</td> */}
-                      <td>{sinhVien.name}</td>
-                      <td>{sinhVien.lopSH}</td>
-                      <td>{sinhVien.phone}</td>
-                      <td>{sinhVien.email}</td>
-                      <td>{Utils.getSinhVienStatusText(sinhVien.status)}</td>
-                      <td>{sinhVien.diemTB}</td>
-                      <td>
-                        <ActionButtons
-                          onDeleteClick={() => { onDeleteClick(sinhVien._id) }}
-                          onEditClick={() => { onEditClick(sinhVien._id) }} />
-                      </td>
-                    </tr>
-                  ))
-                }
-              </tbody>
-            </table>
+            <tbody>
+              {
+                sinhViens.map((sinhVien, index) => (
+                  <tr key={`sinh-vien_${index}`}>
+                    <td>{sinhVien.maSV}</td>
+                    {/* <td>-</td> */}
+                    <td>{sinhVien.name}</td>
+                    <td>{sinhVien.lopSH}</td>
+                    <td>{sinhVien.phone}</td>
+                    <td>{sinhVien.email}</td>
+                    <td>{Utils.getSinhVienStatusText(sinhVien.status)}</td>
+                    <td>{sinhVien.diemTB}</td>
+                    <td>
+                      <ActionButtons
+                        onDeleteClick={() => { onDeleteClick(sinhVien._id) }}
+                        onEditClick={() => { onEditClick(sinhVien._id) }} />
+                    </td>
+                  </tr>
+                ))
+              }
+            </tbody>
           </LyrTable>
           {/* <Card small className="mb-4">
             <CardHeader className="border-bottom">

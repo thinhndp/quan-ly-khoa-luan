@@ -5,12 +5,13 @@ export const getSinhViens = () => {
   return axios.get('/sinh-viens');
 }
 
-export const getSinhViensWithQuery = (search = '', pagingOptions = Utils.getNewPagingOptions()) => {
+export const getSinhViensWithQuery = (search = '', pagingOptions = Utils.getNewPagingOptions(), filters = {}) => {
   var options = {
     search: search,
     pagingOptions: pagingOptions,
   };
-  return axios.post('/sinh-viens/q', options);
+  const filterStr = Utils.getFilterString(filters);
+  return axios.post(`/sinh-viens/q?${filterStr}`, options);
 }
 
 export const getSinhVienById = (id) => {

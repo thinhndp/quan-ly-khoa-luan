@@ -29,10 +29,10 @@ const FilterButton = ({ headerData, onFilter, isActive }) => {
   const [ isOpen, setIsOpen ] = useState(false);
   const [ eqValue, setEQValue ] = useState('');
   const [ slValue, setSLValue ] = useState('');
-  const [ ftdFromValue, setFTDFromValue ] = useState(null);
-  const [ ftdToValue, setFTDToValue ] = useState(null);
-  const [ ftnFromValue, setFTNFromValue ] = useState(null);
-  const [ ftnToValue, setFTNToValue ] = useState(null);
+  const [ ftdFromValue, setFTDFromValue ] = useState('');
+  const [ ftdToValue, setFTDToValue ] = useState('');
+  const [ ftnFromValue, setFTNFromValue ] = useState('');
+  const [ ftnToValue, setFTNToValue ] = useState('');
 
   const ftdFromPickerRef = useRef();
   const ftdToPickerRef = useRef();
@@ -46,32 +46,38 @@ const FilterButton = ({ headerData, onFilter, isActive }) => {
   const onClearClick = () => {
     setEQValue('');
     setSLValue('');
-    setFTDFromValue(null);
-    setFTDToValue(null);
-    setFTNFromValue(null);
-    setFTNToValue(null);
+    setFTDFromValue('');
+    setFTDToValue('');
+    setFTNFromValue('');
+    setFTNToValue('');
   }
 
   const onFilterClick = () => {
     if (headerData.type == Constants.FILTER_TYPE_EQ) {
       onFilter(headerData.field, { [headerData.field]: {
-          value: eqValue,
-          type: Constants.FILTER_TYPE_EQ
-        }
-      });
+        value: eqValue,
+        type: Constants.FILTER_TYPE_EQ,
+      }});
     }
     else if (headerData.type == Constants.FILTER_TYPE_SL) {
       onFilter(headerData.field, { [headerData.field]: {
-          value: slValue,
-          type: Constants.FILTER_TYPE_SL
-        }
-      });
+        value: slValue,
+        type: Constants.FILTER_TYPE_SL,
+      }});
     }
     else if (headerData.type == Constants.FILTER_TYPE_FTD) {
-
+      onFilter(headerData.field, { [headerData.field]: {
+        fromValue: ftdFromValue,
+        toValue: ftdToValue,
+        type: Constants.FILTER_TYPE_FTD,
+      }});
     }
     else if (headerData.type == Constants.FILTER_TYPE_FTN) {
-
+      onFilter(headerData.field, { [headerData.field]: {
+        fromValue: ftnFromValue,
+        toValue: ftnToValue,
+        type: Constants.FILTER_TYPE_FTN,
+      }});
     }
     setIsOpen(false);
   }
@@ -161,7 +167,28 @@ const FilterButton = ({ headerData, onFilter, isActive }) => {
   }
 
   const renderTypeFTNForm = () => {
-    
+    return (
+      <Row form>
+        <Col md="6" className="form-group">
+          <label htmlFor="ftnFromValue">Từ</label>
+          <FormInput
+            type="number"
+            id="ftnFromValue"
+            value={ftnFromValue}
+            onChange={(e) => { setFTNFromValue(e.target.value) }}
+          />
+        </Col>
+        <Col md="6" className="form-group">
+          <label htmlFor="ftnToValue">Đến</label>
+          <FormInput
+            type="number"
+            id="ftnToValue"
+            value={ftnToValue}
+            onChange={(e) => { setFTNToValue(e.target.value) }}
+          />
+        </Col>
+      </Row>
+    );
   }
 
   if (headerData.type == Constants.FILTER_TYPE_NL) {
@@ -181,6 +208,7 @@ const FilterButton = ({ headerData, onFilter, isActive }) => {
               { headerData.type == Constants.FILTER_TYPE_EQ && renderTypeEQForm() }
               { headerData.type == Constants.FILTER_TYPE_SL && renderTypeSLForm() }
               { headerData.type == Constants.FILTER_TYPE_FTD && renderTypeFTDForm() }
+              { headerData.type == Constants.FILTER_TYPE_FTN && renderTypeFTNForm() }
             </div>
           }
           footer={

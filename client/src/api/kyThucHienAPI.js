@@ -5,12 +5,13 @@ export const getKyThucHiens = () => {
   return axios.get('/ky-thuc-hiens');
 }
 
-export const getKyThucHiensWithQuery = (search = '', pagingOptions = Utils.getNewPagingOptions()) => {
+export const getKyThucHiensWithQuery = (search = '', pagingOptions = Utils.getNewPagingOptions(), filters = {}) => {
   var options = {
     search: search,
     pagingOptions: pagingOptions,
   };
-  return axios.post('/ky-thuc-hiens/q', options);
+  const filterStr = Utils.getFilterString(filters);
+  return axios.post(`/ky-thuc-hiens/q?${filterStr}`, options);
 }
 
 export const getKyThucHienById = (id) => {

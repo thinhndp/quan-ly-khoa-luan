@@ -5,6 +5,7 @@ import './styles.css';
 import Pagination from '../Pagination/Pagination';
 import SearchBar from '../SearchBar/SearchBar';
 import * as Utils from '../../../utils/utils';
+import * as Constants from '../../../constants/constants';
 import FilterListIcon from '@material-ui/icons/FilterList';
 import FilterButton from './FilterButton';
 
@@ -38,11 +39,27 @@ const LyrTable = ({ children, buttonSection, data, getList, tableMode = false, h
 
   const onFilter = (fieldName, filter) => {
     var filtersAfter = { ...filters };
-    if (filters[fieldName] && (!filter[fieldName].value || filter[fieldName].value == '')) {
-      delete filtersAfter[fieldName];
-    }
-    else {
+    if (!filters[fieldName]) {
       filtersAfter = { ...filtersAfter, ...filter };
+      setFilters({ ...filtersAfter });
+      return;
+    }
+
+    if (filters[fieldName].type == Constants.FILTER_TYPE_EQ || filters[fieldName].type == Constants.FILTER_TYPE_SL) {
+      if (!filter[fieldName].value || filter[fieldName].value == '') {
+        delete filtersAfter[fieldName];
+      }
+      else {
+        filtersAfter = { ...filtersAfter, ...filter };
+      }
+    }
+    else if (filters[fieldName].type == Constants.FILTER_TYPE_FTD || filters[fieldName].type == Constants.FILTER_TYPE_FTN) {
+      if (filter[fieldName].fromValue == '' && filter[fieldName].toValue == '') {
+        delete filtersAfter[fieldName];
+      }
+      else {
+        filtersAfter = { ...filtersAfter, ...filter };
+      }
     }
     setFilters({ ...filtersAfter });
   }

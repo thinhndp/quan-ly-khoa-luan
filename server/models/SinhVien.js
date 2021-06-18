@@ -3,12 +3,27 @@ import upsertMany from '@meanie/mongoose-upsert-many';
 import mongoosePaginate from 'mongoose-paginate-v2';
 
 export const SinhVienSchema = mongoose.Schema({
-  maSV: String,
-  lopSH: String,
-  name: String,
+  maSV: {
+    type: String,
+    required: true
+  },
+  lopSH: {
+    type: String,
+    default: ''
+  },
+  name: {
+    type: String,
+    required: true
+  },
   // image: String,
-  phone: String,
-  email: String,
+  phone: {
+    type: String,
+    default: ''
+  },
+  email: {
+    type: String,
+    required: true
+  },
   status: {
     type: String,
     enum: ['CDK', 'DTH', 'DHT', 'DD'],
@@ -16,7 +31,9 @@ export const SinhVienSchema = mongoose.Schema({
   },
   diemTB: {
     type: Number,
-    default: 0
+    default: 0,
+    min: 0,
+    max: 10
   }
 });
 

@@ -1,4 +1,5 @@
 import KyThucHien from '../models/KyThucHien.js';
+import * as Utils from '../utils/utils.js';
 
 export const getKyThucHiens = (req, res) => {
   KyThucHien.find()
@@ -11,9 +12,34 @@ export const getKyThucHiens = (req, res) => {
 };
 
 export const getKyThucHiensWithQuery = (req, res) => {
+  // Search and Paging
   const { search, pagingOptions } = req.body;
   const searchRegex = new RegExp("^.*" + search + ".*");
-  KyThucHien.paginate({ name: { $regex: searchRegex, $options: "i" } }, pagingOptions)
+
+  // Filters
+  const reqQuery = { ...req.query };
+  const removeFields = [ "sort" ];
+  removeFields.forEach((val) => delete reqQuery[val]);
+  let queryStr = JSON.stringify(reqQuery);
+  queryStr = Utils.getConvertedQueryString(queryStr);
+
+  const queryFilters = JSON.parse(queryStr);
+  var rawFilters = {
+    name: '',
+    status: '',
+    startDate: { $gte: '1970-01-01T00:00:00.000Z', $lte: '2036-12-31T23:59:59.000Z' },
+    endDate: { $gte: '1970-01-01T00:00:00.000Z', $lte: '2036-12-31T23:59:59.000Z' },
+  }
+  rawFilters = { ...rawFilters, ...queryFilters };
+  const filters = {
+    name: rawFilters.name == '' ? Utils.getIncludeFilter(search) : Utils.getIncludeFilter(rawFilters.name),
+    status: Utils.getIncludeFilter(rawFilters.status),
+    startDate: rawFilters.startDate,
+    endDate: rawFilters.endDate,
+  };
+  console.log(filters);
+
+  KyThucHien.paginate(filters, pagingOptions)
     .then((kyThucHiens) => {
       res.status(200).json(kyThucHiens);
     })

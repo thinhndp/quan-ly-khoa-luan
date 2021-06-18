@@ -184,6 +184,27 @@ export const getSinhVienStatusText = (abbr) => {
   }
 }
 
+export const getSinhVienStatusSL = () => {
+  return ([
+    {
+      value: Constants.SINH_VIEN_STATUS_NOT_STARTED,
+      label: getSinhVienStatusText(Constants.SINH_VIEN_STATUS_NOT_STARTED)
+    },
+    {
+      value: Constants.SINH_VIEN_STATUS_IN_PROGRESS,
+      label: getSinhVienStatusText(Constants.SINH_VIEN_STATUS_IN_PROGRESS)
+    },
+    {
+      value: Constants.SINH_VIEN_STATUS_DONE,
+      label: getSinhVienStatusText(Constants.SINH_VIEN_STATUS_DONE)
+    },
+    {
+      value: Constants.SINH_VIEN_STATUS_ABANDONED,
+      label: getSinhVienStatusText(Constants.SINH_VIEN_STATUS_ABANDONED)
+    },
+  ]);
+}
+
 export const getKyThucHienStatusText = (abbr) => {
   switch(abbr) {
     case Constants.KY_THUC_HIEN_STATUS_NOT_STARTED:
@@ -195,6 +216,23 @@ export const getKyThucHienStatusText = (abbr) => {
     default:
       return "-";
   }
+}
+
+export const getKyThucHienStatusSL = () => {
+  return ([
+    {
+      value: Constants.KY_THUC_HIEN_STATUS_NOT_STARTED,
+      label: getKyThucHienStatusText(Constants.KY_THUC_HIEN_STATUS_NOT_STARTED)
+    },
+    {
+      value: Constants.KY_THUC_HIEN_STATUS_ON_GOING,
+      label: getKyThucHienStatusText(Constants.KY_THUC_HIEN_STATUS_ON_GOING)
+    },
+    {
+      value: Constants.KY_THUC_HIEN_STATUS_FINISHED,
+      label: getKyThucHienStatusText(Constants.KY_THUC_HIEN_STATUS_FINISHED)
+    },
+  ]);
 }
 
 export const getHeDaoTaoText = (abbr) => {
@@ -326,6 +364,16 @@ export const getFilterString = (filters) => {
     if (filters[key].type == Constants.FILTER_TYPE_EQ || filters[key].type == Constants.FILTER_TYPE_SL) {
       res += `&${key}=${filters[key].value}`;
     }
+    else if (filters[key].type == Constants.FILTER_TYPE_FTD || filters[key].type == Constants.FILTER_TYPE_FTN) {
+      if (filters[key].fromValue != '') {
+        res += `&${key}[gte]=${filters[key].fromValue}`;
+      }
+      if (filters[key].toValue != '') {
+        res += `&${key}[lte]=${filters[key].toValue}`;
+      }
+    }
   });
+  console.log('res');
+  console.log(res);
   return res;
 }
