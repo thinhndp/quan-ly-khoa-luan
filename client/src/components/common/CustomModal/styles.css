@@ -5,3 +5,43 @@
 .custom-modal .info-text {
   font-weight: 400;
 }
+
+.title-container {
+  display: flex;
+}
+
+.title-container .title {
+  display: inline;
+  transform: translateY(1px);
+  background: white;
+  text-shadow: 0 0 10px white;
+  border: solid 1px #e1e5eb;
+  padding: 0 10px;
+  border-top-left-radius: 3px;
+  border-top-right-radius: 3px;
+  margin-left: 5px;
+  color: #e1e5eb;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.title-container .title:hover {
+  color: #5a6169;
+}
+
+.title-container .title:first-child {
+  margin-left: 17px;
+}
+
+.title-container .title--active {
+  border-bottom-color: white;
+  z-index: 10;
+  color: #5a6169
+}
+
+.modal-body-container {
+  border: 1px solid #e1e5eb;
+  padding: 20px;
+  border-radius: 5px;
+  position: relative;
+}

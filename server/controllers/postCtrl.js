@@ -1,5 +1,6 @@
 import Post from '../models/Post.js';
 import ThuMuc from '../models/ThuMuc.js';
+import * as Utils from '../utils/utils.js';
 
 export const getPosts = (req, res) => {
   Post.find()
@@ -12,9 +13,41 @@ export const getPosts = (req, res) => {
 };
 
 export const getPostsWithQuery = (req, res) => {
+  // Search and Paging
   const { search, pagingOptions } = req.body;
-  const searchRegex = new RegExp("^.*" + search + ".*");
-  Post.paginate({ title: { $regex: searchRegex, $options: "i" } }, pagingOptions)
+
+  // Filters
+  const reqQuery = { ...req.query };
+  const removeFields = [ "sort" ];
+  removeFields.forEach((val) => delete reqQuery[val]);
+  let queryStr = JSON.stringify(reqQuery);
+  queryStr = Utils.getConvertedQueryString(queryStr);
+
+  const queryFilters = JSON.parse(queryStr);
+  var rawFilters = {
+    title: '',
+    content: '',
+    type: '',
+    isPosted: '',
+    postedTime: { $gte: '1970-01-01T00:00:00.000Z', $lte: '2036-12-31T23:59:59.000Z' },
+  }
+  rawFilters = { ...rawFilters, ...queryFilters };
+  var filters = {
+    title: rawFilters.title == '' ? Utils.getIncludeFilter(search) : Utils.getIncludeFilter(rawFilters.title),
+    content: Utils.getIncludeFilter(rawFilters.content),
+    type: Utils.getIncludeFilter(rawFilters.type),
+    isPosted: rawFilters.isPosted == 'POSTED' ? true : false,
+    postedTime: rawFilters.postedTime,
+  };
+  if (rawFilters.isPosted == '') {
+    delete filters.isPosted;
+  }
+  if (filters.postedTime.$lte && !filters.postedTime.$gte) {
+    filters.postedTime.$gte = '1970-01-01T00:00:01.000Z'
+  }
+  console.log(filters);
+
+  Post.paginate(filters, pagingOptions)
     .then((posts) => {
       res.status(200).json(posts);
     })

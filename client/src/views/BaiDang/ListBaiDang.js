@@ -16,6 +16,7 @@ import PageTitle from "../../components/common/PageTitle";
 import ActionButtons from '../../components/common/ActionButtons';
 import PostReader from '../../components/post/PostReader';
 import LyrTable from '../../components/common/LyrTable/LyrTable';
+import * as Constants from '../../constants/constants';
 
 const ListBaiDang = () => {
   const [ viewMode, setViewMode ] = useState(0);
@@ -43,8 +44,8 @@ const ListBaiDang = () => {
       });
   } */
 
-  const getList = (search = '', pagingOptions = Utils.getNewPagingOptions()) => {
-    getPostsWithQuery(search, pagingOptions)
+  const getList = (search = '', pagingOptions = Utils.getNewPagingOptions(), filters = {}) => {
+    getPostsWithQuery(search, pagingOptions, filters)
       .then((res) => {
         console.log(res);
         setResData(res.data);
@@ -127,6 +128,44 @@ const ListBaiDang = () => {
     );
   }
 
+  if (viewMode == 0) {
+    return (
+      <Container fluid className="main-content-container px-4">
+        {/* Page Header */}
+        <Row noGutters className="page-header py-4">
+          <PageTitle sm="4" title="Danh sách Thông báo" subtitle="QUẢN LÝ THÔNG BÁO" className="text-sm-left" />
+        </Row>
+
+        {/* Table */}
+        <Row>
+          <Col>
+            <LyrTable
+              buttonSection={
+                <div>
+                  <ButtonGroup className="mr-2 btn-group">
+                    <Button onClick={() => { switchView(1) }}>
+                      <ViewListIcon fontSize="small"/>
+                    </Button>
+                    <Button onClick={() => { switchView(0) }}>
+                      <ViewModuleIcon fontSize="small"/>
+                    </Button>
+                  </ButtonGroup>
+                  <Button onClick={onNewPostClick}>Bài đăng mới</Button>
+                </div>
+              }
+              data={resData}
+              getList={getList}
+            >
+              <div>
+                { renderPostsView() }
+              </div>
+            </LyrTable>
+          </Col>
+        </Row>
+      </Container>
+    );
+  }
+
   return (
     <Container fluid className="main-content-container px-4">
       {/* Page Header */}
@@ -153,115 +192,59 @@ const ListBaiDang = () => {
             }
             data={resData}
             getList={getList}
+            tableMode={true}
+            headers={[
+              {
+                label: "Tiêu đề",
+                type: Constants.FILTER_TYPE_EQ,
+                field: 'title',
+              },
+              {
+                label: "Nội dung",
+                type: Constants.FILTER_TYPE_EQ,
+                field: 'content',
+              },
+              {
+                label: "Ngày đăng",
+                type: Constants.FILTER_TYPE_FTD,
+                field: 'postedTime',
+              },
+              {
+                label: "Loại tin",
+                type: Constants.FILTER_TYPE_SL,
+                selectList: Utils.getThongBaoTypeSL(),
+                field: 'type',
+              },
+              {
+                label: "Trạng thái",
+                type: Constants.FILTER_TYPE_SL,
+                selectList: Utils.getThongBaoStatusSL(),
+                field: 'isPosted',
+              },
+              {
+                label: "Thao tác",
+                type: Constants.FILTER_TYPE_NL,
+              },
+            ]}
           >
-            <div>
-              { viewMode == 1 && (
-                <CardBody className="p-0 pb-3 c-table">
-                  <table className="table mb-0">
-                    <thead className="bg-light">
-                      <tr>
-                        <th scope="col" className="border-0">
-                          Tiêu đề
-                        </th>
-                        <th scope="col" className="border-0">
-                          Nội dung
-                        </th>
-                        <th scope="col" className="border-0">
-                          Ngày đăng
-                        </th>
-                        <th scope="col" className="border-0">
-                          Loại tin
-                        </th>
-                        <th scope="col" className="border-0">
-                          Trạng thái
-                        </th>
-                        <th scope="col" className="border-0">
-                          Action
-                        </th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                    {
-                      posts.map((post, index) => (
-                        <tr key={`post_${index}`}>
-                          <td>{post.title}</td>
-                          <td>Xem</td>
-                          <td>{post.isPosted === true ? post.postedTime : '-'}</td>
-                          <td>{post.type === 'CK' ? 'Công khai' : 'Nội bộ'}</td>
-                          <td>{post.isPosted === true ? 'Đã đăng' : 'Chưa đăng'}</td>
-                          <td>
-                            <ActionButtons onEditClick={() => onEditClick(post._id)}
-                              onDeleteClick={() => onDeleteClick(post._id)} />
-                          </td>
-                        </tr>
-                      ))
-                    }
-                    </tbody>
-                  </table>
-                </CardBody>
-              )}
-              { viewMode == 0 && renderPostsView() }
-            </div>
+            <tbody>
+              {
+                posts.map((post, index) => (
+                  <tr key={`post_${index}`}>
+                    <td>{post.title}</td>
+                    <td>Xem</td>
+                    <td>{post.isPosted === true ? post.postedTime : '-'}</td>
+                    <td>{post.type === 'CK' ? 'Công khai' : 'Nội bộ'}</td>
+                    <td>{post.isPosted === true ? 'Đã đăng' : 'Chưa đăng'}</td>
+                    <td>
+                      <ActionButtons onEditClick={() => onEditClick(post._id)}
+                        onDeleteClick={() => onDeleteClick(post._id)} />
+                    </td>
+                  </tr>
+                ))
+              }
+            </tbody>
           </LyrTable>
-          {/* <Card small className="mb-4">
-            <CardHeader className="border-bottom">
-              <ButtonGroup className="mr-2 btn-group">
-                <Button onClick={() => { switchView(1) }}>
-                  <ViewListIcon fontSize="small"/>
-                </Button>
-                <Button onClick={() => { switchView(0) }}>
-                  <ViewModuleIcon fontSize="small"/>
-                </Button>
-              </ButtonGroup>
-              <Button onClick={onNewPostClick}>Bài đăng mới</Button>
-            </CardHeader>
-            { viewMode == 1 && (
-              <CardBody className="p-0 pb-3 c-table">
-                <table className="table mb-0">
-                  <thead className="bg-light">
-                    <tr>
-                      <th scope="col" className="border-0">
-                        Tiêu đề
-                      </th>
-                      <th scope="col" className="border-0">
-                        Nội dung
-                      </th>
-                      <th scope="col" className="border-0">
-                        Ngày đăng
-                      </th>
-                      <th scope="col" className="border-0">
-                        Loại tin
-                      </th>
-                      <th scope="col" className="border-0">
-                        Trạng thái
-                      </th>
-                      <th scope="col" className="border-0">
-                        Action
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                  {
-                    posts.map((post, index) => (
-                      <tr key={`post_${index}`}>
-                        <td>{post.title}</td>
-                        <td>Xem</td>
-                        <td>{post.isPosted === true ? post.postedTime : '-'}</td>
-                        <td>{post.type === 'CK' ? 'Công khai' : 'Nội bộ'}</td>
-                        <td>{post.isPosted === true ? 'Đã đăng' : 'Chưa đăng'}</td>
-                        <td>
-                          <ActionButtons onEditClick={() => onEditClick(post._id)}
-                            onDeleteClick={() => onDeleteClick(post._id)} />
-                        </td>
-                      </tr>
-                    ))
-                  }
-                  </tbody>
-                </table>
-              </CardBody>
-            )}
-            { viewMode == 0 && renderPostsView() }
-          </Card> */}
         </Col>
       </Row>
     </Container>

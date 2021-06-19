@@ -11,7 +11,8 @@ const deTaiSchema = mongoose.Schema({
   // giangVien: GiangVienSchema,
   giangVien: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'GiangVien'
+    ref: 'GiangVien',
+    required: true
   },
   trangThaiDuyet: {
     type: String,
@@ -44,7 +45,8 @@ const deTaiSchema = mongoose.Schema({
   moTa: String,
   kyThucHien: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'KyThucHien'
+    ref: 'KyThucHien',
+    required: true,
   }
 });
 

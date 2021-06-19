@@ -22,6 +22,7 @@ import GiangVienModal from './DetailGiangVienModal';
 import DeXuatButton from '../../components/post/DeXuatButton';
 import DangKyDTButton from '../../components/post/DangKyDTButton';
 import LyrTable from '../../components/common/LyrTable/LyrTable';
+import DetailSVThucHienButton from './DetailSVThucHienButton';
 
 const ListDeTai = () => {
   const [ deTais, setDeTais ] = useState([]);
@@ -63,8 +64,8 @@ const ListDeTai = () => {
       });
   } */
 
-  const getDeTaiList = (search = '', pagingOptions = Utils.getNewPagingOptions()) => {
-    getDeTaisWithQuery(search, pagingOptions)
+  const getDeTaiList = (search = '', pagingOptions = Utils.getNewPagingOptions(), filters = {}) => {
+    getDeTaisWithQuery(search, pagingOptions, filters)
       .then((res) => {
         console.log(res);
         setResData(res.data);
@@ -165,68 +166,88 @@ const ListDeTai = () => {
             }
             data={resData}
             getList={getDeTaiList}
-          >
-            <table className="table mb-0 c-table">
-              <thead className="bg-light">
-                <tr>
-                  <th scope="col" className="border-0">
-                    Tên Đề tài
-                  </th>
-                  <th scope="col" className="border-0">
-                    Giảng viên Hướng dẫn
-                  </th>
-                  <th scope="col" className="border-0">
-                    Mô tả
-                  </th>
-                  <th scope="col" className="border-0">
-                    Kỳ thực hiện
-                  </th>
-                  <th scope="col" className="border-0">
-                    Trạng thái duyệt
-                  </th>
-                  <th scope="col" className="border-0">
-                    Trạng thái thực hiện
-                  </th>
-                  <th scope="col" className="border-0">
-                    Hệ đào tạo
-                  </th>
-                  <th scope="col" className="border-0">
-                    Điểm số
-                  </th>
-                  <th scope="col" className="border-0">
-                    Số SV Thực hiện
-                  </th>
-                  <th scope="col" className="border-0">
-                    Action
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
+            tableMode={true}
+            headers={[
               {
-                deTais.map((deTai, index) => (
-                  <tr key={`de-tai_${index}`}>
-                    <td>{deTai.tenDeTai}</td>
-                    <td>{deTai.giangVien.name}<span className={styles['small-icon-span']}>
-                      <LaunchIcon className={commonStyles['icon-button']} color="primary"
-                        style={{ fontSize: '1rem' }} onClick={() => { onGVClick(deTai.giangVien) }}/>
-                      </span>
-                    </td>
-                    <td>{deTai.moTa}</td>
-                    <td>{(deTai.kyThucHien != null) ? deTai.kyThucHien.name : ''}</td>
-                    <td>{Utils.getDeTaiApproveStatusText(deTai.trangThaiDuyet)}</td>
-                    <td>{Utils.getDeTaiProgressStatusText(deTai.trangThaiThucHien)}</td>
-                    <td>{deTai.heDaoTao}</td>
-                    <td>{deTai.diemSo}</td>
-                    <td>{Utils.getSinhVienNumOfDeTai(deTai)}</td>
-                    <td>
-                      <ActionButtons onEditClick={() => onEditClick(deTai._id)}
-                          onDeleteClick={() => onDeleteClick(deTai._id)} />
-                    </td>
-                  </tr>
-                ))
-              }
-              </tbody>
-            </table>
+                label: "Tên Đề tài",
+                type: Constants.FILTER_TYPE_EQ,
+                field: 'tenDeTai',
+              },
+              {
+                label: "Giảng viên Hướng dẫn",
+                type: Constants.FILTER_TYPE_EQ,
+                field: 'giangVien',
+              },
+              {
+                label: "Mô tả",
+                type: Constants.FILTER_TYPE_EQ,
+                field: 'moTa',
+              },
+              {
+                label: "Kỳ thực hiện",
+                type: Constants.FILTER_TYPE_EQ,
+                field: 'kyThucHien',
+              },
+              {
+                label: "Trạng thái duyệt",
+                type: Constants.FILTER_TYPE_SL,
+                selectList: Utils.getDeTaiApproveStatusSL(),
+                field: 'trangThaiDuyet',
+              },
+              {
+                label: "Trạng thái thực hiện",
+                type: Constants.FILTER_TYPE_SL,
+                selectList: Utils.getDeTaiProgressStatusSL(),
+                field: 'trangThaiThucHien',
+              },
+              {
+                label: "Hệ đào tạo",
+                type: Constants.FILTER_TYPE_SL,
+                selectList: Utils.getHeDaoTaoSL(),
+                field: 'heDaoTao',
+              },
+              {
+                label: "Điểm số",
+                type: Constants.FILTER_TYPE_EQ,
+                field: 'diemSo',
+              },
+              {
+                label: "SV Thực hiện",
+                type: Constants.FILTER_TYPE_EQ,
+                field: 'sinhVienThucHien',
+              },
+              {
+                label: "Thao tác",
+                type: Constants.FILTER_TYPE_NL,
+              },
+            ]}
+          >
+          <tbody>
+            {
+              deTais.map((deTai, index) => (
+                <tr key={`de-tai_${index}`}>
+                  <td>{deTai.tenDeTai}</td>
+                  <td>{deTai.giangVien.name}<span className={styles['small-icon-span']}>
+                    <LaunchIcon className={commonStyles['icon-button']} color="primary"
+                      style={{ fontSize: '1rem' }} onClick={() => { onGVClick(deTai.giangVien) }}/>
+                    </span>
+                  </td>
+                  <td>{deTai.moTa}</td>
+                  <td>{(deTai.kyThucHien != null) ? deTai.kyThucHien.name : ''}</td>
+                  <td>{Utils.getDeTaiApproveStatusText(deTai.trangThaiDuyet)}</td>
+                  <td>{Utils.getDeTaiProgressStatusText(deTai.trangThaiThucHien)}</td>
+                  <td>{deTai.heDaoTao}</td>
+                  <td>{deTai.diemSo}</td>
+                  {/* <td>{Utils.getSinhVienNumOfDeTai(deTai)}</td> */}
+                  <td><DetailSVThucHienButton deTai={deTai} /></td>
+                  <td>
+                    <ActionButtons onEditClick={() => onEditClick(deTai._id)}
+                        onDeleteClick={() => onDeleteClick(deTai._id)} />
+                  </td>
+                </tr>
+              ))
+            }
+            </tbody>
           </LyrTable>
           {/* <Card small className="mb-4">
             <CardHeader className="border-bottom">

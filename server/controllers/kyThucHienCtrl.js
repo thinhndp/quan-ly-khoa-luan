@@ -14,7 +14,6 @@ export const getKyThucHiens = (req, res) => {
 export const getKyThucHiensWithQuery = (req, res) => {
   // Search and Paging
   const { search, pagingOptions } = req.body;
-  const searchRegex = new RegExp("^.*" + search + ".*");
 
   // Filters
   const reqQuery = { ...req.query };

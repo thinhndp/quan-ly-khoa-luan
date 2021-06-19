@@ -188,3 +188,11 @@
 .dis-inline {
   display: inline;
 }
+
+.small-icon-span {
+  -webkit-writing-mode: vertical-lr;
+}
+
+.mt-n10 {
+  margin-top: -10px;
+}

@@ -5,12 +5,13 @@ export const getAllPosts = () => {
   return axios.get('/posts');
 }
 
-export const getPostsWithQuery = (search = '', pagingOptions = Utils.getNewPagingOptions()) => {
+export const getPostsWithQuery = (search = '', pagingOptions = Utils.getNewPagingOptions(), filters = {}) => {
   var options = {
     search: search,
     pagingOptions: pagingOptions,
   };
-  return axios.post('/posts/q', options);
+  const filterStr = Utils.getFilterString(filters);
+  return axios.post(`/posts/q?${filterStr}`, options);
 }
 
 export const getPublicPosts = () => {

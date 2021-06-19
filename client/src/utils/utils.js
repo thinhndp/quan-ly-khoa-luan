@@ -266,6 +266,23 @@ export const getDeTaiApproveStatusText = (abbr) => {
   }
 }
 
+export const getDeTaiApproveStatusSL = () => {
+  return ([
+    {
+      value: Constants.DE_TAI_APPROVE_STATUS_NOT_APPROVED,
+      label: getDeTaiApproveStatusText(Constants.DE_TAI_APPROVE_STATUS_NOT_APPROVED)
+    },
+    {
+      value: Constants.DE_TAI_APPROVE_STATUS_APPROVED,
+      label: getDeTaiApproveStatusText(Constants.DE_TAI_APPROVE_STATUS_APPROVED)
+    },
+    {
+      value: Constants.DE_TAI_APPROVE_STATUS_REJECTED,
+      label: getDeTaiApproveStatusText(Constants.DE_TAI_APPROVE_STATUS_REJECTED)
+    },
+  ]);
+}
+
 export const getUserRoleText = (abbr) => {
   switch(abbr) {
     case Constants.USER_ROLE_GUEST:
@@ -298,6 +315,27 @@ export const getDeTaiProgressStatusText = (abbr) => {
   }
 }
 
+export const getDeTaiProgressStatusSL = () => {
+  return ([
+    {
+      value: Constants.DE_TAI_PROGRESS_STATUS_AVAILABLE,
+      label: getDeTaiProgressStatusText(Constants.DE_TAI_PROGRESS_STATUS_AVAILABLE)
+    },
+    {
+      value: Constants.DE_TAI_PROGRESS_STATUS_IN_PROGRESS,
+      label: getDeTaiProgressStatusText(Constants.DE_TAI_PROGRESS_STATUS_IN_PROGRESS)
+    },
+    {
+      value: Constants.DE_TAI_PROGRESS_STATUS_ABANDONED,
+      label: getDeTaiProgressStatusText(Constants.DE_TAI_PROGRESS_STATUS_ABANDONED)
+    },
+    {
+      value: Constants.DE_TAI_PROGRESS_STATUS_DONE,
+      label: getDeTaiProgressStatusText(Constants.DE_TAI_PROGRESS_STATUS_DONE)
+    },
+  ]);
+}
+
 export const getThuMucStatusText = (abbr) => {
   switch(abbr) {
     case Constants.THU_MUC_STATUS_OPEN:
@@ -307,6 +345,32 @@ export const getThuMucStatusText = (abbr) => {
     default:
       return "-";
   }
+}
+
+export const getThongBaoTypeSL = () => {
+  return ([
+    {
+      value: 'NB',
+      label: 'Nội bộ'
+    },
+    {
+      value: 'CK',
+      label: 'Công khai'
+    },
+  ]);
+}
+
+export const getThongBaoStatusSL = () => {
+  return ([
+    {
+      value: 'NOT_POSTED',
+      label: 'Chưa đăng'
+    },
+    {
+      value: 'POSTED',
+      label: 'Đã đăng'
+    },
+  ]);
 }
 
 export const getSinhVienNumOfDeTai = (deTai) => {

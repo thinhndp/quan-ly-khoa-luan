@@ -160,22 +160,23 @@ const DeTailGiangVienModal = ({ isGVModalOpen, toggleGVModal, selectedGV, onClos
           }
         </div>
       }
-      footer={
-        <div>
-          { mode === Constants.DETAIL_MODE_EDIT && (
-            <div style={{ display: 'flex' }}>
-              <Button onClick={toggleMode}>Hủy thay đổi</Button>
-              <div style={{ width: '0.5rem' }} />
-              <Button onClick={onUpdateClick}>Cập nhật</Button>
-            </div>
-          ) }
-          { mode === Constants.DETAIL_MODE_VIEW && (
-            <Button onClick={toggleMode}>Chỉnh sửa</Button>
-          ) }
-        </div>
-      }
     />
   );
 }
 
 export default DeTailGiangVienModal;
+
+// footer={
+//   <div>
+//     { mode === Constants.DETAIL_MODE_EDIT && (
+//       <div style={{ display: 'flex' }}>
+//         <Button onClick={toggleMode}>Hủy thay đổi</Button>
+//         <div style={{ width: '0.5rem' }} />
+//         <Button onClick={onUpdateClick}>Cập nhật</Button>
+//       </div>
+//     ) }
+//     { mode === Constants.DETAIL_MODE_VIEW && (
+//       <Button onClick={toggleMode}>Chỉnh sửa</Button>
+//     ) }
+//   </div>
+// }

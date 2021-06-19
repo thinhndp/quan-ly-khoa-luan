@@ -1,5 +1,5 @@
 export const getIncludeFilter = (queryVal, option = "i") => {
-  return { $regex: new RegExp(`^.*${queryVal}.*`) }
+  return { $regex: new RegExp(`^.*${queryVal}.*`), $options: option }
 }
 
 export const getConvertedQueryString = (queryStr) => {

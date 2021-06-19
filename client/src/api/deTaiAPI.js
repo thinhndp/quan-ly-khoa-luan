@@ -5,12 +5,13 @@ export const getDeTais = () => {
   return axios.get('/de-tais');
 }
 
-export const getDeTaisWithQuery = (search = '', pagingOptions = Utils.getNewPagingOptions()) => {
+export const getDeTaisWithQuery = (search = '', pagingOptions = Utils.getNewPagingOptions(), filters = {}) => {
   var options = {
     search: search,
     pagingOptions: pagingOptions,
   };
-  return axios.post('/de-tais/q', options);
+  const filterStr = Utils.getFilterString(filters);
+  return axios.post(`/de-tais/q?${filterStr}`, options);
 }
 
 export const getDeTaiById = (id) => {

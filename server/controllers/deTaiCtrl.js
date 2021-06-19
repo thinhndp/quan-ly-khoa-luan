@@ -1,8 +1,10 @@
 import { OAuth2Client } from 'google-auth-library';
 import DeTai from '../models/DeTai.js';
 import SinhVien from '../models/SinhVien.js';
+import GiangVien from '../models/GiangVien.js';
 import User from '../models/User.js';
 import KyThucHien from '../models/KyThucHien.js';
+import * as Utils from '../utils/utils.js';
 
 const CLIENT_ID = process.env.GOOGLE_DRIVE_CLIENT_ID;
 
@@ -20,77 +22,86 @@ export const getDeTais = (req, res) => {
 }
 
 export const getDeTaisWithQuery = (req, res) => {
-  // const { filter, search } = req;
+  // Search and Paging
   const { search, pagingOptions } = req.body;
-  const searchRegex = new RegExp("^.*" + (search ? search : '') + ".*");
-  const filter = {
-    tenDeTai: { $regex: searchRegex, $options: "i" }
-  };
-  console.log(search);
-  // DeTai.find({ tenDeTai: { $regex: search, $options: "i" } }).populate('giangVien').populate('sinhVienThucHien').populate('kyThucHien')
-  DeTai.paginate(filter, {
-    ...pagingOptions,
-    populate: 'giangVien sinhVienThucHien kyThucHien'
-  }).then((deTais) => {
-      // console.log('deTais');
-      // console.log(deTais);
-      var sortedDeTais = deTais.docs.sort((dt1, dt2) => {
-        if (!dt1.kyThucHien && !dt2.kyThucHien) {
-          return 0;
-        }
-        if (!dt1.kyThucHien) {
-          return 1;
-        }
-        if (!dt2.kyThucHien) {
-          return -1;
-        }
-        if (!dt1.kyThucHien.startDate && !dt2.kyThucHien.startDate) {
-          return ('' + dt1.kyThucHien.name).localeCompare(dt2.kyThucHien.name);
-        }
-        if (!dt1.kyThucHien.startDate) {
-          return 1;
-        }
-        if (!dt2.kyThucHien.startDate) {
-          return -1;
-        }
-        return new Date(dt2.kyThucHien.startDate) - new Date(dt1.kyThucHien.startDate);
-      })
-      res.status(200).json({ ...deTais, docs: sortedDeTais});
-    })
-    .catch((err) => {
-      res.status(400).json({ message: err.message });
-    })
-  /* KyThucHien.findOne({ status: 'DDR' })
-    .then((kyThucHien) => {
-      var promises = [];
-      if (kyThucHien != null) {
-        console.log(kyThucHien._id);
-        const p1 = DeTai.find({ kyThucHien: kyThucHien._id }).populate('giangVien').populate('sinhVienThucHien').populate('kyThucHien');
-        const p2 = DeTai.find({ kyThucHien: { $ne: kyThucHien._id } }).populate('giangVien').populate('sinhVienThucHien').populate('kyThucHien');
-        promises = [ p1, p2 ];
-        console.log('2');
-      }
-      else {
-        const p = DeTai.find().populate('giangVien').populate('sinhVienThucHien').populate('kyThucHien');
-        promises = [ p ];
-        console.log('1');
-      }
-      Promise.all(promises)
-        .then((results) => {
-          var deTais = [];
-          for (var result of results) {
-            console.log(result);
-            deTais = [ ...deTais, ...result ];
+
+  // Filters
+  const reqQuery = { ...req.query };
+  const removeFields = [ "sort" ];
+  removeFields.forEach((val) => delete reqQuery[val]);
+  let queryStr = JSON.stringify(reqQuery);
+  queryStr = Utils.getConvertedQueryString(queryStr);
+
+  const queryFilters = JSON.parse(queryStr);
+  var rawFilters = {
+    tenDeTai: '',
+    giangVien: '',
+    trangThaiDuyet: '',
+    trangThaiThucHien: '',
+    heDaoTao: '',
+    diemSo: { $gte: '0', $lte: '10' },
+    sinhVienThucHien: '',
+    kyThucHien: '',
+    moTa: '',
+  }
+  rawFilters = { ...rawFilters, ...queryFilters };
+
+  Promise.all([
+    GiangVien.find({ name: Utils.getIncludeFilter(rawFilters.giangVien) }),
+    SinhVien.find({ name: Utils.getIncludeFilter(rawFilters.sinhVienThucHien) }),
+    KyThucHien.find({ name: Utils.getIncludeFilter(rawFilters.kyThucHien), }),
+  ]).then((resList) => {
+    const giangVienIds = resList[0].map(gv => gv._id);
+    const sinhVienIds = resList[1].map(sv => sv._id);
+    const kyThucHienIds = resList[2].map(kth => kth._id);
+
+    var filters = {
+      tenDeTai: rawFilters.tenDeTai == '' ? Utils.getIncludeFilter(search) : Utils.getIncludeFilter(rawFilters.tenDeTai),
+      giangVien: { $in: giangVienIds },
+      trangThaiDuyet: Utils.getIncludeFilter(rawFilters.trangThaiDuyet),
+      trangThaiThucHien: Utils.getIncludeFilter(rawFilters.trangThaiThucHien),
+      heDaoTao: Utils.getIncludeFilter(rawFilters.heDaoTao),
+      diemSo: { $gte: '0', $lte: '10' },
+      sinhVienThucHien: { $in: sinhVienIds },
+      kyThucHien: { $in: kyThucHienIds },
+      moTa: Utils.getIncludeFilter(rawFilters.moTa),
+    };
+
+    if (rawFilters.sinhVienThucHien == '') {
+      delete filters.sinhVienThucHien;
+    }
+
+    DeTai.paginate(filters, {
+      ...pagingOptions,
+      populate: 'giangVien sinhVienThucHien kyThucHien',
+    }).then((deTais) => {
+        var sortedDeTais = deTais.docs.sort((dt1, dt2) => {
+          if (!dt1.kyThucHien && !dt2.kyThucHien) {
+            return 0;
           }
-          res.status(200).json(deTais);
+          if (!dt1.kyThucHien) {
+            return 1;
+          }
+          if (!dt2.kyThucHien) {
+            return -1;
+          }
+          if (!dt1.kyThucHien.startDate && !dt2.kyThucHien.startDate) {
+            return ('' + dt1.kyThucHien.name).localeCompare(dt2.kyThucHien.name);
+          }
+          if (!dt1.kyThucHien.startDate) {
+            return 1;
+          }
+          if (!dt2.kyThucHien.startDate) {
+            return -1;
+          }
+          return new Date(dt2.kyThucHien.startDate) - new Date(dt1.kyThucHien.startDate);
         })
-        .catch((err) => {
-          res.status(400).json({ message: err.message });
-        })
-    })
-    .catch((err) => {
-      res.status(400).json({ message: err.message });
-    }); */
+        res.status(200).json({ ...deTais, docs: sortedDeTais});
+      })
+      .catch((err) => {
+        res.status(400).json({ message: err.message });
+      });
+  })
 }
 
 export const getDeTaiById = (req, res) => {
