@@ -21,8 +21,8 @@ const deTaiSchema = mongoose.Schema({
   },
   trangThaiThucHien: {
     type: String,
-    enum: [ '-', 'CDK', 'DTH', 'DH', 'HT' ],
-    default: '-'
+    enum: [ 'CDK', 'DTH', 'DH', 'HT' ],
+    default: 'CDK'
   },
   heDaoTao: {
     type: String,

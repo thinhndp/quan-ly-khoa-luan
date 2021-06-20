@@ -7,28 +7,12 @@ import { createUser, updateUserById } from '../../api/userAPI';
 import * as Utils from '../../utils/utils';
 
 const CreateOrEditUserModal = ({ isModalOpen, toggleModal, selected, onClose, onCreated, onUpdated }) => {
-  // const [ giangVien, setGiangVien ] = useState(null);
-  // let user;
   const [ user, setUser ] = useState(Utils.getNewUser);
 
-  // useEffect(() => {
-  //   if (mode === Constants.DETAIL_MODE_EDIT) {
-  //     setGiangVien(selectedGV);
-  //   }
-  // }, [mode]);
 
   const onEnter = () => {
     setUser(selected);
   }
-
-  // const toggleMode = () => {
-  //   if (mode === Constants.DETAIL_MODE_EDIT) {
-  //     setMode(Constants.DETAIL_MODE_VIEW);
-  //   }
-  //   else {
-  //     setMode(Constants.DETAIL_MODE_EDIT);
-  //   }
-  // }
 
   const onCreateOrUpdateClick = () => {
     console.log(user);

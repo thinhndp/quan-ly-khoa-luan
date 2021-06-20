@@ -6,6 +6,10 @@
   margin-right: 0.5rem;
 }
 
+.m-15r {
+  margin: 1.5rem !important;
+}
+
 .icon-button {
   cursor: pointer;
 }
@@ -195,4 +199,22 @@
 
 .mt-n10 {
   margin-top: -10px;
+}
+
+.public-pages-container {
+  padding: 2rem 0;
+  display: flex;
+}
+
+.public-pages-container .main-area {
+  flex: 2;
+}
+
+.flat-card {
+  box-shadow: none;
+  border: 2px solid #e1e5eb;
+}
+
+.blue-border {
+  border-color: #007bff;
 }

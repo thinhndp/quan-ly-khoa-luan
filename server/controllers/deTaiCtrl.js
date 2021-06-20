@@ -105,9 +105,19 @@ export const getDeTaisWithQuery = (req, res) => {
 }
 
 export const getDeTaiById = (req, res) => {
-  console.log('getDeTaiById');
   const { id } = req.params;
   DeTai.findOne({ _id: id }).populate('giangVien').populate('sinhVienThucHien').populate('kyThucHien')
+    .then((deTai) => {
+      res.status(200).json(deTai);
+    })
+    .catch((err) => {
+      res.status(400).json({ message: err.message });
+    })
+}
+
+export const getDeTaiBySinhVienId = (req, res) => {
+  const { id } = req.params;
+  DeTai.findOne({ sinhVienThucHien: id, trangThaiThucHien: { $in: [ 'CDK', 'DTH' ] } }).populate('giangVien').populate('sinhVienThucHien').populate('kyThucHien')
     .then((deTai) => {
       res.status(200).json(deTai);
     })

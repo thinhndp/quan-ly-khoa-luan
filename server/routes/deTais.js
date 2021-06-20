@@ -1,12 +1,14 @@
 import express from 'express';
 
-import { getDeTais, getDeTaisWithQuery, getDeTaiById, updateDeTaiById, createManyDeTais, deleteDeTaiById, applyForDeTai } from '../controllers/deTaiCtrl.js';
+import { getDeTais, getDeTaisWithQuery, getDeTaiById, updateDeTaiById, createManyDeTais, deleteDeTaiById, applyForDeTai,
+    getDeTaiBySinhVienId } from '../controllers/deTaiCtrl.js';
 
 const router = express.Router();
 
 router.get('/', getDeTais);
 router.post('/q', getDeTaisWithQuery);
 router.get('/:id', getDeTaiById);
+router.get('/get-by-sinh-vien/:id', getDeTaiBySinhVienId);
 router.post('/update/:id', updateDeTaiById);
 router.post('/create-many/', createManyDeTais);
 router.delete('/:id', deleteDeTaiById);

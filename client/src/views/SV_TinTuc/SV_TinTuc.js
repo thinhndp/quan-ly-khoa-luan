@@ -2,9 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { useHistory } from "react-router-dom";
 import { Container, Row, Col, Card, CardHeader, CardBody, Button, ButtonGroup} from "shards-react";
 import { useRecoilValue } from 'recoil';
-import Calendar from 'react-calendar';
 
 import PostReader from '../../components/post/PostReader';
+import LyrCalendar from '../../components/common/LyrCalendar/LyrCalendar';
 import "./styles.css";
 import { getPublicPosts, getPrivatePosts } from '../../api/postAPI';
 import userAtom from '../../recoil/user';
@@ -43,8 +43,8 @@ const SV_TinTuc = () => {
 
   return (
     <div className="container min_height_100">
-      <div className="tin_tuc_page-container">
-        <div className="posts-container">
+      <div className="public-pages-container">
+        <div className="posts-container main-area">
           { tinTucs.map((post) => (
             <Card small className="card-post mb-4">
               <CardBody>
@@ -58,9 +58,7 @@ const SV_TinTuc = () => {
             </Card>
           ))}
         </div>
-        <div className="calendar-container">
-          <Calendar />
-        </div>
+        <LyrCalendar />
       </div>
     </div>
   );

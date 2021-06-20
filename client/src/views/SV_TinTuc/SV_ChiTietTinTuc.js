@@ -2,9 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useHistory } from "react-router-dom";
 import { useRecoilValue } from 'recoil';
 import { Container, Row, Col, Card, CardHeader, CardBody, Button, ButtonGroup} from "shards-react";
-import Calendar from 'react-calendar';
 
 import PostReader from '../../components/post/PostReader';
+import LyrCalendar from '../../components/common/LyrCalendar/LyrCalendar';
 import "./styles.css";
 import { getPostWSubmitterById } from '../../api/postAPI';
 import userAtom from '../../recoil/user';
@@ -26,14 +26,10 @@ const SV_ChiTietTinTuc = () => {
       });
   }, []);
 
-  const onClickPost = (id) => {
-    history.push(`/thong-bao/${id}`);
-  }
-
   return (
     <div className="container min_height_100">
-      <div className="tin_tuc_page-container">
-        <div className="posts-container">
+      <div className="public-pages-container">
+        <div className="posts-container main-area">
           <Card small className="card-post mb-4">
             { tinTuc &&
               <CardBody>
@@ -47,9 +43,7 @@ const SV_ChiTietTinTuc = () => {
             }
           </Card>
         </div>
-        <div className="calendar-container">
-          <Calendar />
-        </div>
+        <LyrCalendar />
       </div>
     </div>
   );

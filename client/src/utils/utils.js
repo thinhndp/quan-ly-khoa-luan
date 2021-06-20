@@ -107,6 +107,16 @@ export const getNewDeTai = () => {
   });
 }
 
+export const getNewTaskLog = (sinhVienId = '') => {
+  return ({
+    description: '',
+    sinhVien: sinhVienId,
+    logDate: '',
+    spentTime: '',
+    commitLink: '',
+  });
+}
+
 export const getUserTier = (user) => {
   switch(user.role) {
     case 'GiangVien':
@@ -303,7 +313,7 @@ export const getUserRoleText = (abbr) => {
 export const getDeTaiProgressStatusText = (abbr) => {
   switch(abbr) {
     case Constants.DE_TAI_PROGRESS_STATUS_AVAILABLE:
-      return "Chưa được đăng ký";
+      return "Chờ đăng ký";
     case Constants.DE_TAI_PROGRESS_STATUS_IN_PROGRESS:
       return "Đang thực hiện";
     case Constants.DE_TAI_PROGRESS_STATUS_ABANDONED:
@@ -440,4 +450,17 @@ export const getFilterString = (filters) => {
   console.log('res');
   console.log(res);
   return res;
+}
+
+export const isUserValidSinhVien = (user) => {
+  return !(!user || !user.role || !(user.role == Constants.USER_ROLE_SINH_VIEN) || !user.relatedInfoSV || !user.relatedInfoSV._id);
+}
+
+export const getFormattedDate = (dateStr) => {
+  var date = new Date(dateStr);
+  const offset = date.getTimezoneOffset();
+  console.log('time zone');
+  console.log(offset);
+  date = new Date(date.getTime() - (offset*60*1000));
+  return date.toISOString().split('T')[0];
 }

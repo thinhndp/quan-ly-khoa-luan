@@ -86,7 +86,7 @@ const ListBaiDang = () => {
     return (
       <div>
         { posts.map((post) => (
-          <Card small className="card-post m-4">
+          <Card small className="card-post m-4 flat-card">
             <CardBody>
               <div className="relative_wrap">
                 <h5>{post.title}</h5>

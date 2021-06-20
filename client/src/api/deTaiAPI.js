@@ -18,6 +18,10 @@ export const getDeTaiById = (id) => {
   return axios.get(`/de-tais/${id}`);
 }
 
+export const getDeTaiBySinhVienId = (sinhVienid) => {
+  return axios.get(`/de-tais/get-by-sinh-vien/${sinhVienid}`);
+}
+
 export const updateDeTaiById = (id, deTai) => {
   let token = localStorage.getItem('token');
   return axios.post(`/de-tais/update/${id}`, { deTai: deTai, token: token });

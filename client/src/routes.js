@@ -35,13 +35,14 @@ import CreateOrEditHoiDongPage from './views/HoiDong/CreateOrEditHoiDongPage';
 import ListUser from './views/User/ListUser';
 import SV_TinTuc from './views/SV_TinTuc/SV_TinTuc';
 import SV_ChiTietTinTuc from './views/SV_TinTuc/SV_ChiTietTinTuc';
+import SV_LogTime from './views/SV_LogTime/SV_LogTime';
 
 export default [
   {
     path: "/",
     exact: true,
     layout: DefaultLayout,
-    component: () => <Redirect to="/sinh-vien" />
+    component: () => <Redirect to="/thong-bao" />
   },
   {
     path: "/blog-overview",
@@ -192,6 +193,11 @@ export default [
     path: "/thong-bao/:id",
     layout: SV_Layout,
     component: SV_ChiTietTinTuc
+  },
+  {
+    path: "/logtime",
+    layout: SV_Layout,
+    component: SV_LogTime
   },
   {
     path: "/test",

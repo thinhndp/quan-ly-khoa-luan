@@ -26,7 +26,7 @@ const LoginPage = () => {
         history.push('/');
       })
       .catch((err) => {
-        console.log(err);
+        console.log(err.response);
       })
   }
 
@@ -80,7 +80,7 @@ const LoginPage = () => {
                 /> */}
                 <MyGoogleLogin
                   onSuccess={handleLogin}
-                  onFailure={(err) => { console.log(err) }}
+                  onFailure={(err) => { console.log(err.response) }}
                 />
               </CardBody>
             </Card>

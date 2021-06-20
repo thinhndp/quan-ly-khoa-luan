@@ -1,0 +1,26 @@
+.info-card h5 {
+  font-weight: 500;
+}
+
+.info-card p {
+  font-weight: 400;
+  margin-bottom: 0.75rem;
+}
+
+.info-card p .label {
+  font-weight: 500;
+  margin-right: 10px
+}
+
+.info-card p .icon {
+  margin-right: 10px
+}
+
+/* .info-card h5 {
+  font-weight: 500;
+}
+
+.info-card h5 {
+  font-weight: 500;
+} */
+

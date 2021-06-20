@@ -20,17 +20,17 @@ const SV_MainNavbar = ({ layout, stickyTop }) => {
     history.push(`/thong-bao`);
   }
 
-  // const onLogClick = () => {
-  //   history.push(`/thong-bao`);
-  // }
+  const onLogClick = () => {
+    history.push(`/logtime`);
+  }
 
   return (
     <div className={classes}>
       <Container className="p-0">
         <Navbar type="light" className="align-items-stretch flex-md-nowrap p-0">
           <div className="nav-bar-icon-container">
-            <WebIcon className="icon-button nav-bar-icon" onClick={onTinTucClick}/>
-            <AssignmentIcon className="icon-button nav-bar-icon"/>
+            <WebIcon className="icon-button nav-bar-icon" onClick={onTinTucClick} />
+            <AssignmentIcon className="icon-button nav-bar-icon" onClick={onLogClick} />
           </div>
           <NavbarNav />
         </Navbar>
