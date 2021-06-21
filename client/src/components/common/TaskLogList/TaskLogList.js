@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Container, Row, Col, Card, CardHeader, CardBody, Button, ButtonGroup} from "shards-react";
 
-import { getTaskLogsWithQuery } from '../../../api/taskLogAPI';
+import { getTaskLogsWithQuery, deleteTaskLogById } from '../../../api/taskLogAPI';
 import LyrTable from '../LyrTable/LyrTable';
 import TaskLogInfoCard from '../InfoCard/TaskLogInfoCard';
 import CreateOrEditLogModal from './CreateOrEditLogModal';
@@ -21,6 +21,12 @@ const TaskLogList = ({ sinhVienId }) => {
   useEffect(() => {
     setTaskLogs(resData.docs);
   }, [resData]);
+
+  useEffect(() => {
+    if (selected._id != null) {
+      setIsOpenModal(true);
+    }
+  }, [selected]);
 
   const getList = (search = '', pagingOptions = Utils.getNewPagingOptions(), filters = {}) => {
     if (!filters.sinhVienId) {
@@ -54,8 +60,23 @@ const TaskLogList = ({ sinhVienId }) => {
     setSelected(Utils.getNewKyThucHien);
   }
 
-  const toggleBModal = () => {
+  const toggleModal = () => {
     setIsOpenModal(!isOpenModal);
+  }
+
+  const onDeleteClick = (id) => {
+    deleteTaskLogById(id)
+      .then((res) => {
+        console.log(res);
+        getList();
+      })
+      .catch((err) => {
+        console.log(err.response);
+      });
+  }
+
+  const onEditClick = (log) => {
+    setSelected(log);
   }
 
   return (
@@ -72,12 +93,12 @@ const TaskLogList = ({ sinhVienId }) => {
             getList={getList}
           >
             { taskLogs.map((taskLog) => (
-              <TaskLogInfoCard taskLog={taskLog} flat/>
+              <TaskLogInfoCard taskLog={taskLog} flat editable={true} onDeleteClick={onDeleteClick} onEditClick={onEditClick} />
             )) }
           </LyrTable>
         </Col>
       </Row>
-      <CreateOrEditLogModal isModalOpen={isOpenModal} toggleModal={toggleBModal} selected={selected} onClose={onClose} onUpdated={onUpdated}
+      <CreateOrEditLogModal isModalOpen={isOpenModal} toggleModal={toggleModal} selected={selected} onClose={onClose} onUpdated={onUpdated}
           onCreated={onCreated} sinhVienId={sinhVienId}/>
     </div>
   );

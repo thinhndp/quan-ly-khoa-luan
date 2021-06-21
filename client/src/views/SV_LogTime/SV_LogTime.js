@@ -6,6 +6,7 @@ import { useRecoilValue } from 'recoil';
 import PostReader from '../../components/post/PostReader';
 import LyrCalendar from '../../components/common/LyrCalendar/LyrCalendar';
 import LyrTable from '../../components/common/LyrTable/LyrTable';
+import Heatmap from '../../components/common/Chart/Heatmap';
 import TaskLogList from '../../components/common/TaskLogList/TaskLogList';
 import DeTaiInfoCard from '../../components/common/InfoCard/DeTaiInfoCard';
 import "./styles.css";
@@ -52,7 +53,12 @@ const SV_TinTuc = () => {
             <TaskLogList sinhVienId={currentUser.relatedInfoSV._id} />
           </div>
         </div>
-        <LyrCalendar />
+        <div>
+          <LyrCalendar />
+          <div className="p-1r">
+            <Heatmap />
+          </div>
+        </div>
       </div>
     </div>
   );

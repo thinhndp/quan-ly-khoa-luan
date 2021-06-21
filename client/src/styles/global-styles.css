@@ -6,6 +6,18 @@
   margin-right: 0.5rem;
 }
 
+.p-0 {
+  padding: 0 !important;
+}
+
+.p-1r {
+  padding: 1rem !important;
+}
+
+.m-1r {
+  margin: 1rem !important;
+}
+
 .m-15r {
   margin: 1.5rem !important;
 }
@@ -191,6 +203,10 @@
 
 .dis-inline {
   display: inline;
+}
+
+.pos-relative {
+  position: relative;
 }
 
 .small-icon-span {

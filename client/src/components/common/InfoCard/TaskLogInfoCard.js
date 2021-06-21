@@ -1,15 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { Container, Row, Col, Card, CardHeader, CardBody, Button, ButtonGroup} from "shards-react";
 
+import ActionButtons from '../ActionButtons';
 import * as Utils from '../../../utils/utils';
-
 import './styles.css';
 
-const TaskInfoCard = ({ taskLog, flat = false }) => {
+const TaskInfoCard = ({ taskLog, flat = false, editable = false, onEditClick, onDeleteClick }) => {
   return (
     <Card small className={"card-post mb-4 info-card blue-border m-15r" + (flat ? " flat-card" : "")}>
       <CardBody>
-        <div>
+        <div className="pos-relative">
           <h5>{taskLog.description}</h5>
           <Row>
             <Col md="6">
@@ -28,6 +28,12 @@ const TaskInfoCard = ({ taskLog, flat = false }) => {
                   <a href={taskLog.commitLink} target='_blank'>Xem</a> : 'Không'}</p>
             </Col>
           </Row>
+          { editable && (
+            <div className="absolute_child-rb">
+              <ActionButtons onEditClick={() => { onEditClick(taskLog) }}
+                  onDeleteClick={() => { onDeleteClick(taskLog._id) }} />
+            </div>
+          ) }
           {/* <p><i class="material-icons icon">person</i><span className="label">Sinh Viên:</span>{taskLog.sinhVien.name}</p>
           <p><i class="material-icons icon">calendar_today</i><span className="label">Ngày:</span>{ Utils.getFormattedDate(taskLog.logDate)}</p>
           <p><i class="material-icons icon">schedule</i><span className="label">Thời gian làm:</span>{taskLog.spentTime}h</p>
