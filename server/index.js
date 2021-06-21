@@ -18,6 +18,7 @@ import hoiDongRoutes from './routes/hoiDongs.js';
 import kyThucHienRoutes from './routes/kyThucHiens.js';
 import userRoutes from './routes/users.js';
 import taskLogRoutes from './routes/taskLogs.js';
+import reportRoutes from './routes/reports.js';
 
 const app = express();
 
@@ -40,6 +41,7 @@ app.use('/hoi-dongs', hoiDongRoutes);
 app.use('/ky-thuc-hiens', kyThucHienRoutes);
 app.use('/users', userRoutes);
 app.use('/task-logs', taskLogRoutes);
+app.use('/reports', reportRoutes);
 
 const CONNECTION_URL = 'mongodb+srv://admin:admin123456@cluster0.cjuu6.mongodb.net/QLKL?retryWrites=true&w=majority';
 const PORT = process.env.PORT || 5000;

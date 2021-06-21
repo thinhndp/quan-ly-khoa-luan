@@ -111,9 +111,9 @@ export const getNewTaskLog = (sinhVienId = '') => {
   return ({
     description: '',
     sinhVien: sinhVienId,
-    logDate: '',
+    logDate: (new Date()).toISOString(),
     spentTime: '',
-    commitLink: '',
+    commitLink: ''
   });
 }
 
@@ -463,4 +463,37 @@ export const getFormattedDate = (dateStr) => {
   console.log(offset);
   date = new Date(date.getTime() - (offset*60*1000));
   return date.toISOString().split('T')[0];
+}
+
+const calTotalSpentTime = (dayReport) => {
+  var totalSpentTime = 0;
+  for (var log of dayReport) {
+    totalSpentTime += log.spentTime;
+  }
+  return totalSpentTime;
+}
+
+export const getHeatmapSeriesFromReportData = (report) => {
+  var series = [
+    { name: "CN", data: [] },
+    { name: "T7", data: [] },
+    { name: "T6", data: [] },
+    { name: "T5", data: [] },
+    { name: "T4", data: [] },
+    { name: "T3", data: [] },
+    { name: "T2", data: [] },
+  ];
+  var curDOW = 0;
+  var curW = 0;
+  for (var date of Object.keys(report)) {
+    series[6 - curDOW].data.push({ x: `Tuần ${curW + 1}`, y: calTotalSpentTime(report[date]) });
+    if (curDOW == 6) {
+      curDOW = 0;
+      curW++;
+    }
+    else {
+      curDOW++
+    }
+  }
+  return series;
 }

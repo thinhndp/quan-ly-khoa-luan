@@ -25,6 +25,11 @@ const TaskLogSchema = mongoose.Schema({
   commitLink: {
     type: String
   },
+  deTai: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'DeTai',
+    required: [true, 'Đề tài không được để trống']
+  }
 });
 
 TaskLogSchema.path('commitLink').validate((val) => {

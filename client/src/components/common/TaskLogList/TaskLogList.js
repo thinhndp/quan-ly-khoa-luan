@@ -57,7 +57,7 @@ const TaskLogList = ({ sinhVienId }) => {
   }
 
   const onClose = () => {
-    setSelected(Utils.getNewKyThucHien);
+    setSelected(Utils.getNewTaskLog(sinhVienId));
   }
 
   const toggleModal = () => {

@@ -1,4 +1,5 @@
 import TaskLog from '../models/TaskLog.js';
+import DeTai from '../models/DeTai.js';
 import * as Utils from '../utils/utils.js';
 
 export const getTaskLogs = (req, res) => {
@@ -43,7 +44,7 @@ export const getTaskLogsWithQuery = (req, res) => {
   }
   console.log(filters);
 
-  TaskLog.paginate(filters, { ...pagingOptions, populate: 'sinhVien' })
+  TaskLog.paginate(filters, { ...pagingOptions, populate: 'sinhVien deTai' })
     .then((taskLogs) => {
       res.status(200).json(taskLogs);
     })
@@ -64,11 +65,16 @@ export const getTaskLogById = (req, res) => {
 
 export const createTaskLog = (req, res) => {
   const taskLog = req.body;
-  const newTaskLog = new TaskLog(taskLog);
-
-  newTaskLog.save()
-    .then(() => {
-      res.status(201).json(newTaskLog);
+  DeTai.findOne({ sinhVienThucHien: taskLog.sinhVien })
+    .then((deTai) => {
+      var newTaskLog = new TaskLog({ ...taskLog, deTai: deTai._id });
+      newTaskLog.save()
+        .then(() => {
+          res.status(201).json(newTaskLog);
+        })
+        .catch((err) => {
+          res.status(400).json({ message: err.message });
+        });
     })
     .catch((err) => {
       res.status(400).json({ message: err.message });

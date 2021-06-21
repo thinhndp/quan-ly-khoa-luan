@@ -76,7 +76,8 @@ const CreateOrEditLogModal = ({ isModalOpen, toggleModal, selected, onClose, onC
                   <label htmlFor="feLogDate">Ngày</label>
                   <FormInput
                     id="feLogDate"
-                    value={taskLog.logDate}
+                    disabled="true"
+                    value={ Utils.getFormattedDate(taskLog.logDate) }
                     onClick={callDatePicker}
                   />
                 </FormGroup>

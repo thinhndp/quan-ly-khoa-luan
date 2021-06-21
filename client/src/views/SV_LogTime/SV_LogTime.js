@@ -11,6 +11,7 @@ import TaskLogList from '../../components/common/TaskLogList/TaskLogList';
 import DeTaiInfoCard from '../../components/common/InfoCard/DeTaiInfoCard';
 import "./styles.css";
 import { getDeTaiBySinhVienId } from '../../api/deTaiAPI';
+import { getTaskLogReportBySVId } from '../../api/reportAPI';
 import userAtom, { userAsToken } from '../../recoil/user';
 import * as Utils from '../../utils/utils';
 import * as Constants from '../../constants/constants';
@@ -19,6 +20,7 @@ const SV_TinTuc = () => {
   const currentUser = useRecoilValue(userAtom);
   // const userToken = useRecoilValue(userAsToken);
   const [ deTai, setDeTai ] = useState(Utils.getNewDeTai());
+  const [ report, setReport ] = useState(null);
 
   let history = useHistory();
   useEffect(() => {
@@ -37,6 +39,17 @@ const SV_TinTuc = () => {
         console.log(err.response);
       });
 
+    getTaskLogReportBySVId(currentUser.relatedInfoSV._id)
+      .then((res) => {
+        console.log('report');
+        console.log(res);
+        if (res.data) {
+          setReport(res.data);
+        }
+      })
+      .catch((err) => {
+        console.log(err.response);
+      });
     getList();
   }, []);
 
@@ -49,15 +62,22 @@ const SV_TinTuc = () => {
       <div className="public-pages-container">
         <div className="main-area">
           <DeTaiInfoCard deTai={deTai} />
+          { (report != null) && (
+            <div className="">
+              <Heatmap series={ Utils.getHeatmapSeriesFromReportData(report) }/>
+            </div>
+          ) }
           <div>
             <TaskLogList sinhVienId={currentUser.relatedInfoSV._id} />
           </div>
         </div>
         <div>
           <LyrCalendar />
-          <div className="p-1r">
-            <Heatmap />
-          </div>
+          { (report != null) && (
+            <div className="p-1r">
+              <Heatmap series={ Utils.getHeatmapSeriesFromReportData(report) }/>
+            </div>
+          ) }
         </div>
       </div>
     </div>

@@ -4,7 +4,7 @@ import Chart from "react-apexcharts";
 
 import './styles.css';
 
-const Heatmap = () => {
+const Heatmap = ({ series }) => {
   const [ options, setOptions ] = useState({
     // plotOptions: {
     //   heatmap: {
@@ -39,7 +39,7 @@ const Heatmap = () => {
       text: 'Hiệu suất'
     },
   });
-  const [ series, setSeries ] = useState([
+  const [ seriess, setSeries ] = useState([
     {
       name: "Mon",
       data: [{
