@@ -9,7 +9,7 @@ import * as Constants from '../../../constants/constants';
 import FilterListIcon from '@material-ui/icons/FilterList';
 import FilterButton from './FilterButton';
 
-const LyrTable = ({ children, buttonSection, data, getList, tableMode = false, headers = [] }) => {
+const LyrTable = ({ children, buttonSection, data, getList, tableMode = false, headers = [], flat = false }) => {
   const [ searchInput, setSearchInput ] = useState('');
   const [ pagingOptions, setPagingOptions ] = useState(Utils.getNewPagingOptions());
   const [ filters, setFilters ] = useState({});
@@ -66,7 +66,7 @@ const LyrTable = ({ children, buttonSection, data, getList, tableMode = false, h
 
   return (
     <div className="l-table">
-      <Card small className="mb-4">
+      <Card small className={"mb-4"  + (flat ? " flat-card" : "")}>
         <CardHeader className="border-bottom header">
           <div className="button-section">
             { buttonSection }

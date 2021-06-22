@@ -209,8 +209,8 @@ const ListHoiDong = () => {
                           onClick={() => { setSelectedHD(hoiDong) }}/>
                       </td>
                       <td>{hoiDong.phongHoc.name}</td>
-                      <td>{hoiDong.startAt}</td>
-                      <td>{hoiDong.endAt}</td>
+                      <td>{Utils.getLocaleDateString(hoiDong.startAt)}</td>
+                      <td>{Utils.getLocaleDateString(hoiDong.endAt)}</td>
                       <td>
                         <LaunchIcon color="primary" className="icon-button"
                           onClick={() => { setSelectedDTHD(hoiDong) }}/>

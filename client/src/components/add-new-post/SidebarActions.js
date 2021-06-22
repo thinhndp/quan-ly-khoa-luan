@@ -44,8 +44,11 @@ const SidebarActions = ({ title, onSaveClick, onPreviewClick, post, onLoaiTinCha
   }
   const onSelectSubmitter = (thuMuc) => {
     setSubmitter(thuMuc);
-    if (thuMuc._id !=  null) {
+    if (thuMuc != null && thuMuc._id !=  null) {
       onThuMucChange(thuMuc._id);
+    }
+    else {
+      onThuMucChange(null);
     }
   }
   return (
@@ -110,7 +113,7 @@ const SidebarActions = ({ title, onSaveClick, onPreviewClick, post, onLoaiTinCha
             </span>
             <span className="d-flex mb-2">
               <i className="material-icons mr-1">assignment_ind</i>
-              <strong className="mr-1">Thêm nút Đăng ký Đề tài:</strong>{" "}
+              <strong className="mr-1">Thêm nút ĐKĐT:</strong>{" "}
               <strong style={post.hasDKDTButton ? { color: "#007BFF" } : {}}
                   >{post.hasDKDTButton ? ' Có ' : ' Không '}</strong>{" "}
               <Dropdown className="ml-auto" open={isOpenDKDTButton} toggle={toggleDKDT}>

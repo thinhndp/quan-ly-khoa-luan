@@ -12,7 +12,7 @@ const PostReader = ({ post, asPreview }) => {
     <div class={asPreview ? "c-fade" : ""}>
       <ReactQuill value={post.content}
           readOnly={true} theme={"bubble"}/>
-      { (asPreview == null && post.submitter != null) && (
+      { (asPreview == null && post.submitter != null && post.submitter._id != null) && (
         <FileSubmitterButton folderId={post.submitter._id}
             folderDriveId={post.submitter.driveId}
             renderAs={

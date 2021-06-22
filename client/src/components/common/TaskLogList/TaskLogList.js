@@ -8,7 +8,7 @@ import CreateOrEditLogModal from './CreateOrEditLogModal';
 import * as Utils from '../../../utils/utils';
 import * as Constants from '../../../constants/constants';
 
-const TaskLogList = ({ sinhVienId }) => {
+const TaskLogList = ({ sinhVienId, editable = false, flat = false }) => {
   const [ taskLogs, setTaskLogs ] = useState([])
   const [ resData, setResData ] = useState(Utils.getNewPageData());
   const [ selected, setSelected ] = useState(Utils.getNewTaskLog(sinhVienId));
@@ -84,16 +84,20 @@ const TaskLogList = ({ sinhVienId }) => {
       <Row>
         <Col>
           <LyrTable
+            flat={flat}
             buttonSection={
-              <div>
-                <Button onClick={onNewLogClick}>Log mới</Button>
-              </div>
+              editable &&
+              (
+                <div>
+                  <Button onClick={onNewLogClick}>Log mới</Button>
+                </div>
+              )
             }
             data={resData}
             getList={getList}
           >
             { taskLogs.map((taskLog) => (
-              <TaskLogInfoCard taskLog={taskLog} flat editable={true} onDeleteClick={onDeleteClick} onEditClick={onEditClick} />
+              <TaskLogInfoCard taskLog={taskLog} flat={true} editable={editable} onDeleteClick={onDeleteClick} onEditClick={onEditClick} />
             )) }
           </LyrTable>
         </Col>

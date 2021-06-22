@@ -1,0 +1,29 @@
+.section-title {
+  margin-bottom: 20px
+}
+
+.title-and-button {
+  display: flex;
+  flex-direction: row;
+  height: 40px;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.title-and-button .btn {
+  font-weight: 700 !important;
+  font-size: 1em;
+}
+
+.title-and-button h5 {
+  font-weight: 700 !important;
+}
+
+.full-width-line {
+  margin: 10px 0;
+}
+
+.de-tai-info-section:first-of-type {
+  margin-bottom: 1.5rem!important;
+}
+

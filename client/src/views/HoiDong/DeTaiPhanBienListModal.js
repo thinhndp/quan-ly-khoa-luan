@@ -17,6 +17,10 @@ const DeTaiPhanBien = ({ isOpen, toggle, selected, onClose }) => {
     history.push(`/hoi-dong/create-or-edit/${hoiDong._id}`);
   }
 
+  const onDeTaiClick = (id) => {
+    window.open(`de-tai/detail/${id}`, "_blank");
+  }
+
   return (
     <CustomModal isOpen={isOpen} toggle={toggle} onClose={onClose}
       onEnter={onEnter}
@@ -25,10 +29,10 @@ const DeTaiPhanBien = ({ isOpen, toggle, selected, onClose }) => {
         <div>
           { hoiDong != null && (
             <div>
-              <Col md="6" className="form-group">
+              <Col className="form-group">
                 {/* <label >Các Đề tài</label> */}
                 { hoiDong.deTais.map((deTai) => (
-                  <div className="blue_link">{deTai.tenDeTai}</div>
+                  <div className="blue_link" onClick={() => { onDeTaiClick(deTai._id) }}>{deTai.tenDeTai}</div>
                 )) }
               </Col>
             </div>)

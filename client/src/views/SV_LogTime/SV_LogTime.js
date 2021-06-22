@@ -16,7 +16,7 @@ import userAtom, { userAsToken } from '../../recoil/user';
 import * as Utils from '../../utils/utils';
 import * as Constants from '../../constants/constants';
 
-const SV_TinTuc = () => {
+const SV_LogTime = () => {
   const currentUser = useRecoilValue(userAtom);
   // const userToken = useRecoilValue(userAsToken);
   const [ deTai, setDeTai ] = useState(Utils.getNewDeTai());
@@ -68,20 +68,15 @@ const SV_TinTuc = () => {
             </div>
           ) }
           <div>
-            <TaskLogList sinhVienId={currentUser.relatedInfoSV._id} />
+            <TaskLogList sinhVienId={currentUser.relatedInfoSV._id} editable/>
           </div>
         </div>
         <div>
           <LyrCalendar />
-          { (report != null) && (
-            <div className="p-1r">
-              <Heatmap series={ Utils.getHeatmapSeriesFromReportData(report) }/>
-            </div>
-          ) }
         </div>
       </div>
     </div>
   );
 }
 
-export default SV_TinTuc;
+export default SV_LogTime;

@@ -41,8 +41,8 @@ const PreviewBaiDang = () => {
       </Row>
       <div style={{ display: 'flex' }}>
         <Button onClick={onBackClick}>Trở về</Button>
-        <div style={{ margin: '10px' }} />
-        <DeXuatButton />
+        {/* <div style={{ margin: '10px' }} /> */}
+        {/* <DeXuatButton /> */}
       </div>
     </Container>
   );

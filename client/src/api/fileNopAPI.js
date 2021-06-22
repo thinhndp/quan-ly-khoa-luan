@@ -11,6 +11,14 @@ export const getThuMucs = () => {
   return axios.get('/thu-mucs');
 }
 
+export const getFilesBySinhVienId = (id, search = '', pagingOptions = Utils.getNewPagingOptions()) => {
+  var options = {
+    search: search,
+    pagingOptions: pagingOptions,
+  };
+  return axios.post(`/thu-mucs/get-files-by-sinh-vien/${id}`, options);
+}
+
 export const getThuMucsWithQuery = (search = '', pagingOptions = Utils.getNewPagingOptions()) => {
   var options = {
     search: search,

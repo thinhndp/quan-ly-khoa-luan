@@ -150,7 +150,7 @@ const ListBaiDang = () => {
                       <ViewModuleIcon fontSize="small"/>
                     </Button>
                   </ButtonGroup>
-                  <Button onClick={onNewPostClick}>Bài đăng mới</Button>
+                  <Button onClick={onNewPostClick}>Thông báo mới</Button>
                 </div>
               }
               data={resData}
@@ -187,7 +187,7 @@ const ListBaiDang = () => {
                     <ViewModuleIcon fontSize="small"/>
                   </Button>
                 </ButtonGroup>
-                <Button onClick={onNewPostClick}>Bài đăng mới</Button>
+                <Button onClick={onNewPostClick}>Thông báo mới</Button>
               </div>
             }
             data={resData}

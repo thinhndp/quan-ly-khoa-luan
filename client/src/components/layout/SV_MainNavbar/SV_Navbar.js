@@ -5,6 +5,7 @@ import classNames from "classnames";
 import { Container, Navbar } from "shards-react";
 import WebIcon from '@material-ui/icons/Web';
 import AssignmentIcon from '@material-ui/icons/Assignment';
+import OpenInBrowserIcon from '@material-ui/icons/OpenInBrowser';
 
 import NavbarNav from "./SV_NavbarNav/SV_NavbarNav";
 
@@ -24,6 +25,10 @@ const SV_MainNavbar = ({ layout, stickyTop }) => {
     history.push(`/logtime`);
   }
 
+  const onAdminClick = () => {
+    history.push(`/ky-thuc-hien`);
+  }
+
   return (
     <div className={classes}>
       <Container className="p-0">
@@ -31,6 +36,7 @@ const SV_MainNavbar = ({ layout, stickyTop }) => {
           <div className="nav-bar-icon-container">
             <WebIcon className="icon-button nav-bar-icon" onClick={onTinTucClick} />
             <AssignmentIcon className="icon-button nav-bar-icon" onClick={onLogClick} />
+            <OpenInBrowserIcon className="icon-button nav-bar-icon" onClick={onAdminClick} />
           </div>
           <NavbarNav />
         </Navbar>

@@ -167,14 +167,17 @@ const ListThuMuc = () => {
         <Col>
           <LyrTable
             buttonSection={
-              <ButtonGroup className="mr-2 btn-group">
-                <Button onClick={() => { switchView(1) }}>
-                  <ViewListIcon fontSize="small"/>
-                </Button>
-                <Button onClick={() => { switchView(0) }}>
-                  <ViewModuleIcon fontSize="small"/>
-                </Button>
-              </ButtonGroup>
+              <div>
+                <ButtonGroup className="mr-2 btn-group">
+                  <Button className={viewMode == 1 ? "" : "t-button"} onClick={() => { switchView(1) }}>
+                    <ViewListIcon fontSize="small"/>
+                  </Button>
+                  <Button className={viewMode == 0 ? "" : "t-button"} onClick={() => { switchView(0) }}>
+                    <ViewModuleIcon fontSize="small"/>
+                  </Button>
+                </ButtonGroup>
+                <Button onClick={toggleModal}>Tạo mới</Button>
+              </div>
             }
             data={resData}
             getList={getList}

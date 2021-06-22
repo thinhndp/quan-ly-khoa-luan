@@ -1,0 +1,27 @@
+.file-nops {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+.file-nops .file {
+  width: 20%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 1rem;
+  position:relative;
+  flex-direction: column;
+  cursor: pointer;
+}
+
+.file-nops .file:hover {
+  opacity: 0.8;
+  background-color: #fbfbfb;
+}
+
+.file-nops .file-nop-name {
+  width: 100%;
+  text-align: center;
+  margin-top: 0.5rem;
+}

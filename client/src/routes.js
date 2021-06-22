@@ -36,6 +36,7 @@ import ListUser from './views/User/ListUser';
 import SV_TinTuc from './views/SV_TinTuc/SV_TinTuc';
 import SV_ChiTietTinTuc from './views/SV_TinTuc/SV_ChiTietTinTuc';
 import SV_LogTime from './views/SV_LogTime/SV_LogTime';
+import DetailDeTaiPage from './views/DeTai/DetailDeTaiPage';
 
 export default [
   {
@@ -133,6 +134,12 @@ export default [
     layout: DefaultLayout,
     exact: true,
     component: ListDeTai
+  },
+  {
+    path: "/de-tai/detail/:id",
+    layout: DefaultLayout,
+    exact: true,
+    component: DetailDeTaiPage
   },
   {
     path: "/de-tai/:id",

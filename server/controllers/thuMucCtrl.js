@@ -1,6 +1,7 @@
 import mongoose from 'mongoose';
 import ThuMuc from '../models/ThuMuc.js';
 import FileNop from '../models/FileNop.js';
+import User from '../models/User.js';
 
 export const getThuMucs = (req, res) => {
   ThuMuc.find()
@@ -126,6 +127,7 @@ export const getFilesOfFolderWithQuery = (req, res) => {
   const id = req.params.id;
   const { search, pagingOptions } = req.body;
   const searchRegex = new RegExp("^.*" + search + ".*");
+  
   ThuMuc.findById(id)
     .then((thuMuc) => {
       console.log(thuMuc);
@@ -150,6 +152,48 @@ export const getFilesOfFolderWithQuery = (req, res) => {
     .catch((err) => {
       res.status(400).json({ message: err.message });
     });
+}
+
+export const getFilesBySinhVienId = async (req, res) => {
+  const { id } = req.params;
+  const { search, pagingOptions } = req.body;
+  const searchRegex = new RegExp("^.*" + search + ".*");
+
+  try {
+    const user = await User.findOne({ relatedInfoSV: id });
+    const thuMucs = await ThuMuc.find({ 'files.user.email': user.email });
+    var resFiles = [];
+    for (var thuMuc of thuMucs) {
+      for (var file of thuMuc.files) {
+        if (file.user.email == user.email) {
+          var newFile = JSON.parse(JSON.stringify(file));
+          newFile.thuMuc = { name: thuMuc.name, _id: thuMuc._id, driveId: thuMuc.driveId }
+          console.log(newFile);
+          resFiles = [ ...resFiles, newFile ];
+        }
+      }
+    }
+
+    // PAGINATE
+      let matchFiles = resFiles.filter((f) => (f.name.toLowerCase().includes(search.toLowerCase())));
+      let returnData = { ...pagingOptions };
+      let { page, limit } = pagingOptions;
+      returnData.totalPages = Math.ceil(matchFiles.length / limit);
+      returnData.docs = matchFiles.slice((page - 1) * limit, page * limit);
+      returnData.totalDocs = matchFiles.length;
+      returnData.pagingCounter = (page - 1) * limit + 1;
+      returnData.prevPage = page - 1 > 0 ? page - 1 : null;
+      returnData.nextPage = page + 1 <= returnData.totalPages ? page + 1 : null;
+      returnData.hasPrevPage = returnData.prevPage != null;
+      returnData.hasNextPage = returnData.nextPage != null;
+      res.status(201).json(returnData);
+      
+      // res.status(201).json(resFiles);
+  }
+  catch (err) {
+    res.status(400).json({ message: err.message });
+  }
+  
 }
 
 export const createFilesInFolder = (req, res) => {

@@ -98,7 +98,7 @@ export const getNewDeTai = () => {
     tenDeTai: "",
     giangVien: "",
     trangThaiDuyet: "CD",
-    trangThaiThucHien: "-",
+    trangThaiThucHien: "CDK",
     heDaoTao: "",
     diemSo: 0,
     sinhVienThucHien: [],
@@ -497,6 +497,11 @@ export const getFormattedDate = (dateStr) => {
   console.log(offset);
   date = new Date(date.getTime() - (offset*60*1000));
   return date.toISOString().split('T')[0];
+}
+
+export const getLocaleDateString = (dateStr) => {
+  var date = new Date(dateStr);
+  return date.toLocaleDateString();
 }
 
 const calTotalSpentTime = (dayReport) => {

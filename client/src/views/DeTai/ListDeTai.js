@@ -226,7 +226,7 @@ const ListDeTai = () => {
             {
               deTais.map((deTai, index) => (
                 <tr key={`de-tai_${index}`}>
-                  <td>{deTai.tenDeTai}</td>
+                  <td><a href={`/de-tai/detail/${deTai._id}`}>{deTai.tenDeTai}</a></td>
                   <td>{deTai.giangVien.name}<span className={styles['small-icon-span']}>
                     <LaunchIcon className={commonStyles['icon-button']} color="primary"
                       style={{ fontSize: '1rem' }} onClick={() => { onGVClick(deTai.giangVien) }}/>

@@ -1,4 +1,5 @@
 import BieuMau from '../models/BieuMau.js';
+import * as Utils from '../utils/utils.js';
 
 export const getBieuMaus = (req, res) => {
   BieuMau.find()
@@ -11,12 +12,29 @@ export const getBieuMaus = (req, res) => {
 };
 
 export const getBieuMausWithQuery = (req, res) => {
+  // Search and Paging
   const { search, pagingOptions } = req.body;
-  const searchRegex = new RegExp("^.*" + (search ? search : '') + ".*");
-  const filter = {
-    name: { $regex: searchRegex, $options: "i" },
+
+  // Filters
+  const reqQuery = { ...req.query };
+  const removeFields = [ "sort" ];
+  removeFields.forEach((val) => delete reqQuery[val]);
+  let queryStr = JSON.stringify(reqQuery);
+  queryStr = Utils.getConvertedQueryString(queryStr);
+
+  const queryFilters = JSON.parse(queryStr);
+  var rawFilters = {
+    name: '',
+    link: '',
+  }
+  rawFilters = { ...rawFilters, ...queryFilters };
+  var filters = {
+    name: rawFilters.name == '' ? Utils.getIncludeFilter(search) : Utils.getIncludeFilter(rawFilters.name),
+    link: Utils.getIncludeFilter(rawFilters.link),
   };
-  BieuMau.paginate(filter, {
+  console.log(filters);
+
+  BieuMau.paginate(filters, {
     ...pagingOptions,
   }).then((bieuMaus) => {
       res.status(200).json(bieuMaus);

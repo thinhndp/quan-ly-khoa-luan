@@ -4,7 +4,7 @@ import Chart from "react-apexcharts";
 
 import './styles.css';
 
-const Heatmap = ({ series, height }) => {
+const Heatmap = ({ series, height, flat = false }) => {
   const [ options, setOptions ] = useState({
     // plotOptions: {
     //   heatmap: {
@@ -50,7 +50,7 @@ const Heatmap = ({ series, height }) => {
   });
 
   return (
-    <Card small className="card-post mb-4">
+    <Card small className={"card-post mb-4"  + (flat ? " flat-card" : "") } >
       <CardBody className="chart-container">
         <div id="chart">
           {/* <ReactApexChart options={this.state.options} series={this.state.series} type="heatmap" height={350} /> */}

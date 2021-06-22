@@ -5,12 +5,13 @@ export const getBieuMaus = () => {
   return axios.get('/bieu-maus');
 }
 
-export const getBieuMausWithQuery = (search = '', pagingOptions = Utils.getNewPagingOptions()) => {
+export const getBieuMausWithQuery = (search = '', pagingOptions = Utils.getNewPagingOptions(), filters = {}) => {
   var options = {
     search: search,
     pagingOptions: pagingOptions,
   };
-  return axios.post('/bieu-maus/q', options);
+  const filterStr = Utils.getFilterString(filters);
+  return axios.post(`/bieu-maus/q?${filterStr}`, options);
 }
 
 export const getBieuMauById = (id) => {

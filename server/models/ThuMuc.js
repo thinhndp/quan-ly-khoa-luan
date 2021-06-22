@@ -33,6 +33,10 @@ const thuMucSchema = mongoose.Schema({
   driveId: {
     type: String,
     required: true
+  },
+  kyThucHien: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'KyThucHien'
   }
 });
 

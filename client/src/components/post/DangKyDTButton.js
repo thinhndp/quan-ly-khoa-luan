@@ -1,10 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { Button, FormGroup, FormInput, FormSelect, FormTextarea, CardBody } from "shards-react";
+import { useRecoilValue } from 'recoil';
 
 import CustomModal from '../../components/common/CustomModal/CustomModal';
 import SearchBar from '../../components/common/SearchBar/SearchBar';
 import { getDeTais, applyForDeTai } from '../../api/deTaiAPI';
 import * as Utils from '../../utils/utils';
+import * as Constants from '../../constants/constants';
+import userAtom from '../../recoil/user';
 
 import "./dang-ki-btn.css";
 
@@ -12,6 +15,8 @@ const DangKyDTButton = ({ renderAs }) => {
   const [ isOpen, setIsOpen ] = useState(false);
   const [ deTais, setDeTais ] = useState([]);
   const user = Utils.getUser();
+  const currentUser = useRecoilValue(userAtom);
+
 
   useEffect(() => {
     getDeTaiList();
@@ -32,7 +37,7 @@ const DangKyDTButton = ({ renderAs }) => {
   }
 
   const onApplyClick = (deTaiId) => {
-    const sinhVienId = user.relatedInfoSV;
+    const sinhVienId = currentUser.relatedInfoSV;
     console.log(deTaiId);
     console.log(sinhVienId);
     applyForDeTai(deTaiId, sinhVienId)
@@ -94,7 +99,8 @@ const DangKyDTButton = ({ renderAs }) => {
                       <td>{deTai.heDaoTao}</td>
                       <td>{Utils.getSinhVienNumOfDeTai(deTai)}</td>
                       <td>
-                        <Button onClick={() => { onApplyClick(deTai._id) }}>Đăng ký</Button>
+                        <Button disabled={!(currentUser.relatedInfoSV && currentUser.relatedInfoSV.status == Constants.SINH_VIEN_STATUS_NOT_STARTED)}
+                            onClick={() => { onApplyClick(deTai._id) }}>Đăng ký</Button>
                       </td>
                     </tr>
                   ))

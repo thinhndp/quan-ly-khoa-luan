@@ -6,6 +6,7 @@ import { Container, Row, Col, Card, CardHeader, CardBody, Button } from "shards-
 import { getBieuMaus, deleteBieuMauById, updateBieuMauById, createBieuMau,
   getBieuMausWithQuery } from '../../api/bieuMauAPI';
 import * as Utils from '../../utils/utils';
+import * as Constants from '../../constants/constants';
 
 import PageTitle from "../../components/common/PageTitle";
 import ActionButtons from '../../components/common/ActionButtons';
@@ -46,8 +47,8 @@ const ListBieuMau = () => {
       });
   } */
 
-  const getList = (search = '', pagingOptions = Utils.getNewPagingOptions()) => {
-    getBieuMausWithQuery(search, pagingOptions)
+  const getList = (search = '', pagingOptions = Utils.getNewPagingOptions(), filters = {}) => {
+    getBieuMausWithQuery(search, pagingOptions, filters)
       .then((res) => {
         console.log(res);
         setResData(res.data);
@@ -106,80 +107,44 @@ const ListBieuMau = () => {
             }
             data={resData}
             getList={getList}
+            tableMode={true}
+            headers={[
+              {
+                label: "Tên Biểu mẫu",
+                type: Constants.FILTER_TYPE_EQ,
+                field: 'name',
+              },
+              {
+                label: "Link",
+                type: Constants.FILTER_TYPE_EQ,
+                field: 'link',
+              },
+              {
+                label: "Thao tác",
+                type: Constants.FILTER_TYPE_NL,
+              },
+            ]}
           >
-            <table className="table mb-0 c-table">
-              <thead className="bg-light">
-                <tr>
-                  <th scope="col" className="border-0">
-                    Tên Biểu mẫu
-                  </th>
-                  <th scope="col" className="border-0">
-                    Link
-                  </th>
-                  <th scope="col" className="border-0">
-                    Action
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {
-                  bieuMaus.map((bieuMau, index) => (
-                    <tr key={`bieu-mau_${index}`}>
-                      <td>{bieuMau.name}</td>
-                      <td>{bieuMau.link}</td>
-                      <td>
-                        <ActionButtons
-                          onDeleteClick={() => { onDeleteClick(bieuMau._id) }}
-                          onEditClick={() => { onEditClick(bieuMau) }} />
-                      </td>
-                    </tr>
-                  ))
-                }
-              </tbody>
-            </table>
-          </LyrTable>
-          {/* <Card small className="mb-4">
-            <CardHeader className="border-bottom">
-              <Button onClick={() => { setIsOpenModal(true) }}>Thêm Biểu mẫu</Button>
-            </CardHeader>
-            <CardBody className="p-0 pb-3">
-              <table className="table mb-0">
-                <thead className="bg-light">
-                  <tr>
-                    <th scope="col" className="border-0">
-                      Tên Biểu mẫu
-                    </th>
-                    <th scope="col" className="border-0">
-                      Link
-                    </th>
-                    <th scope="col" className="border-0">
-                      Action
-                    </th>
+            <tbody>
+              {
+                bieuMaus.map((bieuMau, index) => (
+                  <tr key={`bieu-mau_${index}`}>
+                    <td>{bieuMau.name}</td>
+                    <td><a href={bieuMau.link} target="_blank">{bieuMau.link}</a></td>
+                    <td>
+                      <ActionButtons
+                        onDeleteClick={() => { onDeleteClick(bieuMau._id) }}
+                        onEditClick={() => { onEditClick(bieuMau) }} />
+                    </td>
                   </tr>
-                </thead>
-                <tbody>
-                  {
-                    bieuMaus.map((bieuMau, index) => (
-                      <tr key={`bieu-mau_${index}`}>
-                        <td>{bieuMau.name}</td>
-                        <td>{bieuMau.link}</td>
-                        <td>
-                          <ActionButtons
-                            onDeleteClick={() => { onDeleteClick(bieuMau._id) }}
-                            onEditClick={() => { onEditClick(bieuMau) }} />
-                        </td>
-                      </tr>
-                    ))
-                  }
-                </tbody>
-              </table>
-            </CardBody>
-          </Card> */}
+                ))
+              }
+            </tbody>
+          </LyrTable>
         </Col>
       </Row>
       <CreateOrEditBieuMauModal isModalOpen={isOpenModal} toggleModal={toggleBModal} selected={selectedBM} onClose={onClose} onUpdated={onUpdated}
           onCreated={onCreated}/>
-      {/* <EditBieuMauModal isOpen={isOpenModal}/> */}
     </Container>
   )
 };
