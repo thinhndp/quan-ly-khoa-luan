@@ -5,6 +5,7 @@ import { Container, Row, Col, Card, CardHeader, CardBody, Button } from "shards-
 import { getUsers, deleteUserById, updateUserById, createUser,
   getUsersWithQuery } from '../../api/userAPI';
 import * as Utils from '../../utils/utils';
+import * as Constants from '../../constants/constants';
 
 import PageTitle from "../../components/common/PageTitle";
 import ActionButtons from '../../components/common/ActionButtons';
@@ -44,8 +45,8 @@ const ListUser = () => {
       });
   } */
 
-  const getList = (search = '', pagingOptions = Utils.getNewPagingOptions()) => {
-    getUsersWithQuery(search, pagingOptions)
+  const getList = (search = '', pagingOptions = Utils.getNewPagingOptions(), filters = {}) => {
+    getUsersWithQuery(search, pagingOptions, filters)
       .then((res) => {
         console.log(res);
         setResData(res.data);
@@ -104,49 +105,58 @@ const ListUser = () => {
             }
             data={resData}
             getList={getList}
+            tableMode={true}
+            headers={[
+              {
+                label: "Tên",
+                type: Constants.FILTER_TYPE_EQ,
+                field: 'name',
+              },
+              {
+                label: "Ảnh",
+                type: Constants.FILTER_TYPE_NL,
+              },
+              {
+                label: "Vai trò",
+                type: Constants.FILTER_TYPE_SL,
+                selectList: Utils.getUserRoleSL(),
+                field: 'role',
+              },
+              {
+                label: "Quyền duyệt Đề xuất",
+                type: Constants.FILTER_TYPE_SL,
+                selectList: Utils.getTrueFalseSL(),
+                field: 'canApprove',
+              },
+              {
+                label: "Email",
+                type: Constants.FILTER_TYPE_EQ,
+                field: 'email',
+              },
+              {
+                label: "Thao tác",
+                type: Constants.FILTER_TYPE_NL,
+              },
+            ]}
           >
-            <table className="table mb-0 c-table">
-              <thead className="bg-light">
-                <tr>
-                  <th scope="col" className="border-0">
-                    Tên
-                  </th>
-                  <th scope="col" className="border-0">
-                    Ảnh
-                  </th>
-                  <th scope="col" className="border-0">
-                    Vai trò
-                  </th>
-                  <th scope="col" className="border-0">
-                    Quyền duyệt Đề xuất
-                  </th>
-                  <th scope="col" className="border-0">
-                    Email
-                  </th>
-                  <th scope="col" className="border-0">
-                    Action
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {
-                  users.map((user, index) => (
-                    <tr key={`user_${index}`}>
-                      <td>{user.name}</td>
-                      <td><img className="avatar-pic" src={user.picture} alt="User Picture"/></td>
-                      <td>{Utils.getUserRoleText(user.role)}</td>
-                      <td>{user.canApprove ? 'Có' : 'Không'}</td>
-                      <td>{user.email}</td>
-                      <td>
-                        <ActionButtons
-                          onDeleteClick={() => { onDeleteClick(user._id) }}
-                          onEditClick={() => { onEditClick(user) }} />
-                      </td>
-                    </tr>
-                  ))
-                }
-              </tbody>
-            </table>
+            <tbody>
+              {
+                users.map((user, index) => (
+                  <tr key={`user_${index}`}>
+                    <td>{user.name}</td>
+                    <td><img className="avatar-pic" src={user.picture} alt="User Picture"/></td>
+                    <td>{Utils.getUserRoleText(user.role)}</td>
+                    <td>{user.canApprove ? 'Có' : 'Không'}</td>
+                    <td>{user.email}</td>
+                    <td>
+                      <ActionButtons
+                        onDeleteClick={() => { onDeleteClick(user._id) }}
+                        onEditClick={() => { onEditClick(user) }} />
+                    </td>
+                  </tr>
+                ))
+              }
+            </tbody>
           </LyrTable>
         </Col>
       </Row>

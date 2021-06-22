@@ -4,7 +4,7 @@ import Chart from "react-apexcharts";
 
 import './styles.css';
 
-const Heatmap = ({ series }) => {
+const Heatmap = ({ series, height }) => {
   const [ options, setOptions ] = useState({
     // plotOptions: {
     //   heatmap: {
@@ -36,377 +36,19 @@ const Heatmap = ({ series }) => {
     },
     colors: ["#008FFB"],
     title: {
-      text: 'Hiệu suất'
+      text: 'Lịch Log'
     },
-  });
-  const [ seriess, setSeries ] = useState([
-    {
-      name: "Mon",
-      data: [{
-        x: 'W1',
-        y: 22
-      }, {
-        x: 'W2',
-        y: 29
-      }, {
-        x: 'W3',
-        y: 13
-      }, {
-        x: 'W4',
-        y: 32
-      }, {
-        x: 'W4',
-        y: 32
-      }, {
-        x: 'W4',
-        y: 32
-      }, {
-        x: 'W4',
-        y: 32
-      }, {
-        x: 'W4',
-        y: 32
-      }, {
-        x: 'W4',
-        y: 32
-      }, {
-        x: 'W4',
-        y: 32
-      }, {
-        x: 'W4',
-        y: 32
-      }, {
-        x: 'W4',
-        y: 32
-      }, {
-        x: 'W4',
-        y: 32
-      }, {
-        x: 'W4',
-        y: 32
-      }, {
-        x: 'W4',
-        y: 32
-      }, {
-        x: 'W4',
-        y: 32
-      }]
-    },
-    {
-      name: "Mon",
-      data: [{
-        x: 'W1',
-        y: 22
-      }, {
-        x: 'W2',
-        y: 29
-      }, {
-        x: 'W3',
-        y: 13
-      }, {
-        x: 'W4',
-        y: 32
-      }, {
-        x: 'W4',
-        y: 32
-      }, {
-        x: 'W4',
-        y: 32
-      }, {
-        x: 'W4',
-        y: 32
-      }, {
-        x: 'W4',
-        y: 32
-      }, {
-        x: 'W4',
-        y: 32
-      }, {
-        x: 'W4',
-        y: 32
-      }, {
-        x: 'W4',
-        y: 32
-      }, {
-        x: 'W4',
-        y: 32
-      }, {
-        x: 'W4',
-        y: 32
-      }, {
-        x: 'W4',
-        y: 32
-      }, {
-        x: 'W4',
-        y: 32
-      }, {
-        x: 'W4',
-        y: 32
-      }]
-    },
-    {
-      name: "Mon",
-      data: [{
-        x: 'W1',
-        y: 22
-      }, {
-        x: 'W2',
-        y: 29
-      }, {
-        x: 'W3',
-        y: 13
-      }, {
-        x: 'W4',
-        y: 32
-      }, {
-        x: 'W4',
-        y: 32
-      }, {
-        x: 'W4',
-        y: 32
-      }, {
-        x: 'W4',
-        y: 32
-      }, {
-        x: 'W4',
-        y: 32
-      }, {
-        x: 'W4',
-        y: 32
-      }, {
-        x: 'W4',
-        y: 32
-      }, {
-        x: 'W4',
-        y: 32
-      }, {
-        x: 'W4',
-        y: 32
-      }, {
-        x: 'W4',
-        y: 32
-      }, {
-        x: 'W4',
-        y: 32
-      }, {
-        x: 'W4',
-        y: 32
-      }, {
-        x: 'W4',
-        y: 32
-      }]
-    },
-    {
-      name: "Mon",
-      data: [{
-        x: 'W1',
-        y: 22
-      }, {
-        x: 'W2',
-        y: 29
-      }, {
-        x: 'W3',
-        y: 13
-      }, {
-        x: 'W4',
-        y: 32
-      }, {
-        x: 'W4',
-        y: 32
-      }, {
-        x: 'W4',
-        y: 32
-      }, {
-        x: 'W4',
-        y: 32
-      }, {
-        x: 'W4',
-        y: 32
-      }, {
-        x: 'W4',
-        y: 32
-      }, {
-        x: 'W4',
-        y: 32
-      }, {
-        x: 'W4',
-        y: 32
-      }, {
-        x: 'W4',
-        y: 32
-      }, {
-        x: 'W4',
-        y: 32
-      }, {
-        x: 'W4',
-        y: 32
-      }, {
-        x: 'W4',
-        y: 32
-      }, {
-        x: 'W4',
-        y: 32
-      }]
-    },
-    {
-      name: "Mon",
-      data: [{
-        x: 'W1',
-        y: 22
-      }, {
-        x: 'W2',
-        y: 29
-      }, {
-        x: 'W3',
-        y: 13
-      }, {
-        x: 'W4',
-        y: 32
-      }, {
-        x: 'W4',
-        y: 32
-      }, {
-        x: 'W4',
-        y: 32
-      }, {
-        x: 'W4',
-        y: 32
-      }, {
-        x: 'W4',
-        y: 32
-      }, {
-        x: 'W4',
-        y: 32
-      }, {
-        x: 'W4',
-        y: 32
-      }, {
-        x: 'W4',
-        y: 32
-      }, {
-        x: 'W4',
-        y: 32
-      }, {
-        x: 'W4',
-        y: 32
-      }, {
-        x: 'W4',
-        y: 32
-      }, {
-        x: 'W4',
-        y: 32
-      }, {
-        x: 'W4',
-        y: 32
-      }]
-    },
-    {
-      name: "Mon",
-      data: [{
-        x: 'W1',
-        y: 22
-      }, {
-        x: 'W2',
-        y: 29
-      }, {
-        x: 'W3',
-        y: 13
-      }, {
-        x: 'W4',
-        y: 32
-      }, {
-        x: 'W4',
-        y: 32
-      }, {
-        x: 'W4',
-        y: 32
-      }, {
-        x: 'W4',
-        y: 32
-      }, {
-        x: 'W4',
-        y: 32
-      }, {
-        x: 'W4',
-        y: 32
-      }, {
-        x: 'W4',
-        y: 32
-      }, {
-        x: 'W4',
-        y: 32
-      }, {
-        x: 'W4',
-        y: 32
-      }, {
-        x: 'W4',
-        y: 32
-      }, {
-        x: 'W4',
-        y: 32
-      }, {
-        x: 'W4',
-        y: 32
-      }, {
-        x: 'W4',
-        y: 32
-      }]
-    },
-    {
-      name: "Tue",
-      data: [
-        {
-          x: 'W1',
-          y: 43
-        }, {
-          x: 'W2',
-          y: 43
-        }, {
-          x: 'W3',
-          y: 43
-        }, {
-          x: 'W4',
-          y: 43
-        }, {
-          x: 'W4',
-          y: 43
-        }, {
-          x: 'W4',
-          y: 43
-        }, {
-          x: 'W4',
-          y: 43
-        }, {
-          x: 'W4',
-          y: 43
-        }, {
-          x: 'W4',
-          y: 43
-        }, {
-          x: 'W4',
-          y: 43
-        }, {
-          x: 'W4',
-          y: 43
-        }, {
-          x: 'W4',
-          y: 43
-        }, {
-          x: 'W4',
-          y: 43
-        }, {
-          x: 'W4',
-          y: 43
-        }, {
-          x: 'W4',
-          y: 43
-        }, {
-          x: 'W4',
-          y: 43
+    chart: {
+      events: {
+        click: function(event, chartContext, config) {
+          console.log(event);
+          console.log(chartContext);
+          console.log(config);
         }
-      ]
+      }
     }
-  ]);
+  });
+
   return (
     <Card small className="card-post mb-4">
       <CardBody className="chart-container">
@@ -417,12 +59,22 @@ const Heatmap = ({ series }) => {
             type="heatmap"
             height={350}
           /> */}
-          <Chart
-            options={options}
-            series={series}
-            type="heatmap"
-            // width="500"
-          />
+          { height && (
+            <Chart
+              options={options}
+              series={series}
+              type="heatmap"
+              height={height}
+              // width="500"
+            />
+          ) }
+          { !height && (
+            <Chart
+              options={options}
+              series={series}
+              type="heatmap"
+            />
+          ) }
         </div>
       </CardBody>
     </Card>

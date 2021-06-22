@@ -64,7 +64,7 @@ const SV_TinTuc = () => {
           <DeTaiInfoCard deTai={deTai} />
           { (report != null) && (
             <div className="">
-              <Heatmap series={ Utils.getHeatmapSeriesFromReportData(report) }/>
+              <Heatmap series={ Utils.getHeatmapSeriesFromReportData(report) } height={330}/>
             </div>
           ) }
           <div>

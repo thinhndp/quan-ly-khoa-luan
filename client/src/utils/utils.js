@@ -310,6 +310,27 @@ export const getUserRoleText = (abbr) => {
   }
 }
 
+export const getUserRoleSL = () => {
+  return ([
+    {
+      value: Constants.USER_ROLE_SINH_VIEN,
+      label: getUserRoleText(Constants.USER_ROLE_SINH_VIEN)
+    },
+    {
+      value: Constants.USER_ROLE_GIANG_VIEN,
+      label: getUserRoleText(Constants.USER_ROLE_GIANG_VIEN)
+    },
+    {
+      value: Constants.USER_ROLE_CB_KHOA,
+      label: getUserRoleText(Constants.USER_ROLE_CB_KHOA)
+    },
+    {
+      value: Constants.USER_ROLE_CN_KHOA,
+      label: getUserRoleText(Constants.USER_ROLE_CN_KHOA)
+    },
+  ]);
+}
+
 export const getDeTaiProgressStatusText = (abbr) => {
   switch(abbr) {
     case Constants.DE_TAI_PROGRESS_STATUS_AVAILABLE:
@@ -379,6 +400,19 @@ export const getThongBaoStatusSL = () => {
     {
       value: 'POSTED',
       label: 'Đã đăng'
+    },
+  ]);
+}
+
+export const getTrueFalseSL = () => {
+  return ([
+    {
+      value: 'FALSE',
+      label: 'Không'
+    },
+    {
+      value: 'TRUE',
+      label: 'Có'
     },
   ]);
 }
@@ -486,7 +520,7 @@ export const getHeatmapSeriesFromReportData = (report) => {
   var curDOW = 0;
   var curW = 0;
   for (var date of Object.keys(report)) {
-    series[6 - curDOW].data.push({ x: `Tuần ${curW + 1}`, y: calTotalSpentTime(report[date]) });
+    series[6 - curDOW].data.push({ x: `Tuần ${curW + 1}`, y: `${calTotalSpentTime(report[date])}h` });
     if (curDOW == 6) {
       curDOW = 0;
       curW++;

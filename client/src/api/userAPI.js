@@ -5,12 +5,13 @@ export const getUsers = () => {
   return axios.get('/users');
 }
 
-export const getUsersWithQuery = (search = '', pagingOptions = Utils.getNewPagingOptions()) => {
+export const getUsersWithQuery = (search = '', pagingOptions = Utils.getNewPagingOptions(), filters = {}) => {
   var options = {
     search: search,
     pagingOptions: pagingOptions,
   };
-  return axios.post('/users/q', options);
+  const filterStr = Utils.getFilterString(filters);
+  return axios.post(`/users/q?${filterStr}`, options);
 }
 
 export const getUserById = (id) => {
