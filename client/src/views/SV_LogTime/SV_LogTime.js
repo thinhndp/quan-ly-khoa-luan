@@ -27,30 +27,32 @@ const SV_LogTime = () => {
     if (!Utils.isUserValidSinhVien(currentUser)) {
       history.push('/');
     }
-    getDeTaiBySinhVienId(currentUser.relatedInfoSV._id)
-      .then((res) => {
-        console.log('de tai');
-        console.log(res);
-        if (res.data) {
-          setDeTai(res.data);
-        }
-      })
-      .catch((err) => {
-        console.log(err.response);
-      });
-
-    getTaskLogReportBySVId(currentUser.relatedInfoSV._id)
-      .then((res) => {
-        console.log('report');
-        console.log(res);
-        if (res.data) {
-          setReport(res.data);
-        }
-      })
-      .catch((err) => {
-        console.log(err.response);
-      });
-    getList();
+    else {
+      getDeTaiBySinhVienId(currentUser.relatedInfoSV._id)
+        .then((res) => {
+          console.log('de tai');
+          console.log(res);
+          if (res.data) {
+            setDeTai(res.data);
+          }
+        })
+        .catch((err) => {
+          console.log(err.response);
+        });
+  
+      getTaskLogReportBySVId(currentUser.relatedInfoSV._id)
+        .then((res) => {
+          console.log('report');
+          console.log(res);
+          if (res.data) {
+            setReport(res.data);
+          }
+        })
+        .catch((err) => {
+          console.log(err.response);
+        });
+      getList();
+    }
   }, []);
 
   const getList = () => {
@@ -68,7 +70,11 @@ const SV_LogTime = () => {
             </div>
           ) }
           <div>
-            <TaskLogList sinhVienId={currentUser.relatedInfoSV._id} editable/>
+            {
+              Utils.isUserValidSinhVien(currentUser) && (
+                <TaskLogList sinhVienId={currentUser.relatedInfoSV._id} editable/>
+              )
+            }
           </div>
         </div>
         <div>

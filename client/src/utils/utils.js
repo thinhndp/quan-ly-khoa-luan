@@ -487,7 +487,7 @@ export const getFilterString = (filters) => {
 }
 
 export const isUserValidSinhVien = (user) => {
-  return !(!user || !user.role || !(user.role == Constants.USER_ROLE_SINH_VIEN) || !user.relatedInfoSV || !user.relatedInfoSV._id);
+  return (user && user.role && (user.role == Constants.USER_ROLE_SINH_VIEN) && user.relatedInfoSV && user.relatedInfoSV._id);
 }
 
 export const getFormattedDate = (dateStr) => {
