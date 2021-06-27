@@ -1,0 +1,23 @@
+.de_tai_card_container {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.de_tai_card {
+  width: 33%;
+  padding: 10px;
+  transition: 0.2s;
+  cursor: pointer;
+}
+
+.de_tai_card .card-post .card-body {
+  padding-bottom: 2.75rem;
+}
+
+.export-button {
+  margin-left: 10px;
+}
+
+/* .de_tai_card:hover {
+  opacity: 0.9;
+} */

@@ -50,11 +50,11 @@ export default function() {
       htmlBefore: '<i class="material-icons">person</i>',
       to: "/user",
     },
-    {
-      title: "Test",
-      htmlBefore: '<i class="material-icons">table_chart</i>',
-      to: "/test",
-    },
+    // {
+    //   title: "Test",
+    //   htmlBefore: '<i class="material-icons">table_chart</i>',
+    //   to: "/test",
+    // },
     // {
     //   title: "Blog Dashboard",
     //   to: "/blog-overview",

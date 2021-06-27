@@ -3,7 +3,7 @@ import ThuMuc from '../models/ThuMuc.js';
 import * as Utils from '../utils/utils.js';
 
 export const getPosts = (req, res) => {
-  Post.find()
+  Post.find().sort({ postedTime: -1 })
     .then((posts) => {
       res.status(200).json(posts);
     })
@@ -57,7 +57,7 @@ export const getPostsWithQuery = (req, res) => {
 };
 
 export const getPublicPosts = (req, res) => {
-  Post.find({ type: 'CK', isPosted: true  })
+  Post.find({ type: 'CK', isPosted: true  }).sort({ postedTime: -1 })
     .then((posts) => {
       res.status(200).json(posts);
     })
@@ -67,7 +67,7 @@ export const getPublicPosts = (req, res) => {
 };
 
 export const getPrivatePosts = (req, res) => {
-  Post.find({ isPosted: true })
+  Post.find({ isPosted: true }).sort({ postedTime: -1 })
     .then((posts) => {
       res.status(200).json(posts);
     })

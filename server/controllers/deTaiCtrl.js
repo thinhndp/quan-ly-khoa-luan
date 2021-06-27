@@ -126,6 +126,18 @@ export const getDeTaiBySinhVienId = (req, res) => {
     })
 }
 
+export const getDeTaisByKTHId = async (req, res) => {
+  const { id } = req.params;
+  try {
+    let deTais = await DeTai.find({ kyThucHien: id }).populate('giangVien').populate('sinhVienThucHien').populate('kyThucHien');
+    // deTais = deTais.sort
+    res.status(200).json(deTais);
+  }
+  catch (err) {
+    res.status(400).json({ message: err.message });
+  }
+}
+
 export const updateDeTaiById = (req, res) => {
   console.log('updateDeTaiById');
   const { id } = req.params;

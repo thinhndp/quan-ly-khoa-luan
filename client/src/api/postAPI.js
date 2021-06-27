@@ -10,7 +10,8 @@ export const getPostsWithQuery = (search = '', pagingOptions = Utils.getNewPagin
     search: search,
     pagingOptions: pagingOptions,
   };
-  const filterStr = Utils.getFilterString(filters);
+  var filterStr = Utils.getFilterString(filters);
+  // filterStr += "&-postedTime";
   return axios.post(`/posts/q?${filterStr}`, options);
 }
 

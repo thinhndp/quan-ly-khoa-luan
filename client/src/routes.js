@@ -30,6 +30,7 @@ import ListThuMuc from './views/ThuMuc/ListThuMuc';
 import ListFile from './views/ThuMuc/ListFile';
 import ListBieuMau from './views/BieuMau/ListBieuMau';
 import ListKyThucHien from './views/KyThucHien/ListKyThucHien';
+import ListDeTaisOfKTH from './views/KyThucHien/ListDeTaisOfKTH';
 import ListHoiDong from './views/HoiDong/ListHoiDong';
 import CreateOrEditHoiDongPage from './views/HoiDong/CreateOrEditHoiDongPage';
 import ListUser from './views/User/ListUser';
@@ -171,7 +172,13 @@ export default [
   {
     path: "/ky-thuc-hien",
     layout: DefaultLayout,
+    exact: true,
     component: ListKyThucHien
+  },
+  {
+    path: "/ky-thuc-hien/:id",
+    layout: DefaultLayout,
+    component: ListDeTaisOfKTH
   },
   {
     path: "/hoi-dong",

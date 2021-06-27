@@ -6,7 +6,12 @@ import mongoosePaginate from 'mongoose-paginate-v2';
 const deTaiSchema = mongoose.Schema({
   tenDeTai: {
     type: String,
-    required: true
+    required: true,
+    trim: true,
+  },
+  englishName: {
+    type: String,
+    trim: true,
   },
   // giangVien: GiangVienSchema,
   giangVien: {

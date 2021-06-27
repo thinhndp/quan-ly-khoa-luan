@@ -42,7 +42,8 @@
     "recoil": "^0.2.0",
     "shards-react": "^1.0.0",
     "shortid": "^2.2.14",
-    "xlsx-parse-json": "^3.1.1"
+    "xlsx-parse-json": "^3.1.1",
+    "xlsx-style": "^0.8.13"
   },
   "scripts": {
     "start": "react-scripts start",

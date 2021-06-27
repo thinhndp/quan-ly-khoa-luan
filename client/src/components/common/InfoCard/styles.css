@@ -16,6 +16,11 @@
   margin-right: 10px
 }
 
+.status-tag {
+  position: absolute;
+  right: 1rem;
+  bottom: 1rem;
+}
 /* .info-card h5 {
   font-weight: 500;
 }

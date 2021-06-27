@@ -140,10 +140,10 @@ const ListKyThucHien = () => {
               {
                 kyThucHiens.map((kyThucHien, index) => (
                   <tr key={`ky-thuc-hien_${index}`}>
-                    <td>{kyThucHien.name}</td>
+                    <td><a href={`/ky-thuc-hien/${kyThucHien._id}`}>{kyThucHien.name}</a></td>
                     <td>{Utils.getKyThucHienStatusText(kyThucHien.status)}</td>
-                    <td>{kyThucHien.startDate}</td>
-                    <td>{kyThucHien.endDate}</td>
+                    <td>{Utils.getFormattedDate(kyThucHien.startDate)}</td>
+                    <td>{Utils.getFormattedDate(kyThucHien.endDate)}</td>
                     <td>
                       <ActionButtons
                         onDeleteClick={() => { onDeleteClick(kyThucHien._id) }}

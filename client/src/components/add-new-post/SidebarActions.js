@@ -143,9 +143,9 @@ const SidebarActions = ({ title, onSaveClick, onPreviewClick, post, onLoaiTinCha
             <Button outline theme="accent" size="sm" onClick={onSaveClick}>
               <i className="material-icons">save</i> Lưu
             </Button>
-            <Button outline className="ml-2" theme="accent" size="sm" onClick={onPreviewClick}>
+            {/* <Button outline className="ml-2" theme="accent" size="sm" onClick={onPreviewClick}>
               <i className="material-icons">list_alt</i> Xem trước
-            </Button>
+            </Button> */}
             <Button className="ml-2" theme="accent" size="sm" onClick={onPostClick}>
               <i className="material-icons">file_copy</i> Đăng
             </Button>
