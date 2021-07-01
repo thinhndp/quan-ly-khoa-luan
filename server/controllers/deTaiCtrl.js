@@ -4,6 +4,7 @@ import SinhVien from '../models/SinhVien.js';
 import GiangVien from '../models/GiangVien.js';
 import User from '../models/User.js';
 import KyThucHien from '../models/KyThucHien.js';
+import HoiDong from '../models/HoiDong.js';
 import * as Utils from '../utils/utils.js';
 
 const CLIENT_ID = process.env.GOOGLE_DRIVE_CLIENT_ID;
@@ -131,6 +132,82 @@ export const getDeTaisByKTHId = async (req, res) => {
   try {
     let deTais = await DeTai.find({ kyThucHien: id }).populate('giangVien').populate('sinhVienThucHien').populate('kyThucHien');
     // deTais = deTais.sort
+    deTais = deTais.sort((dt1, dt2) => {
+      if (dt1.trangThaiDuyet == 'CD') {
+        return -1;
+      }
+      if (dt1.trangThaiDuyet == 'DTC') {
+        return 1;
+      }
+      if (dt2.trangThaiDuyet == 'CD') {
+        return 1;
+      }
+      if (dt2.trangThaiDuyet == 'DTC') {
+        return -1;
+      }
+      return 0;
+    });
+    res.status(200).json(deTais);
+  }
+  catch (err) {
+    res.status(400).json({ message: err.message });
+  }
+}
+
+export const getCurrrentKTHDeTaisByGiangVien = async (req, res) => {
+  const { id } = req.params;
+  try {
+    let curKTH = await KyThucHien.findOne({ status: 'DDR' });
+    console.log(curKTH);
+    let deTais = await DeTai.find({ kyThucHien: curKTH._id, giangVien: id }).populate('giangVien').populate('sinhVienThucHien').populate('kyThucHien');
+    console.log(deTais);
+    deTais = deTais.sort((dt1, dt2) => {
+      if (dt1.trangThaiDuyet == 'CD') {
+        return -1;
+      }
+      if (dt1.trangThaiDuyet == 'DTC') {
+        return 1;
+      }
+      if (dt2.trangThaiDuyet == 'CD') {
+        return 1;
+      }
+      if (dt2.trangThaiDuyet == 'DTC') {
+        return -1;
+      }
+      return 0;
+    })
+    res.status(200).json(deTais);
+  }
+  catch (err) {
+    res.status(400).json({ message: err.message });
+  }
+}
+
+export const getDeTaisWithHoiDong = async (req, res) => {
+  try {
+    let hoiDongs = await HoiDong.find()
+      .populate({ path: 'deTais', populate: [{ path: 'sinhVienThucHien', model: 'SinhVien' }, { path: 'giangVien', model: 'GiangVien' }] }).populate('canBoPhanBien')
+      .populate('canBoHuongDan').populate('chuTich').populate('thuKy')
+      .populate('uyVien')
+    var deTais = [];
+    for (var hoiDong of hoiDongs) {
+      if (hoiDong.deTais) {
+        for (var deTai of hoiDong.deTais) {
+          var newDeTai = deTai;
+          var newDeTai = {
+            ...JSON.parse(JSON.stringify(deTai)),
+            hoiDong: hoiDong,
+            canBoPhanBien: hoiDong.canBoPhanBien,
+            chuTich: hoiDong.chuTich,
+            thuKy: hoiDong.thuKy,
+            uyVien: hoiDong.uyVien,
+          }
+          console.log(newDeTai);
+          deTais.push(newDeTai);
+        }
+      }
+    }
+    // console.log(deTais);
     res.status(200).json(deTais);
   }
   catch (err) {

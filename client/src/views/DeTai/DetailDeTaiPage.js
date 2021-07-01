@@ -10,6 +10,7 @@ import Heatmap from '../../components/common/Chart/Heatmap';
 import TaskLogList from '../../components/common/TaskLogList/TaskLogList';
 import FileNopOfSvList from '../../components/common/FileNopOfSVList/FileNopOfSvList';
 import DeTaiInfoCard from '../../components/common/InfoCard/DeTaiInfoCard';
+import BackButton from '../../components/common/BackButton';
 import "./styles.css";
 import { getDeTaiById } from '../../api/deTaiAPI';
 import { getTaskLogReportBySVId } from '../../api/reportAPI';
@@ -153,6 +154,7 @@ const DetailDeTaiPage = () => {
               </CardBody>
             </Card>
           ) }
+          <BackButton mTop="15px" />
         </div>
       </div>
     </div>

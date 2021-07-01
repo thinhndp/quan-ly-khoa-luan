@@ -22,8 +22,16 @@ export const getDeTaiBySinhVienId = (sinhVienid) => {
   return axios.get(`/de-tais/get-by-sinh-vien/${sinhVienid}`);
 }
 
+export const getCurDeTaisByGiangVienId = (giangVienId) => {
+  return axios.get(`/de-tais/get-active-by-giang-vien/${giangVienId}`);
+}
+
 export const getDeTaisByKTHId = (kyThucHienId) => {
   return axios.get(`/de-tais/get-by-ky-thuc-hien/${kyThucHienId}`);
+}
+
+export const getDeTaisWithHoiDong = () => {
+  return axios.get(`/de-tais/w/get-with-hoi-dong`);
 }
 
 export const updateDeTaiById = (id, deTai) => {

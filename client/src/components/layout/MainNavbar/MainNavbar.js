@@ -1,16 +1,20 @@
 import React from "react";
 import PropTypes from "prop-types";
+import { useHistory } from "react-router-dom";
 import classNames from "classnames";
 import { Container, Navbar } from "shards-react";
+import HomeIcon from '@material-ui/icons/Home';
 
 import NavbarSearch from "./NavbarSearch";
 import NavbarNav from "./NavbarNav/NavbarNav";
 import NavbarToggle from "./NavbarToggle";
 
 const MainNavbar = ({ layout, stickyTop }) => {
+  let history = useHistory();
   const classes = classNames(
     "main-navbar",
     "bg-white",
+    "c-nav-bar--white",
     stickyTop && "sticky-top"
   );
 
@@ -18,6 +22,12 @@ const MainNavbar = ({ layout, stickyTop }) => {
     <div className={classes}>
       <Container className="p-0">
         <Navbar type="light" className="align-items-stretch flex-md-nowrap p-0">
+          <div className="nav-bar-icon-container">
+            <div className="nav-bar-icon-button" onClick={() => { history.push(`/thong-bao`); }}>
+              <HomeIcon className="icon-button nav-bar-icon" />
+              <div className="one-line">Trang chủ</div>
+            </div>
+          </div>
           <NavbarSearch />
           <NavbarNav />
           <NavbarToggle />

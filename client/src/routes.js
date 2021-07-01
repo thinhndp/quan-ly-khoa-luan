@@ -38,6 +38,7 @@ import SV_TinTuc from './views/SV_TinTuc/SV_TinTuc';
 import SV_ChiTietTinTuc from './views/SV_TinTuc/SV_ChiTietTinTuc';
 import SV_LogTime from './views/SV_LogTime/SV_LogTime';
 import DetailDeTaiPage from './views/DeTai/DetailDeTaiPage';
+import ListCurrentDeTaisOfGVPage from './views/GV_DeTais/ListCurrentDeTaisOfGVPage';
 
 export default [
   {
@@ -209,9 +210,20 @@ export default [
     component: SV_ChiTietTinTuc
   },
   {
-    path: "/logtime",
+    path: "/de-tai-thuc-hien",
     layout: SV_Layout,
     component: SV_LogTime
+  },
+  {
+    path: "/de-tai-huong-dan",
+    layout: SV_Layout,
+    exact: true,
+    component: ListCurrentDeTaisOfGVPage
+  },
+  {
+    path: "/de-tai-huong-dan/:id",
+    layout: SV_Layout,
+    component: DetailDeTaiPage
   },
   {
     path: "/test",

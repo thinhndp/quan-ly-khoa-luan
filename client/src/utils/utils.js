@@ -490,6 +490,10 @@ export const isUserValidSinhVien = (user) => {
   return (user && user.role && (user.role == Constants.USER_ROLE_SINH_VIEN) && user.relatedInfoSV && user.relatedInfoSV._id);
 }
 
+export const isUserValidGiangVien = (user) => {
+  return (user && user.role && (user.role == Constants.USER_ROLE_GIANG_VIEN) && user.relatedInfoGV && user.relatedInfoGV._id);
+}
+
 export const getFormattedDate = (dateStr) => {
   var date = new Date(dateStr);
   const offset = date.getTimezoneOffset();
