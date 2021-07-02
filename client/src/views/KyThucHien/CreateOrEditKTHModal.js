@@ -2,6 +2,7 @@ import React, { useEffect, useState, useRef } from "react";
 import { Button, FormInput, FormGroup, Row, Col, FormSelect } from "shards-react";
 import MomentUtils from '@date-io/moment';
 import { DateTimePicker, MuiPickersUtilsProvider, DatePicker } from '@material-ui/pickers';
+import toast from 'react-hot-toast';
 
 import CustomModal from '../../components/common/CustomModal/CustomModal';
 import * as Constants from '../../constants/constants';
@@ -37,24 +38,52 @@ const CreateOrEditKyThucHienModal = ({ isModalOpen, toggleModal, selected, onClo
   const onCreateOrUpdateClick = () => {
     console.log(kyThucHien);
     if (kyThucHien == null || kyThucHien._id == null) {
-      createKyThucHien(kyThucHien)
+      /* createKyThucHien(kyThucHien)
         .then((res) => {
           onCreated();
           console.log(res);
         })
         .catch((err) => {
-          console.log(err);
-        });
+          console.log(err.response);
+        }); */
+      toast.promise(
+        createKyThucHien(kyThucHien),
+        {
+          loading: 'Đang tạo Kỳ thực hiện',
+          success: (res) => {
+            onCreated();
+            return 'Tạo thành công';
+          },
+          error: (err) => {
+            return err.response.data.message;
+          }
+        },
+        Utils.getToastConfig()
+      );
     }
     else {
-      updateKyThucHienById(kyThucHien._id, kyThucHien)
+      /* updateKyThucHienById(kyThucHien._id, kyThucHien)
         .then((res) => {
           onUpdated();
           console.log(res);
         })
         .catch((err) => {
           console.log(err.response);
-        })
+        }) */
+      toast.promise(
+        updateKyThucHienById(kyThucHien._id, kyThucHien),
+        {
+          loading: 'Đang cập nhật Kỳ thực hiện',
+          success: (res) => {
+            onUpdated();
+            return 'Cập nhật thành công';
+          },
+          error: (err) => {
+            return err.response.data.message;
+          }
+        },
+        Utils.getToastConfig()
+      );
     }
   }
 

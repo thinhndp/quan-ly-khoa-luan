@@ -4,7 +4,7 @@ import mongoosePaginate from 'mongoose-paginate-v2';
 const kyThucHien = mongoose.Schema({
   name: {
     type: String,
-    required: true
+    required: [true, 'Vui lòng nhập tên Kỳ thực hiện']
   },
   status: {
     type: String,

@@ -1,0 +1,10 @@
+.confirm-delete-body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.delete-icon {
+  color: #c4183c;
+  font-size: 3rem !important;
+}

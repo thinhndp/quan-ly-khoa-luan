@@ -28,8 +28,8 @@ const ListKyThucHien = () => {
   }, []);
 
   useEffect(() => {
-    if (deTais. length > 0) {
-      setKyThucHien(deTais[0]. kyThucHien);
+    if (deTais.length > 0) {
+      setKyThucHien(deTais[0].kyThucHien);
     }
   }, [deTais]);
 
@@ -41,6 +41,7 @@ const ListKyThucHien = () => {
       })
       .catch((err) => {
         console.log(err.response);
+        Utils.showErrorToast(err.response.data.message);
       });
     getDeTaisWithHoiDong()
       .then((res) => {
@@ -49,6 +50,7 @@ const ListKyThucHien = () => {
       })
       .catch((err) => {
         console.log(err.response);
+        Utils.showErrorToast(err.response.data.message);
       });
   }
 

@@ -207,6 +207,11 @@
   display: flex;
 }
 
+.btn-fsize-small {
+  font-weight: 400;
+  font-size: .75em;
+}
+
 .avatar-pic {
   max-width: 2.5rem;
   border-radius: 50%!important;
@@ -304,4 +309,8 @@
 
 .one-line {
   white-space: nowrap;
+}
+
+.toaster-container div[role=status] {
+  font-weight: 400;
 }

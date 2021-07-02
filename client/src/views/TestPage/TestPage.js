@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 // import GoogleLogin from 'react-google-login';
 import axios from 'axios';
 import { Button } from 'shards-react';
+import { NotificationContainer, NotificationManager } from 'react-notifications';
+import toast, { Toaster } from 'react-hot-toast';
 
 import DangKyDTButton from '../../components/post/DangKyDTButton';
 import FileSubmitterButton from '../../components/FileSubmitter/FileSubmitterButton';
@@ -23,6 +25,10 @@ const SCOPES = 'https://www.googleapis.com/auth/drive.file';
 const TestPage = () => {
   const [user, setUser] = useState(null);
   const [ auth2, setAuth2 ] = useState(null);
+  const notify = () => toast('Here is your toast.', {
+    duration: 180000,
+  });
+
   useEffect(() => {
     console.log(process.env.REACT_APP_GOOGLE_LOG_IN_CLIENT_ID);
     gapi.load('client:auth2', initClient);
@@ -161,6 +167,8 @@ const TestPage = () => {
       <FileSubmitterButton />
       <Button onClick={handleClientLoad}>Button</Button>
       <Button onClick={listFiles}>Files</Button>
+      <Button onClick={notify}>Noti</Button>
+      <Toaster />
     </div>
   );
 }

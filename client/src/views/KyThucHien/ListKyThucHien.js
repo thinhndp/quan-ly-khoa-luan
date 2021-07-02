@@ -2,6 +2,8 @@ import React, { useEffect, useState, useRef } from "react";
 import axios from "axios";
 import { useHistory } from "react-router-dom";
 import { Container, Row, Col, Card, CardHeader, CardBody, Button } from "shards-react";
+import { confirmAlert } from 'react-confirm-alert';
+import toast from 'react-hot-toast';
 
 import { getKyThucHiens, deleteKyThucHienById, updateKyThucHienById, createKyThucHien, getKyThucHiensWithQuery
   } from '../../api/kyThucHienAPI';
@@ -12,6 +14,7 @@ import PageTitle from "../../components/common/PageTitle";
 import ActionButtons from '../../components/common/ActionButtons';
 import CreateOrEditKyThucHienModal from './CreateOrEditKTHModal';
 import LyrTable from '../../components/common/LyrTable/LyrTable';
+import ConfirmDeleteModal from "../../components/common/ConfirmDeleteModal/ConfirmDeleteModal";
 
 const ListKyThucHien = () => {
   const [ kyThucHiens, setKyThucHiens ] = useState([]);
@@ -58,14 +61,38 @@ const ListKyThucHien = () => {
   }
 
   const onDeleteClick = (id) => {
-    deleteKyThucHienById(id)
+    console.log('delete');
+    confirmAlert({
+      customUI: ({ onClose }) => {
+        return (
+          <ConfirmDeleteModal onClose={onClose} onConfirm={() => {
+            toast.promise(
+              deleteKyThucHienById(id),
+              {
+                loading: 'Đang xóa',
+                success: (res) => {
+                  getList();
+                  onClose();
+                  return 'Xóa thành công';
+                },
+                error: (err) => {
+                  return err.response.data.message;
+                }
+              },
+              Utils.getToastConfig()
+            );
+          }} />
+        );
+      }
+    });
+    /* deleteKyThucHienById(id)
       .then((res) => {
         console.log(res);
         getList();
       })
       .catch((err) => {
         console.log(err);
-      });
+      }); */
   }
 
   const onEditClick = (kyThucHien) => {

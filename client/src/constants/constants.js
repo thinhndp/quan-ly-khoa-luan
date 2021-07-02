@@ -51,3 +51,8 @@ export const FILTER_TYPE_SL = 'SL';
 export const FILTER_TYPE_FTD = 'FTD';
 export const FILTER_TYPE_FTN = 'FTN';
 export const FILTER_TYPE_NL = 'NL';
+
+export const NOTIFICATION_TYPE_INFO = 'INFO';
+export const NOTIFICATION_TYPE_SUCCESS = 'SUCCESS';
+export const NOTIFICATION_TYPE_WARNING = 'WARNING';
+export const NOTIFICATION_TYPE_ERROR = 'ERROR';

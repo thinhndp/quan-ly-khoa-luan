@@ -11,6 +11,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "./shards-dashboard/styles/shards-dashboards.1.1.0.min.css";
 import "./styles/global-styles.css";
 import 'react-calendar/dist/Calendar.css';
+import 'react-confirm-alert/src/react-confirm-alert.css';
 
 axios.defaults.baseURL = 'http://localhost:5000';
 

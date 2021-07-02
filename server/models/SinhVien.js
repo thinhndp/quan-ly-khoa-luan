@@ -34,6 +34,12 @@ export const SinhVienSchema = mongoose.Schema({
     default: 0,
     min: 0,
     max: 10
+  },
+  diemKL: {
+    type: Number,
+    default: 0,
+    min: 0,
+    max: 10
   }
 });
 

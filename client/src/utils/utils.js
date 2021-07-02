@@ -1,3 +1,5 @@
+import toast from 'react-hot-toast';
+
 import * as Constants from '../constants/constants';
 import ExcelLogo from '../resources/file-icons/excel.svg';
 import PDFLogo from '../resources/file-icons/pdf.svg';
@@ -540,3 +542,37 @@ export const getHeatmapSeriesFromReportData = (report) => {
   }
   return series;
 }
+
+export const getToastConfig = () => {
+  return ({
+    style: {
+      minWidth: '250px',
+    },
+    position: 'bottom-center',
+  });
+}
+
+export const showErrorToast = (message) => {
+  toast.error(message, getToastConfig());
+}
+
+/* export const notify = (type, message) => {
+  return () => {
+    switch (type) {
+      case Constants.NOTIFICATION_TYPE_INFO:
+        toast.info(message);
+        break;
+      case Constants.NOTIFICATION_TYPE_SUCCESS:
+        toast.success(message);
+        break;
+      case Constants.NOTIFICATION_TYPE_WARNING:
+        toast.warning(message);
+        break;
+      case Constants.NOTIFICATION_TYPE_ERROR:
+        toast.error(message);
+        break;
+      default:
+        break;
+    }
+  };
+} */
