@@ -7,7 +7,10 @@ import { Container, Row, Col, Card, CardHeader, CardBody, Button,
 import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
 import LaunchIcon from '@material-ui/icons/Launch';
+import { confirmAlert } from 'react-confirm-alert';
+import toast from 'react-hot-toast';
 
+import ConfirmDeleteModal from "../../components/common/ConfirmDeleteModal/ConfirmDeleteModal";
 import commonStyles from '../../styles/CommonStyles.module.scss';
 import styles from './styles.module.scss';
 import PageTitle from "../../components/common/PageTitle";
@@ -105,14 +108,37 @@ const ListDeTai = () => {
   }
   const onDeleteClick = (id) => {
     // console.log(id);
-    deleteDeTaiById(id)
+    confirmAlert({
+      customUI: ({ onClose }) => {
+        return (
+          <ConfirmDeleteModal onClose={onClose} onConfirm={() => {
+            toast.promise(
+              deleteDeTaiById(id),
+              {
+                loading: 'Đang xóa',
+                success: (res) => {
+                  getDeTaiList();
+                  onClose();
+                  return 'Xóa thành công';
+                },
+                error: (err) => {
+                  return err.response.data.message;
+                }
+              },
+              Utils.getToastConfig()
+            );
+          }} />
+        );
+      }
+    });
+    /* deleteDeTaiById(id)
       .then((res) => {
         console.log(res);
         getDeTaiList();
       })
       .catch((err) => {
         console.log(err);
-      });
+      }); */
   }
   const onDeXuatToiDaUpdate = () => {
     console.log(deXuatToiDa);

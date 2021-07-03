@@ -314,3 +314,32 @@
 .toaster-container div[role=status] {
   font-weight: 400;
 }
+
+.ql-bieumau {
+  position:relative;
+  color: #3d5170 !important
+}
+
+.ql-bieumau:hover {
+  color: #06c !important
+}
+
+.ql-bieumau:before {
+  content: "\f15c";
+  font-family: FontAwesome;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+/* .ql-bieumau:before {
+  display: inline-block;
+  font: FontAwesome;
+  font-size: inherit;
+  text-rendering: auto;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  transform: translate(0, 0);
+
+  content: "\f15c";
+} */

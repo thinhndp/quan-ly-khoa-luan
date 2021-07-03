@@ -19,6 +19,10 @@ const deTaiSchema = mongoose.Schema({
     ref: 'GiangVien',
     required: true
   },
+  canBoPhanBien: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'GiangVien',
+  },
   trangThaiDuyet: {
     type: String,
     enum: [ 'CD', 'DD', 'DTC' ],

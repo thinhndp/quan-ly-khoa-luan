@@ -279,15 +279,21 @@ export const createManyDeTais = (req, res) => {
     // })
 }
 
-export const deleteDeTaiById = (req, res) => {
+export const deleteDeTaiById = async (req, res) => {
+  const { id } = req.params;
   console.log('deleteDeTaiById');
-  DeTai.deleteOne({ _id: req.params.id })
-    .then(() => {
-      res.status(201).json(req.params.id);
-    })
-    .catch((err) => {
-      res.status(400).json({ message: err.message });
-    });
+  const deTai = await DeTai.findOne({ _id: id });
+  if (deTai.sinhVienThucHien.length > 0) {
+    res.status(400).json({ message: 'Đề tài đã có Sinh viên đăng ký.' });
+    return;
+  }
+  try {
+    await DeTai.deleteOne({ _id: id });
+    res.status(201).json(req.params.id);
+  }
+  catch (err) {
+    res.status(400).json({ message: err.message });
+  }
 }
 
 export const applyForDeTai = (req, res) => {

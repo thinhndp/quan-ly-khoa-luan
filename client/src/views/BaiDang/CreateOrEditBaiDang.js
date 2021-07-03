@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo, useRef } from "react";
 import { Container, Row, Col, Card, CardBody, Form, FormInput, Button } from "shards-react";
 import { useRecoilValue } from 'recoil';
 import moment from 'moment';
@@ -28,6 +28,43 @@ const CreateOrEditBaiDang = () => {
   let history = useHistory();
   let { id } = useParams();
   let isUpdate = (id != null);
+
+  const quillRef = React.useRef(null);
+  const modules = useMemo(() => ({
+    toolbar: {
+      container: [
+        [{ 'header': [1, 2, false] }],
+        ['bold', 'italic', 'underline','strike', 'blockquote'],
+        [{'list': 'ordered'}, {'list': 'bullet'}, {'indent': '-1'}, {'indent': '+1'}],
+        ['link', 'image'],
+        ['clean'],
+        ['bieumau']
+      ],
+      handlers: {
+        'bieumau': () => { onBieuMauClick() }
+      }
+    }
+  }), []);
+
+  const formats = [
+    'header',
+    'bold', 'italic', 'underline', 'strike', 'blockquote',
+    'list', 'bullet', 'indent',
+    'link', 'image'
+  ];
+
+  const onBieuMauClick = () => {
+    console.log('click');
+    const quill = quillRef.current.getEditor();
+    const cursorPosition = quill.getSelection().index;
+    var delta = {
+      ops: [
+        {retain: cursorPosition + 1},
+        {insert: "Learn more from this resource", attributes: {link: "http://wikipedia.org"}}
+      ]
+    };
+    quill.updateContents(delta);
+  }
 
   useEffect(() => {
     console.log(isUpdate);
@@ -143,6 +180,7 @@ const CreateOrEditBaiDang = () => {
                   <FormInput size="lg" className="mb-3" placeholder="Tên bài đăng"
                     value={newPost.title} onChange={(e) => { setNewPost({ ...newPost, title: e.target.value}) }}/>
                   <ReactQuill className="add-new-post__editor mb-1"
+                    modules={modules} formats={formats} ref={quillRef}
                     value={content} onChange={(html) => { setContent(html) }}/>
                 </Form>
               </CardBody>

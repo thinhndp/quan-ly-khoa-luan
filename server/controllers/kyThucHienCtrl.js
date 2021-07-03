@@ -1,4 +1,5 @@
 import KyThucHien from '../models/KyThucHien.js';
+import DeTai from '../models/DeTai.js';
 import * as Utils from '../utils/utils.js';
 
 export const getKyThucHiens = (req, res) => {
@@ -120,12 +121,18 @@ export const updateKyThucHienById = (req, res) => {
   }
 }
 
-export const deleteKyThucHien = (req, res) => {
-  KyThucHien.deleteOne({ _id: req.params.id })
-    .then(() => {
-      res.status(201).json(req.params.id);
-    })
-    .catch((err) => {
-      res.status(400).json({ message: err.message });
-    });
+export const deleteKyThucHien = async (req, res) => {
+  const { id } = req.params;
+  const deTais = await DeTai.find({ kyThucHien: id });
+  if (deTais.length > 0) {
+    res.status(400).json({ message: 'Kỳ thực hiện đã tồn tại Đề tài' });
+    return;
+  }
+  try {
+    await KyThucHien.deleteOne({ _id: req.params.id });
+    res.status(201).json(req.params.id);
+  }
+  catch (err) {
+    res.status(400).json({ message: err.message });
+  }
 }

@@ -37,6 +37,11 @@ const postSchema = mongoose.Schema({
     type: Boolean,
     default: false
   },
+  bieuMaus: {
+    type: [ mongoose.Schema.Types.ObjectId ],
+    ref: 'BieuMau',
+    default: []
+  }
   /* submitterObj: {
     name: {
       type: String,
