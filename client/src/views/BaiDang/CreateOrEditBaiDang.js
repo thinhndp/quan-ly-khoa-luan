@@ -10,6 +10,7 @@ import { useHistory, useParams } from "react-router-dom";
 import "react-quill/dist/quill.snow.css";
 import "../../assets/quill.css";
 
+import BieuMauListModal from './BieuMauListModal';
 import PageTitle from "../../components/common/PageTitle";
 import SidebarActions from "../../components/add-new-post/SidebarActions";
 import SidebarCategories from "../../components/add-new-post/SidebarCategories";
@@ -25,6 +26,8 @@ const CreateOrEditBaiDang = () => {
   const [ submitter, setSubmitter ] = useState(null);
   const [ content, setContent ] = useState('');
   const [ isShowPreview, setIsShowPreview ] = useState(false);
+  const [ isBieuMauListOpen, setIsBieuMauListOpen ] = useState(false);
+
   let history = useHistory();
   let { id } = useParams();
   let isUpdate = (id != null);
@@ -54,16 +57,28 @@ const CreateOrEditBaiDang = () => {
   ];
 
   const onBieuMauClick = () => {
-    console.log('click');
+    setIsBieuMauListOpen(true);
+  }
+
+  const onSelectBM = (bieuMau) => {
+    setIsBieuMauListOpen(false);
     const quill = quillRef.current.getEditor();
     const cursorPosition = quill.getSelection().index;
     var delta = {
       ops: [
         {retain: cursorPosition + 1},
-        {insert: "Learn more from this resource", attributes: {link: "http://wikipedia.org"}}
+        {insert: bieuMau.name, attributes: {link: bieuMau.link}}
       ]
     };
     quill.updateContents(delta);
+  }
+
+  const onBMClose = () => {
+    // setSelectedKTH(Utils.getNewKyThucHien);
+  }
+
+  const toggleBMModal = () => {
+    setIsBieuMauListOpen(!isBieuMauListOpen);
   }
 
   useEffect(() => {
@@ -229,6 +244,7 @@ const CreateOrEditBaiDang = () => {
         </div>
         </div>
       }
+      <BieuMauListModal isModalOpen={isBieuMauListOpen} toggleModal={toggleBMModal} onClose={onBMClose} onSelectBM={onSelectBM} />
     </Container>
   );
 }
