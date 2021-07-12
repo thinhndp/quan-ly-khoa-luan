@@ -1,5 +1,9 @@
+import { OAuth2Client } from 'google-auth-library';
 import User from '../models/User.js';
 import * as Utils from '../utils/utils.js';
+
+const CLIENT_ID = process.env.GOOGLE_DRIVE_CLIENT_ID;
+const client = new OAuth2Client(CLIENT_ID);
 
 export const getUsers = (req, res) => {
   User.find()
@@ -123,12 +127,48 @@ export const updateUserById = (req, res) => {
     });
 }
 
-export const deleteUser = (req, res) => {
-  User.deleteOne({ _id: req.params.id })
-    .then(() => {
-      res.status(201).json(req.params.id);
-    })
-    .catch((err) => {
-      res.status(400).json({ message: err.message });
-    });
+export const deleteUser = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const bearerHeader = req.headers['authorization'];
+    // console.log(req.headers);
+    // console.log(bearerHeader);
+    if (bearerHeader != null) {
+      const bearer = bearerHeader.split(' ');
+      const bearerToken = bearer[1];
+
+      const ticket = await client.verifyIdToken({
+        idToken: bearerToken,
+        audience: CLIENT_ID
+      });
+
+      const userInfo = ticket.getPayload();
+
+      const requestingUser = await User.findOne({ email: userInfo.email });
+      if (requestingUser.role != 'CanBoKhoa' && requestingUser.role != 'ChuNhiemKhoa') {
+        console.log(1);
+        // console.log(requestingUser);
+        res.status(400).json({ message: 'Không đủ quyền để thực hiện thao tác này' });
+        return;
+      }
+      const userToBeDelete = await User.findById(id);
+      if (requestingUser.role == 'CanBoKhoa' && userToBeDelete.role == 'ChuNhiemKhoa') {
+        console.log(2);
+        res.status(400).json({ message: 'Không đủ quyền để thực hiện thao tác này' });
+        return;
+      }
+
+      console.log(requestingUser);
+      console.log(userToBeDelete);
+
+      await User.deleteOne({ _id: id });
+      res.status(201).json(id);
+    }
+    else {
+      res.status(400).json({ message: 'Không lấy được token của user hiện tại, vui lòng đăng nhập lại' });
+    }
+  }
+  catch (err) {
+    res.status(400).json({ message: err.message });
+  }
 }

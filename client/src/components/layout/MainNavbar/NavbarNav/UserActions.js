@@ -38,8 +38,10 @@ const UserActions = () => {
   const onLogOutClick = () => {
     // logOutButton.current.click();
     // console.log(logOutButton.current);
+    console.log(window.gapi);
     if (window.gapi) {
       const auth2 = window.gapi.auth2.getAuthInstance()
+      console.log(auth2);
       if (auth2 != null) {
         auth2.signOut().then(auth2.disconnect()
           .then(() => {
@@ -47,6 +49,9 @@ const UserActions = () => {
             localStorage.setItem('token', null);
             setUser(DEFAULT_USER);
             history.push('/login');
+          }).catch((err) => {
+            console.log(err);
+            Utils.showErrorToast();
           }))
       }
     }

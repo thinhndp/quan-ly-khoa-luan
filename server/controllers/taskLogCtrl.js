@@ -44,7 +44,7 @@ export const getTaskLogsWithQuery = (req, res) => {
   }
   console.log(filters);
 
-  TaskLog.paginate(filters, { ...pagingOptions, populate: 'sinhVien deTai' })
+  TaskLog.paginate(filters, { ...pagingOptions, populate: 'sinhVien deTai', sort: { logDate: -1 } })
     .then((taskLogs) => {
       res.status(200).json(taskLogs);
     })

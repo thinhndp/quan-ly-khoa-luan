@@ -1,9 +1,10 @@
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useHistory } from "react-router-dom";
-import { Container, Row, Col, Card, CardHeader, CardBody, Button,
+import { Container, Row, Col, Card, CardHeader, CardBody, Button, ButtonGroup,
   Dropdown, DropdownToggle, DropdownMenu, DropdownItem, FormInput} from "shards-react";
 // import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
+import xlsxParser from 'xlsx-parse-json';
 import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
 import LaunchIcon from '@material-ui/icons/Launch';
@@ -15,7 +16,7 @@ import commonStyles from '../../styles/CommonStyles.module.scss';
 import styles from './styles.module.scss';
 import PageTitle from "../../components/common/PageTitle";
 import ActionButtons from '../../components/common/ActionButtons';
-import { getDeTais, getDeTaisWithQuery, deleteDeTaiById } from '../../api/deTaiAPI';
+import { getDeTaisWithQuery, deleteDeTaiById, getDeTaisWithPendingApproval, updateNameChange } from '../../api/deTaiAPI';
 import { getSystemSettings, updateSystemSetting } from '../../api/systemSettingAPI';
 import CustomModal from '../../components/common/CustomModal/CustomModal';
 import { FormGroup } from "@material-ui/core";
@@ -34,8 +35,11 @@ const ListDeTai = () => {
   const [ isGVModalOpen, setIsGVModalOpen ] = useState(false);
   const [ deXuatToiDa, setDeXuatToiDa ] = useState(0);
   const [ selectedGV, setSelectedGV ] = useState(null);
+  const [ listMode, setListMode ] = useState(0);
   const [ resData, setResData ] = useState(Utils.getNewPageData());
+  const [ isFileResetting, setIsFileResetting ] = useState(false);
   let history = useHistory();
+  const inputFile = useRef(null);
 
   useEffect(() => {
     getDeTaiList();
@@ -43,8 +47,18 @@ const ListDeTai = () => {
   }, []);
 
   useEffect(() => {
+    getDeTaiList();
+  }, [listMode]);
+
+  useEffect(() => {
     setDeTais(resData.docs);
   }, [resData]);
+
+  useEffect(() => {
+    if (isFileResetting) {
+      setIsFileResetting(false);
+    }
+  }, [isFileResetting]);
 
   useEffect(() => {
     // toggleGVModal();
@@ -67,15 +81,66 @@ const ListDeTai = () => {
       });
   } */
 
-  const getDeTaiList = (search = '', pagingOptions = Utils.getNewPagingOptions(), filters = {}) => {
-    getDeTaisWithQuery(search, pagingOptions, filters)
-      .then((res) => {
-        console.log(res);
-        setResData(res.data);
-      })
-      .catch((err) => {
-        console.log(err.response);
+  const onImportButtonClick = () => {
+    inputFile.current.click();
+  }
+
+  const handleImportNameChangeList = event => {
+    const { files } = event.target;
+    console.log(files);
+    xlsxParser
+      .onFileSelection(files[0])
+      .then(data => {
+        var parsedData = data;
+        var changes = parsedData.Sheet1;
+        console.log(changes);
+        toast.promise(
+          updateNameChange(changes),
+          {
+            loading: 'Đang cập nhật',
+            success: (res) => {
+              getDeTaiList();
+              return 'Cập nhật thành công';
+            },
+            error: (err) => {
+              return err.response.data.message;
+            }
+          },
+          Utils.getToastConfig()
+        );
+        // upsertSinhViens(sinhViens)
+        //   .then((res) => {
+        //     console.log(res);
+        //     setIsFileResetting(true);
+        //     getList();
+        //   })
+        //   .catch((err) => {
+        //     console.log(err);
+        //   })
       });
+  }
+
+  const getDeTaiList = (search = '', pagingOptions = Utils.getNewPagingOptions(), filters = {}) => {
+    if (listMode == 0) {
+      getDeTaisWithQuery(search, pagingOptions, filters)
+        .then((res) => {
+          console.log(res);
+          setResData(res.data);
+        })
+        .catch((err) => {
+          console.log(err.response);
+        });
+    }
+    else if (listMode == 1) {
+      getDeTaisWithPendingApproval(search, pagingOptions, filters)
+        .then((res) => {
+          console.log(res);
+          setResData(res.data);
+        })
+        .catch((err) => {
+          console.log(err.response);
+        });
+    }
   }
 
   const getDeXuatToiDa = () => {
@@ -142,7 +207,23 @@ const ListDeTai = () => {
   }
   const onDeXuatToiDaUpdate = () => {
     console.log(deXuatToiDa);
-    updateSystemSetting({ deXuatToiDa: deXuatToiDa, instance: Constants.SYSTEM_SETTING_INSTANCE })
+    toast.promise(
+      updateSystemSetting({ deXuatToiDa: deXuatToiDa, instance: Constants.SYSTEM_SETTING_INSTANCE }),
+      {
+        loading: 'Đang cập nhật',
+        success: (res) => {
+          console.log(res);
+          getDeXuatToiDa();
+          toggleDKModal();
+          return 'Cập nhật thành công';
+        },
+        error: (err) => {
+          return err.response.data.message;
+        }
+      },
+      Utils.getToastConfig()
+    );
+    /* updateSystemSetting({ deXuatToiDa: deXuatToiDa, instance: Constants.SYSTEM_SETTING_INSTANCE })
       .then((res) => {
         console.log(res);
         getDeXuatToiDa();
@@ -150,7 +231,7 @@ const ListDeTai = () => {
       })
       .catch((err) => {
         console.log(err);
-      })
+      }) */
   }
 
   const onGVClick = (id) => {
@@ -176,181 +257,203 @@ const ListDeTai = () => {
       <Row noGutters className="page-header py-4">
         <PageTitle sm="4" title="Danh sách Đề tài" subtitle="QUẢN LÝ ĐỀ TÀI" className="text-sm-left" />
       </Row>
-
+      <ButtonGroup className="mr-2 btn-group width-100 mb-15">
+        <Button className={listMode == 0 ? "t-button-font" : "t-button"} onClick={() => { setListMode(0) }}>
+          Tất cả đề tài
+        </Button>
+        <Button className={listMode == 1 ? "t-button-font" : "t-button"} onClick={() => { setListMode(1) }}>
+          Đề tài chờ xác nhận Giữa kỳ
+        </Button>
+      </ButtonGroup>
       {/* Table */}
-      <Row>
-        <Col>
-          <LyrTable
-            buttonSection={
-              <Row>
-                <span class="pr-05r"/>
-                <Button onClick={toggleDKModal}>Tùy chỉnh điều kiện</Button>
-                <span class="pr-05r"/>
-                <DeXuatButton onCompleted={onCompleted}/>
-                <span class="pr-05r"/>
-              </Row>
-            }
-            data={resData}
-            getList={getDeTaiList}
-            tableMode={true}
-            headers={[
-              {
-                label: "Tên Đề tài",
-                type: Constants.FILTER_TYPE_EQ,
-                field: 'tenDeTai',
-              },
-              {
-                label: "Giảng viên Hướng dẫn",
-                type: Constants.FILTER_TYPE_EQ,
-                field: 'giangVien',
-              },
-              {
-                label: "Mô tả",
-                type: Constants.FILTER_TYPE_EQ,
-                field: 'moTa',
-              },
-              {
-                label: "Kỳ thực hiện",
-                type: Constants.FILTER_TYPE_EQ,
-                field: 'kyThucHien',
-              },
-              {
-                label: "Trạng thái duyệt",
-                type: Constants.FILTER_TYPE_SL,
-                selectList: Utils.getDeTaiApproveStatusSL(),
-                field: 'trangThaiDuyet',
-              },
-              {
-                label: "Trạng thái thực hiện",
-                type: Constants.FILTER_TYPE_SL,
-                selectList: Utils.getDeTaiProgressStatusSL(),
-                field: 'trangThaiThucHien',
-              },
-              {
-                label: "Hệ đào tạo",
-                type: Constants.FILTER_TYPE_SL,
-                selectList: Utils.getHeDaoTaoSL(),
-                field: 'heDaoTao',
-              },
-              {
-                label: "Điểm số",
-                type: Constants.FILTER_TYPE_EQ,
-                field: 'diemSo',
-              },
-              {
-                label: "SV Thực hiện",
-                type: Constants.FILTER_TYPE_EQ,
-                field: 'sinhVienThucHien',
-              },
-              {
-                label: "Thao tác",
-                type: Constants.FILTER_TYPE_NL,
-              },
-            ]}
-          >
-          <tbody>
-            {
-              deTais.map((deTai, index) => (
-                <tr key={`de-tai_${index}`}>
-                  <td><a href={`/de-tai/detail/${deTai._id}`}>{deTai.tenDeTai}</a></td>
-                  <td>{deTai.giangVien.name}<span className={styles['small-icon-span']}>
-                    <LaunchIcon className={commonStyles['icon-button']} color="primary"
-                      style={{ fontSize: '1rem' }} onClick={() => { onGVClick(deTai.giangVien) }}/>
-                    </span>
-                  </td>
-                  <td>{deTai.moTa}</td>
-                  <td>{(deTai.kyThucHien != null) ? deTai.kyThucHien.name : ''}</td>
-                  <td>{Utils.getDeTaiApproveStatusText(deTai.trangThaiDuyet)}</td>
-                  <td>{Utils.getDeTaiProgressStatusText(deTai.trangThaiThucHien)}</td>
-                  <td>{deTai.heDaoTao}</td>
-                  <td>{deTai.diemSo}</td>
-                  {/* <td>{Utils.getSinhVienNumOfDeTai(deTai)}</td> */}
-                  <td><DetailSVThucHienButton deTai={deTai} /></td>
-                  <td>
-                    <ActionButtons onEditClick={() => onEditClick(deTai._id)}
-                        onDeleteClick={() => onDeleteClick(deTai._id)} />
-                  </td>
-                </tr>
-              ))
-            }
-            </tbody>
-          </LyrTable>
-          {/* <Card small className="mb-4">
-            <CardHeader className="border-bottom">
-              <Row>
-                <span class="pr-05r"/>
-                <Button onClick={toggleDKModal}>Tùy chỉnh điều kiện</Button>
-                <span class="pr-05r"/>
-                <DeXuatButton onCompleted={onCompleted}/>
-                <span class="pr-05r"/>
-              </Row>
-            </CardHeader>
-            <CardBody className="p-0 pb-3">
-              <table className="table mb-0">
-                <thead className="bg-light">
-                  <tr>
-                    <th scope="col" className="border-0">
-                      Tên Đề tài
-                    </th>
-                    <th scope="col" className="border-0">
-                      Giảng viên Hướng dẫn
-                    </th>
-                    <th scope="col" className="border-0">
-                      Mô tả
-                    </th>
-                    <th scope="col" className="border-0">
-                      Kỳ thực hiện
-                    </th>
-                    <th scope="col" className="border-0">
-                      Trạng thái duyệt
-                    </th>
-                    <th scope="col" className="border-0">
-                      Trạng thái thực hiện
-                    </th>
-                    <th scope="col" className="border-0">
-                      Hệ đào tạo
-                    </th>
-                    <th scope="col" className="border-0">
-                      Điểm số
-                    </th>
-                    <th scope="col" className="border-0">
-                      Số SV Thực hiện
-                    </th>
-                    <th scope="col" className="border-0">
-                      Action
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
+      { listMode == 0 && (
+        <Row>
+          <Col>
+            <LyrTable
+              buttonSection={
+                <Row>
+                  <span class="pr-05r"/>
+                  <Button onClick={toggleDKModal}>Tùy chỉnh điều kiện</Button>
+                  {/* <span class="pr-05r"/>
+                  <DeXuatButton onCompleted={onCompleted}/>
+                  <span class="pr-05r"/> */}
+                </Row>
+              }
+              data={resData}
+              getList={getDeTaiList}
+              tableMode={true}
+              headers={[
                 {
-                  deTais.map((deTai, index) => (
-                    <tr key={`de-tai_${index}`}>
-                      <td>{deTai.tenDeTai}</td>
-                      <td>{deTai.giangVien.name}<span className={styles['small-icon-span']}>
-                        <LaunchIcon className={commonStyles['icon-button']} color="primary"
-                          style={{ fontSize: '1rem' }} onClick={() => { onGVClick(deTai.giangVien) }}/>
-                        </span>
-                      </td>
-                      <td>{deTai.moTa}</td>
-                      <td>{(deTai.kyThucHien != null) ? deTai.kyThucHien.name : ''}</td>
-                      <td>{Utils.getDeTaiApproveStatusText(deTai.trangThaiDuyet)}</td>
-                      <td>{Utils.getDeTaiProgressStatusText(deTai.trangThaiThucHien)}</td>
-                      <td>{deTai.heDaoTao}</td>
-                      <td>{deTai.diemSo}</td>
-                      <td>{Utils.getSinhVienNumOfDeTai(deTai)}</td>
-                      <td>
-                        <ActionButtons onEditClick={() => onEditClick(deTai._id)}
-                            onDeleteClick={() => onDeleteClick(deTai._id)} />
-                      </td>
-                    </tr>
-                  ))
-                }
-                </tbody>
-              </table>
-            </CardBody>
-          </Card> */}
-        </Col>
-      </Row>
+                  label: "Tên Đề tài",
+                  type: Constants.FILTER_TYPE_EQ,
+                  field: 'tenDeTai',
+                },
+                {
+                  label: "Giảng viên Hướng dẫn",
+                  type: Constants.FILTER_TYPE_EQ,
+                  field: 'giangVien',
+                },
+                {
+                  label: "Mô tả",
+                  type: Constants.FILTER_TYPE_EQ,
+                  field: 'moTa',
+                },
+                {
+                  label: "Kỳ thực hiện",
+                  type: Constants.FILTER_TYPE_EQ,
+                  field: 'kyThucHien',
+                },
+                {
+                  label: "Trạng thái duyệt",
+                  type: Constants.FILTER_TYPE_SL,
+                  selectList: Utils.getDeTaiApproveStatusSL(),
+                  field: 'trangThaiDuyet',
+                },
+                {
+                  label: "Trạng thái thực hiện",
+                  type: Constants.FILTER_TYPE_SL,
+                  selectList: Utils.getDeTaiProgressStatusSL(),
+                  field: 'trangThaiThucHien',
+                },
+                {
+                  label: "Hệ đào tạo",
+                  type: Constants.FILTER_TYPE_SL,
+                  selectList: Utils.getHeDaoTaoSL(),
+                  field: 'heDaoTao',
+                },
+                {
+                  label: "Điểm số",
+                  type: Constants.FILTER_TYPE_EQ,
+                  field: 'diemSo',
+                },
+                {
+                  label: "SV Thực hiện",
+                  type: Constants.FILTER_TYPE_EQ,
+                  field: 'sinhVienThucHien',
+                },
+                {
+                  label: "Thao tác",
+                  type: Constants.FILTER_TYPE_NL,
+                },
+              ]}
+            >
+            <tbody>
+              {
+                deTais.map((deTai, index) => (
+                  <tr key={`de-tai_${index}`}>
+                    <td><a href={`/de-tai/detail/${deTai._id}`} target="_blank">{deTai.tenDeTai}</a></td>
+                    <td>{deTai.giangVien.name}<span className={styles['small-icon-span']}>
+                      <LaunchIcon className={commonStyles['icon-button']} color="primary"
+                        style={{ fontSize: '1rem' }} onClick={() => { onGVClick(deTai.giangVien) }}/>
+                      </span>
+                    </td>
+                    <td>{deTai.moTa}</td>
+                    <td>{(deTai.kyThucHien != null) ? deTai.kyThucHien.name : ''}</td>
+                    <td>{Utils.getDeTaiApproveStatusText(deTai.trangThaiDuyet)}</td>
+                    <td>{Utils.getDeTaiProgressStatusText(deTai.trangThaiThucHien)}</td>
+                    <td>{deTai.heDaoTao}</td>
+                    <td>{deTai.diemSo}</td>
+                    {/* <td>{Utils.getSinhVienNumOfDeTai(deTai)}</td> */}
+                    <td><DetailSVThucHienButton deTai={deTai} /></td>
+                    <td>
+                      <ActionButtons onEditClick={() => onEditClick(deTai._id)}
+                          onDeleteClick={() => onDeleteClick(deTai._id)} />
+                    </td>
+                  </tr>
+                ))
+              }
+              </tbody>
+            </LyrTable>
+          </Col>
+        </Row>
+      ) }
+      { listMode == 1 && (
+        <Row>
+          <Col>
+            <LyrTable
+              buttonSection={
+                <Row>
+                  {/* <span class="pr-05r"/>
+                  <Button onClick={toggleDKModal}>Tùy chỉnh điều kiện</Button> */}
+                  <span class="pr-05r"/>
+                  {!isFileResetting && (
+                      <div>
+                        <Button onClick={onImportButtonClick}>Nhập danh sách thay đổi tên</Button>
+                        <input type="file" id="file" ref={inputFile}
+                          style={{ display: 'none' }} onChange={(e) => handleImportNameChangeList(e)} on />
+                      </div>
+                    )
+                  }
+                </Row>
+              }
+              data={resData}
+              getList={getDeTaiList}
+              tableMode={true}
+              headers={[
+                {
+                  label: "Tên Đề tài",
+                  type: Constants.FILTER_TYPE_EQ,
+                },
+                {
+                  label: "Tên mới",
+                  type: Constants.FILTER_TYPE_NL,
+                },
+                {
+                  label: "Tên tiếng Anh cũ",
+                  type: Constants.FILTER_TYPE_NL,
+                },
+                {
+                  label: "Tên tiếng Anh mới",
+                  type: Constants.FILTER_TYPE_NL,
+                },
+                {
+                  label: "Sinh viên",
+                  type: Constants.FILTER_TYPE_NL,
+                },
+                {
+                  label: "SV1 tiếp tục thực hiện",
+                  type: Constants.FILTER_TYPE_NL,
+                },
+                {
+                  label: "SV2 tiếp tục thực hiện",
+                  type: Constants.FILTER_TYPE_NL,
+                },
+                {
+                  label: "Thao tác",
+                  type: Constants.FILTER_TYPE_NL,
+                },
+              ]}
+            >
+            <tbody>
+              {
+                deTais.map((deTai, index) => (
+                  <tr key={`de-tai_${index}`}>
+                    <td>{deTai.tenDeTai}</td>
+                    <td>{(deTai.xacNhanGiuaKi.newName && deTai.xacNhanGiuaKi.newName != '')
+                          ? deTai.xacNhanGiuaKi.newName : '-'}
+                    </td>
+                    <td>{deTai.englishName}</td>
+                    <td>{(deTai.xacNhanGiuaKi.newEnglishName && deTai.xacNhanGiuaKi.newEnglishName != '')
+                          ? deTai.xacNhanGiuaKi.newEnglishName : '-'}</td>
+                    <td><DetailSVThucHienButton deTai={deTai} /></td>
+                    <td>{deTai.xacNhanGiuaKi.sinhVien1.tiepTuc ? 'Có' : 'Không'}</td>
+                    <td>{
+                      deTai.sinhVienThucHien.length > 1
+                        ? (deTai.xacNhanGiuaKi.sinhVien2.tiepTuc ? 'Có' : 'Không')
+                        : '-'
+                    }</td>
+                    <td>
+                      <ActionButtons onEditClick={() => onEditClick(deTai._id)}
+                          onDeleteClick={() => onDeleteClick(deTai._id)} />
+                    </td>
+                  </tr>
+                ))
+              }
+              </tbody>
+            </LyrTable>
+          </Col>
+        </Row>
+      ) }
       {/* Dieu kien de xuat Modal */}
       <CustomModal isOpen={isDKModalOpen} toggle={toggleDKModal}
         title='Tùy chỉnh điều kiện'

@@ -31,6 +31,8 @@ import * as Utils from '../../utils/utils';
 import PageTitle from "../../components/common/PageTitle";
 import userAtom from '../../recoil/user';
 
+import toast from 'react-hot-toast';
+
 const EditDeTaiPage = () => {
   let { id } = useParams();
   let history = useHistory();
@@ -85,14 +87,28 @@ const EditDeTaiPage = () => {
   }, []);
   const onUpdateClick = () => {
     console.log(deTai);
-    updateDeTaiById(id, deTai)
+    toast.promise(
+      updateDeTaiById(id, deTai),
+      {
+        loading: 'Đang cập nhật',
+        success: (res) => {
+          history.push('/de-tai');
+          return 'Cập nhật thành công';
+        },
+        error: (err) => {
+          return err.response.data.message;
+        }
+      },
+      Utils.getToastConfig()
+    );
+    /* updateDeTaiById(id, deTai)
       .then((res) => {
         console.log(res);
         history.push('/de-tai');
       })
       .catch((err) => {
         console.log(err.response);
-      });
+      }); */
   }
 
   return (
@@ -119,6 +135,14 @@ const EditDeTaiPage = () => {
                           id="feName"
                           value={deTai.tenDeTai}
                           onChange={(e) => { setDeTai({ ...deTai, tenDeTai: e.target.value }) }}
+                        />
+                      </FormGroup>
+                      <FormGroup>
+                        <label htmlFor="feName">Tên Đề tài Tiếng Anh</label>
+                        <FormInput
+                          id="feEngName"
+                          value={deTai.englishName}
+                          onChange={(e) => { setDeTai({ ...deTai, englishName: e.target.value }) }}
                         />
                       </FormGroup>
                       <FormGroup>

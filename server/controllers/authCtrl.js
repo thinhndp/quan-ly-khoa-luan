@@ -23,41 +23,47 @@ export const authGoogle = async (req, res) => {
       .then((promiseRes) => {
         let relatedInfoSV = null;
         let relatedInfoGV = null;
-        let role = null;
-        if (promiseRes[0] != null) {
-          relatedInfoSV = new mongoose.Types.ObjectId(promiseRes[0]._id);
-          role = "SinhVien";
-        }
-        else if (promiseRes[1] != null) {
-          relatedInfoGV = new mongoose.Types.ObjectId(promiseRes[1]._id);
-          role = "GiangVien";
-        }
-        User.findOneAndUpdate(
-          {'email': info.email},
-          { 
-            name: info.name,
-            email: info.email,
-            picture: info.picture,
-            relatedInfoSV: relatedInfoSV,
-            relatedInfoGV: relatedInfoGV,
-            role: role
-          },
-          {
-            new: true,
-            upsert: true
-          }
-        ).then((user) => {
-          // console.log('** user **');
-          // console.log(user);
-          User.findById(user._id).populate('relatedInfoSV').populate('relatedInfoGV')
-            .then((fUser) => {
-              console.log('** fUser **');
-              console.log(fUser);
-              res.status(201).json(fUser);
-            }).catch((err) => {
-              res.status(400).json({ message: err.message });
+        User.findOne({ 'email': info.email })
+          .then((oneUser) => {
+            let role = oneUser.role;
+            if (promiseRes[0] != null) {
+              relatedInfoSV = new mongoose.Types.ObjectId(promiseRes[0]._id);
+              role = "SinhVien";
+            }
+            else if (promiseRes[1] != null) {
+              relatedInfoGV = new mongoose.Types.ObjectId(promiseRes[1]._id);
+              role = "GiangVien";
+            }
+            User.findOneAndUpdate(
+              {'email': info.email},
+              { 
+                name: info.name,
+                email: info.email,
+                picture: info.picture,
+                relatedInfoSV: relatedInfoSV,
+                relatedInfoGV: relatedInfoGV,
+                role: role
+              },
+              {
+                new: true,
+                upsert: true
+              }
+            ).then((user) => {
+              // console.log('** user **');
+              // console.log(user);
+              User.findById(user._id).populate('relatedInfoSV').populate('relatedInfoGV')
+                .then((fUser) => {
+                  console.log('** fUser **');
+                  console.log(fUser);
+                  res.status(201).json(fUser);
+                }).catch((err) => {
+                  res.status(400).json({ message: err.message });
+                });
             });
-        });
+          })
+          .catch((err) => {
+            res.status(400).json({ message: err.message });
+          });
       })
   }).catch((err) => {
     res.status(400).json({ message: err.message });

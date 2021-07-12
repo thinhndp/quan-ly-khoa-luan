@@ -32,14 +32,14 @@ export const SinhVienSchema = mongoose.Schema({
   diemTB: {
     type: Number,
     default: 0,
-    min: 0,
-    max: 10
+    min: [0, 'Điểm trong khoảng 0 tới 10'],
+    max: [10, 'Điểm trong khoảng 0 tới 10']
   },
   diemKL: {
     type: Number,
     default: 0,
-    min: 0,
-    max: 10
+    min: [0, 'Điểm trong khoảng 0 tới 10'],
+    max: [10, 'Điểm trong khoảng 0 tới 10']
   }
 });
 

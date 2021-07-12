@@ -30,3 +30,15 @@ export const getPostById = (id) => {
 export const getPostWSubmitterById = (id) => {
   return axios.get(`/posts/with-submitter/${id}`);
 }
+
+export const deletePostById = (id) => {
+  return axios.delete(`/posts/${id}`);
+}
+
+export const createPost = (post) => {
+  return axios.post('/posts/', post);
+}
+
+export const updatePostById = (id, post) => {
+  return axios.post(`/posts/${id}`, post);
+}

@@ -29,6 +29,7 @@ const DeTaiInfoCard = ({ deTai }) => {
         <div>
           <h5>{deTai.tenDeTai}</h5>
           <p>{deTai.moTa}</p>
+          <p><i class="material-icons icon">info</i><span className="label">Tên tiếng Anh:</span>{deTai.englishName}</p>
           <p><i class="material-icons icon">event</i><span className="label">Kỳ thực hiện:</span>{deTai.kyThucHien.name}</p>
           <p><i class="material-icons icon">school</i><span className="label">Hệ đào tạo:</span>{Utils.getHeDaoTaoText(deTai.heDaoTao)}</p>
           <p><i class="material-icons icon">person</i><span className="label">GV Hướng dẫn:</span>{deTai.giangVien.name}</p>

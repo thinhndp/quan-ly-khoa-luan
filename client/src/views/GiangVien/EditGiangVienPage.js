@@ -21,6 +21,9 @@ import { getGiangVienById, updateGiangVienById } from '../../api/giangVienAPI';
 import * as Constants from '../../constants/constants';
 import PageTitle from "../../components/common/PageTitle";
 
+import * as Utils from '../../utils/utils';
+import toast from 'react-hot-toast';
+
 const EditGiangVienPage = () => {
   let { id } = useParams();
   let history = useHistory();
@@ -45,15 +48,29 @@ const EditGiangVienPage = () => {
   }, []);
   const onUpdateClick = () => {
     console.log(giangVien);
-    // TODO: Validation
-    updateGiangVienById(id, giangVien)
+    toast.promise(
+      updateGiangVienById(id, giangVien),
+      {
+        loading: 'Đang cập nhật',
+        success: (res) => {
+          console.log(res);
+          history.push('/giang-vien');
+          return 'Cập nhật thành công';
+        },
+        error: (err) => {
+          return err.response.data.message;
+        }
+      },
+      Utils.getToastConfig()
+    );
+    /* updateGiangVienById(id, giangVien)
       .then((res) => {
         console.log(res);
         history.push('/giang-vien');
       })
       .catch((err) => {
         console.log(err);
-      });
+      }); */
   }
 
   return (

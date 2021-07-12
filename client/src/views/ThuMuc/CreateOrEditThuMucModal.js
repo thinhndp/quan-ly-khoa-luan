@@ -13,6 +13,8 @@ import * as Utils from '../../utils/utils';
 import * as API from '../../api/fileNopAPI';
 import * as Services from '../../services/googleDriveServices';
 
+import toast from 'react-hot-toast';
+
 const CreateOrEditThuMucModal = ({ isModalOpen, toggleModal, selected, onClose, onUpdate }) => {
   // const [ giangVien, setGiangVien ] = useState(null);
   // let thuMuc;
@@ -43,10 +45,35 @@ const CreateOrEditThuMucModal = ({ isModalOpen, toggleModal, selected, onClose, 
   //   }
   // }
 
+  const createThuMuc = async() => {
+    const res = await Services.createFolder(thuMuc.name);
+    console.log('id');
+    console.log(res.result.id);
+    const res2 = await Services.setPermission(res.result.id);
+    console.log(res2);
+    return API.createThuMuc({ ...thuMuc, driveId: res.result.id });
+  }
+
   const onCreateOrUpdateClick = () => {
     console.log(thuMuc);
     if (thuMuc._id == null) {
-      Services.createFolder(thuMuc.name)
+      toast.promise(
+        createThuMuc(),
+        {
+          loading: 'Đang tạo Thư mục',
+          success: (res) => {
+            console.log('db');
+            console.log(res);
+            onUpdate();
+            return 'Tạo thành công';
+          },
+          error: (err) => {
+            return err.response.data.message;
+          }
+        },
+        Utils.getToastConfig()
+      );
+      /* Services.createFolder(thuMuc.name)
         .then((res) => {
           console.log('id');
           console.log(res.result.id);
@@ -63,7 +90,7 @@ const CreateOrEditThuMucModal = ({ isModalOpen, toggleModal, selected, onClose, 
         })
         .catch((err) => {
           console.log(err);
-        })
+        }) */
       // createThuMuc(thuMuc)
       //   .then((res) => {
       //     console.log(res);

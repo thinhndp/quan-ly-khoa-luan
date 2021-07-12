@@ -2,6 +2,7 @@ import React, { useEffect, useState, useRef } from "react";
 import { Button, FormInput, FormGroup, FormSelect, Col, Row, FormTextarea } from "shards-react";
 import MomentUtils from '@date-io/moment';
 import { DateTimePicker, MuiPickersUtilsProvider, DatePicker } from '@material-ui/pickers';
+import toast from 'react-hot-toast';
 
 import CustomModal from '../CustomModal/CustomModal';
 import * as Constants from '../../../constants/constants';
@@ -19,24 +20,52 @@ const CreateOrEditLogModal = ({ isModalOpen, toggleModal, selected, onClose, onC
   const onCreateOrUpdateClick = () => {
     console.log(taskLog);
     if (taskLog == null || taskLog._id == null) {
-      createTaskLog(taskLog)
+      toast.promise(
+        createTaskLog(taskLog),
+        {
+          loading: 'Đang tạo',
+          success: (res) => {
+            onCreated();
+            return 'Tạo thành công';
+          },
+          error: (err) => {
+            return err.response.data.message;
+          }
+        },
+        Utils.getToastConfig()
+      );
+      /* createTaskLog(taskLog)
         .then((res) => {
           onCreated();
           console.log(res);
         })
         .catch((err) => {
           console.log(err.response);
-        });
+        }); */
     }
     else {
-      updateTaskLogById(taskLog._id, taskLog)
+      toast.promise(
+        updateTaskLogById(taskLog._id, taskLog),
+        {
+          loading: 'Đang cập nhật',
+          success: (res) => {
+            onUpdated();
+            return 'Cập nhật thành công';
+          },
+          error: (err) => {
+            return err.response.data.message;
+          }
+        },
+        Utils.getToastConfig()
+      );
+      /* updateTaskLogById(taskLog._id, taskLog)
         .then((res) => {
           onUpdated();
           console.log(res);
         })
         .catch((err) => {
           console.log(err.response);
-        })
+        }) */
     }
   }
 

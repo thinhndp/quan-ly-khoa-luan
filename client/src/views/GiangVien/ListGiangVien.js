@@ -14,6 +14,10 @@ import Pagination from '../../components/common/Pagination/Pagination';
 import LyrTable from '../../components/common/LyrTable/LyrTable';
 // import EditGiangVienModal from './EditGiangVienModal';
 
+import { confirmAlert } from 'react-confirm-alert';
+import toast from 'react-hot-toast';
+import ConfirmDeleteModal from "../../components/common/ConfirmDeleteModal/ConfirmDeleteModal";
+
 const ListGiangVien = () => {
   const [ giangViens, setGiangViens ] = useState([]);
   const [ isFileResetting, setIsFileResetting ] = useState(false);
@@ -60,7 +64,30 @@ const ListGiangVien = () => {
         var parsedData = data;
         var giangViens = parsedData.Sheet1;
         console.log(giangViens);
-        upsertGiangViens(giangViens)
+        if (!giangViens || giangViens.length == 0) {
+          Utils.showErrorToast('Đã có lỗi xảy ra');
+          return;
+        }
+        if (!Utils.isObjHasAllKeys(giangViens[0], [ 'maGV', 'name', 'hocHam', 'phone', 'email', 'huongNghienCuu' ])) {
+          Utils.showErrorToast('Dữ liệu hoặc file Không hợp lệ');
+          return;
+        }
+        toast.promise(
+          upsertGiangViens(giangViens),
+          {
+            loading: 'Đang cập nhật thông tin Giảng viên',
+            success: (res) => {
+              setIsFileResetting(true);
+              getList();
+              return 'Cập nhật thành công';
+            },
+            error: (err) => {
+              return err.response.data.message;
+            }
+          },
+          Utils.getToastConfig()
+        );
+        /* upsertGiangViens(giangViens)
           .then((res) => {
             console.log(res);
             setIsFileResetting(true);
@@ -68,19 +95,43 @@ const ListGiangVien = () => {
           })
           .catch((err) => {
             console.log(err);
-          })
+          }) */
       });
   }
 
   const onDeleteClick = (id) => {
-    deleteGiangVienById(id)
+    /* deleteGiangVienById(id)
       .then((res) => {
         console.log(res);
         getList();
       })
       .catch((err) => {
         console.log(err);
-      });
+      }); */
+    confirmAlert({
+      customUI: ({ onClose }) => {
+        return (
+          <ConfirmDeleteModal onClose={onClose} onConfirm={() => {
+            toast.promise(
+              deleteGiangVienById(id),
+              {
+                loading: 'Đang xóa',
+                success: (res) => {
+                  getList();
+                  onClose();
+                  return 'Xóa thành công';
+                },
+                error: (err) => {
+                  console.log(err.response);
+                  return err.response.data.message;
+                }
+              },
+              Utils.getToastConfig()
+            );
+          }} />
+        );
+      }
+    });
   }
 
   const onEditClick = (id) => {

@@ -21,6 +21,9 @@ import { getSinhVienById, updateSinhVienById } from '../../api/sinhVienAPI';
 import * as Constants from '../../constants/constants';
 import PageTitle from "../../components/common/PageTitle";
 
+import * as Utils from '../../utils/utils';
+import toast from 'react-hot-toast';
+
 const EditSinhVienPage = () => {
   let { id } = useParams();
   let history = useHistory();
@@ -33,6 +36,7 @@ const EditSinhVienPage = () => {
     status: Constants.SINH_VIEN_STATUS_IN_PROGRESS,
     diemTB: 0
   });
+
   useEffect(() => {
     // console.log(id);
     getSinhVienById(id)
@@ -44,18 +48,32 @@ const EditSinhVienPage = () => {
         console.log(err);
       });
   }, []);
+
   const onUpdateClick = () => {
     console.log(sinhVien);
-    // TODO: Validation
-    updateSinhVienById(id, sinhVien)
+    toast.promise(
+      updateSinhVienById(id, sinhVien),
+      {
+        loading: 'Đang cập nhật',
+        success: (res) => {
+          console.log(res);
+          history.push('/sinh-vien');
+          return 'Cập nhật thành công';
+        },
+        error: (err) => {
+          return err.response.data.message;
+        }
+      },
+      Utils.getToastConfig()
+    );
+    /* updateSinhVienById(id, sinhVien)
       .then((res) => {
         console.log(res);
         history.push('/sinh-vien');
       })
       .catch((err) => {
         console.log(err);
-      });
-
+      }); */
   }
   return (
     <Container fluid className="main-content-container px-4">
@@ -132,6 +150,8 @@ const EditSinhVienPage = () => {
                           <FormInput
                             type="number"
                             id="feDiemTB"
+                            min={0}
+                            max={10}
                             value={sinhVien.diemTB}
                             onChange={(e) => { setSinhVien({ ...sinhVien, diemTB: e.target.value }) }}
                           />

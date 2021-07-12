@@ -13,6 +13,9 @@ import ActionButtons from '../../components/common/ActionButtons';
 import CreateOrEditBieuMauModal from './CreateOrEditBieuMauModal';
 import LyrTable from '../../components/common/LyrTable/LyrTable';
 
+import { confirmAlert } from 'react-confirm-alert';
+import toast from 'react-hot-toast';
+import ConfirmDeleteModal from "../../components/common/ConfirmDeleteModal/ConfirmDeleteModal";
 
 const ListBieuMau = () => {
   const [ bieuMaus, setBieuMaus ] = useState([]);
@@ -59,14 +62,37 @@ const ListBieuMau = () => {
   }
 
   const onDeleteClick = (id) => {
-    deleteBieuMauById(id)
+    confirmAlert({
+      customUI: ({ onClose }) => {
+        return (
+          <ConfirmDeleteModal onClose={onClose} onConfirm={() => {
+            toast.promise(
+              deleteBieuMauById(id),
+              {
+                loading: 'Đang xóa',
+                success: (res) => {
+                  getList();
+                  onClose();
+                  return 'Xóa thành công';
+                },
+                error: (err) => {
+                  return err.response.data.message;
+                }
+              },
+              Utils.getToastConfig()
+            );
+          }} />
+        );
+      }
+    });
+    /* deleteBieuMauById(id)
       .then((res) => {
         console.log(res);
         getList();
       })
       .catch((err) => {
         console.log(err);
-      });
+      }); */
   }
 
   const onEditClick = (bieuMau) => {

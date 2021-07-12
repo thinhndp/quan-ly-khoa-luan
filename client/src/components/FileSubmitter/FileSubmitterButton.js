@@ -13,6 +13,8 @@ import { uploadFileToFolder } from '../../services/googleDriveServices';
 import { createFilesInFolder } from '../../api/fileNopAPI';
 import userAtom from '../../recoil/user';
 
+import toast from 'react-hot-toast';
+
 const baseStyle = {
   flex: 1,
   display: 'flex',
@@ -117,6 +119,23 @@ const FileSubmitterButton = ({ renderAs, folderId, folderDriveId, onUploaded }) 
   //   </div>
   // );
 
+  const createFiles = async(gDriveUploadPromises) => {
+    const res = await Promise.all([...gDriveUploadPromises]);
+    let uploadedFiles = [];
+    for (let i = 0; i < res.length; i++) {
+      if (res[i].status == 200) {
+        uploadedFiles.push({
+          name: res[i].data.name,
+          driveId: res[i].data.id,
+          user: currentUser,
+          ngayNop: Date.now()
+        });
+      }
+    }
+    console.log(res);
+    return createFilesInFolder(folderId, uploadedFiles)
+  }
+
   const onSubmitClick = () => {
     console.log(acceptedFiles);
     const gDriveUploadPromises = [];
@@ -129,18 +148,29 @@ const FileSubmitterButton = ({ renderAs, folderId, folderDriveId, onUploaded }) 
         parents: [ folderDriveId ]
       };
 
-      // uploadFileToFolder(fileMetadata, file)
-      //   .then((res) => {
-      //     console.log(res);
-      //   })
-      //   .catch((err) => {
-      //     console.log(err);
-      //   });
-
       gDriveUploadPromises.push(uploadFileToFolder(fileMetadata, file));
       fileList.push(file);
     });
-    Promise.all([...gDriveUploadPromises])
+    toast.promise(
+      createFiles(gDriveUploadPromises),
+      {
+        loading: 'Đang Upload Files',
+        success: (res) => {
+          console.log("db'ed");
+          console.log(res);
+          setIsOpen(false);
+          if (onUploaded != null) {
+            onUploaded();
+          }
+          return 'Upload thành công';
+        },
+        error: (err) => {
+          return err.response.data.message;
+        }
+      },
+      Utils.getToastConfig()
+    );
+    /* Promise.all([...gDriveUploadPromises])
         .then((res) => {
           let uploadedFiles = [];
           for (let i = 0; i < res.length; i++) {
@@ -166,7 +196,7 @@ const FileSubmitterButton = ({ renderAs, folderId, folderDriveId, onUploaded }) 
         })
         .catch((err) => {
           console.log(err);
-        });
+        }); */
   }
 
   const toggleRefHandler = () => {

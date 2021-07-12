@@ -5,7 +5,7 @@ import { Container, Row, Col, Card, CardHeader, CardBody, Button } from "shards-
 import VisibilityIcon from '@material-ui/icons/Visibility';
 import LaunchIcon from '@material-ui/icons/Launch';
 
-import { getHoiDongs, createHoiDong, deleteHoiDongById, getHoiDongsWithQuery } from '../../api/hoiDongAPI';
+import { deleteHoiDongById, getHoiDongsWithQuery } from '../../api/hoiDongAPI';
 import * as Utils from '../../utils/utils';
 
 import PageTitle from "../../components/common/PageTitle";
@@ -14,6 +14,10 @@ import CreateOrEditPhongHocModal from './CreateOrEditPhongHocModal';
 import ThanhPhanModal from './ThanhPhanModal';
 import DeTaiPhanBienListModal from './DeTaiPhanBienListModal';
 import LyrTable from '../../components/common/LyrTable/LyrTable';
+
+import { confirmAlert } from 'react-confirm-alert';
+import toast from 'react-hot-toast';
+import ConfirmDeleteModal from "../../components/common/ConfirmDeleteModal/ConfirmDeleteModal";
 
 const ListHoiDong = () => {
   const [ hoiDongs, setHoiDongs ] = useState([]);
@@ -85,14 +89,37 @@ const ListHoiDong = () => {
   }
 
   const onDeleteClick = (id) => {
-    deleteHoiDongById(id)
+    confirmAlert({
+      customUI: ({ onClose }) => {
+        return (
+          <ConfirmDeleteModal onClose={onClose} onConfirm={() => {
+            toast.promise(
+              deleteHoiDongById(id),
+              {
+                loading: 'Đang xóa',
+                success: (res) => {
+                  getList();
+                  onClose();
+                  return 'Xóa thành công';
+                },
+                error: (err) => {
+                  return err.response.data.message;
+                }
+              },
+              Utils.getToastConfig()
+            );
+          }} />
+        );
+      }
+    });
+    /* deleteHoiDongById(id)
       .then((res) => {
         console.log(res);
         getList();
       })
       .catch((err) => {
         console.log(err);
-      });
+      }); */
   }
 
   const onEditClick = (hoiDong) => {

@@ -1,5 +1,6 @@
 import GiangVien from '../models/GiangVien.js';
 import DeTai from '../models/DeTai.js';
+import User from '../models/User.js';
 import * as Utils from '../utils/utils.js';
 
 export const getGiangViens = (req, res) => {
@@ -90,7 +91,7 @@ export const createManyGiangViens = (req, res) => {
     })
 }
 
-export const upsertManyGiangViens = (req, res) => {
+/* export const upsertManyGiangViens = (req, res) => {
   const giangViens = req.body;
   const config = { matchFields: ['maGV'] };
   const giangVienPromise = GiangVien.upsertMany(giangViens, config);
@@ -116,7 +117,7 @@ export const upsertManyGiangViens = (req, res) => {
         });
       }
       DeTai.bulkWrite(bulkArr);
-    });
+    })
   
   Promise.all([ giangVienPromise, deTaiPromise ])
     .then(() => {
@@ -126,6 +127,49 @@ export const upsertManyGiangViens = (req, res) => {
     .catch((err) => {
       res.status(400).json({ message: err.message });
     });
+} */
+
+export const upsertManyGiangViens = async (req, res) => {
+  const giangViens = req.body;
+  const config = { matchFields: ['maGV'] };
+  try {
+    console.log(giangViens);
+    await GiangVien.upsertMany(giangViens, config);
+    /* 
+    let giangViensMap = new Map();
+    let maGVs = [];
+    giangViens.forEach((gv, index) => {
+      giangViensMap.set(gv.maGV, gv);
+      maGVs.push(gv.maGV);
+    });
+    console.log('map');
+    console.log(giangViensMap);
+
+    let deTais = await DeTai.find({ 'giangVien.maGV': { $in: maGVs } });
+    let bulkArr = [];
+    for (let deTai of deTais) {
+      bulkArr.push({
+        updateOne: {
+          "filter": { "_id": deTai._id },
+          "update": { $set: { "giangVien": giangViensMap.get(deTai.giangVien.maGV) } }
+        }
+      });
+    }
+    DeTai.bulkWrite(bulkArr);
+    
+    Promise.all([ giangVienPromise, deTaiPromise ])
+      .then(() => {
+        console.log('promise');
+        res.status(201).json(giangViens);
+      })
+      .catch((err) => {
+        res.status(400).json({ message: err.message });
+      }); */
+    res.status(201).json(giangViens);
+  } catch (err) {
+    res.status(400).json({ message: err.message });
+  }
+  
 }
 
 export const updateGiangVienById = (req, res) => {
@@ -150,12 +194,25 @@ export const updateGiangVienById = (req, res) => {
     });
 }
 
-export const deleteGiangVienById = (req, res) => {
-  GiangVien.deleteOne({ _id: req.params.id })
-    .then(() => {
-      res.status(201).json(req.params.id);
-    })
-    .catch((err) => {
-      res.status(400).json({ message: err.message });
-    });
+export const deleteGiangVienById = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const deTai = await DeTai.findOne({ giangVien: id });
+    if (deTai != null) {
+      console.log(deTai);
+      res.status(400).json({ message: 'Đã có Đề tài liên kết với Giảng viên này' });
+      return;
+    }
+    const user = await User.findOne({ relatedInfoGV: id })
+    if (user != null) {
+      res.status(400).json({ message: 'Đã có User liên kết với Giảng viên này' });
+      return;
+    }
+    await GiangVien.deleteOne({ _id: req.params.id });
+    console.log('deleted');
+    res.status(201).json(req.params.id);
+  }
+  catch (err) {
+    res.status(400).json({ message: err.message });
+  }
 }

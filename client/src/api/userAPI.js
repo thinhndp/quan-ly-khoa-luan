@@ -23,7 +23,12 @@ export const createUser = (user) => {
 }
 
 export const deleteUserById = (id) => {
-  return axios.delete(`/users/${id}`);
+  let token = localStorage.getItem('token');
+  return axios.delete(`/users/${id}`, {
+    headers: {
+      'Authorization': `Bearer ${token}`
+    }
+  });
 }
 
 export const updateUserById = (id, user) => {

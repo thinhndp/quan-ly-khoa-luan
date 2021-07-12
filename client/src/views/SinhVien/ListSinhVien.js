@@ -4,13 +4,17 @@ import { useHistory } from "react-router-dom";
 import xlsxParser from 'xlsx-parse-json';
 import { Container, Row, Col, Card, CardHeader, CardBody, Button } from "shards-react";
 
-import { getSinhViens, deleteSinhVienById, upsertSinhViens, getSinhViensWithQuery } from '../../api/sinhVienAPI';
+import { deleteSinhVienById, upsertSinhViens, getSinhViensWithQuery } from '../../api/sinhVienAPI';
 import * as Utils from '../../utils/utils';
 import * as Constants from '../../constants/constants';
 
 import PageTitle from "../../components/common/PageTitle";
 import ActionButtons from '../../components/common/ActionButtons';
 import LyrTable from '../../components/common/LyrTable/LyrTable';
+
+import { confirmAlert } from 'react-confirm-alert';
+import toast from 'react-hot-toast';
+import ConfirmDeleteModal from "../../components/common/ConfirmDeleteModal/ConfirmDeleteModal";
 
 const ListSinhVien = () => {
   const [ sinhViens, setSinhViens ] = useState([]);
@@ -70,7 +74,30 @@ const ListSinhVien = () => {
         var parsedData = data;
         var sinhViens = parsedData.Sheet1;
         console.log(sinhViens);
-        upsertSinhViens(sinhViens)
+        if (!sinhViens || sinhViens.length == 0) {
+          Utils.showErrorToast('Đã có lỗi xảy ra');
+          return;
+        }
+        if (!Utils.isObjHasAllKeys(sinhViens[0], [ 'maSV', 'name', 'lopSH', 'image', 'phone', 'email' ])) {
+          Utils.showErrorToast('Dữ liệu hoặc file Không hợp lệ');
+          return;
+        }
+        toast.promise(
+          upsertSinhViens(sinhViens),
+          {
+            loading: 'Đang cập nhật thông tin Sinh viên',
+            success: (res) => {
+              setIsFileResetting(true);
+              getList();
+              return 'Cập nhật thành công';
+            },
+            error: (err) => {
+              return err.response.data.message;
+            }
+          },
+          Utils.getToastConfig()
+        );
+        /* upsertSinhViens(sinhViens)
           .then((res) => {
             console.log(res);
             setIsFileResetting(true);
@@ -78,19 +105,43 @@ const ListSinhVien = () => {
           })
           .catch((err) => {
             console.log(err);
-          })
+          }) */
       });
   }
 
   const onDeleteClick = (id) => {
-    deleteSinhVienById(id)
+    /* deleteSinhVienById(id)
       .then((res) => {
         console.log(res);
         getList();
       })
       .catch((err) => {
         console.log(err);
-      });
+      }); */
+    confirmAlert({
+      customUI: ({ onClose }) => {
+        return (
+          <ConfirmDeleteModal onClose={onClose} onConfirm={() => {
+            toast.promise(
+              deleteSinhVienById(id),
+              {
+                loading: 'Đang xóa',
+                success: (res) => {
+                  getList();
+                  onClose();
+                  return 'Xóa thành công';
+                },
+                error: (err) => {
+                  console.log(err.response);
+                  return err.response.data.message;
+                }
+              },
+              Utils.getToastConfig()
+            );
+          }} />
+        );
+      }
+    });
   }
 
   const onEditClick = (id) => {

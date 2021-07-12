@@ -15,10 +15,12 @@ import PageTitle from "../../components/common/PageTitle";
 import SidebarActions from "../../components/add-new-post/SidebarActions";
 import SidebarCategories from "../../components/add-new-post/SidebarCategories";
 import PostReader from '../../components/post/PostReader';
-import { getPostById, getPostWSubmitterById } from '../../api/postAPI';
+import { getPostById, getPostWSubmitterById, createPost, updatePostById } from '../../api/postAPI';
 import { getThuMucById } from '../../api/fileNopAPI';
 import * as Utils from '../../utils/utils';
 import userAtom from '../../recoil/user';
+
+import toast from 'react-hot-toast';
 
 const CreateOrEditBaiDang = () => {
   const currentUser = useRecoilValue(userAtom);
@@ -123,18 +125,50 @@ const CreateOrEditBaiDang = () => {
       return;
     }
     if (!isUpdate) {
-      axios.post('http://localhost:5000/posts/', post)
-      .then((res) => {
-        console.log(res);
-        history.push('/bai-dang');
-      })
-      .catch((err) => {
-        console.log('create err');
-        console.log(err);
-      });
+      // axios.post('http://localhost:5000/posts/', post)
+      toast.promise(
+        createPost(post),
+        {
+          loading: 'Đang tạo',
+          success: (res) => {
+            console.log(res);
+            history.push('/bai-dang');
+            return 'Tạo thành công';
+          },
+          error: (err) => {
+            return err.response.data.message;
+          }
+        },
+        Utils.getToastConfig()
+      );
+      /* createPost(post)
+        .then((res) => {
+          console.log(res);
+          history.push('/bai-dang');
+        })
+        .catch((err) => {
+          console.log('create err');
+          console.log(err);
+        }); */
     }
     else {
-      axios.post(`http://localhost:5000/posts/${post._id}`, post)
+      // axios.post(`http://localhost:5000/posts/${post._id}`, post)
+      toast.promise(
+        updatePostById(post._id, post),
+        {
+          loading: 'Đang Cập nhật',
+          success: (res) => {
+            console.log(res);
+            history.push('/bai-dang');
+            return 'Cập nhật thành công';
+          },
+          error: (err) => {
+            return err.response.data.message;
+          }
+        },
+        Utils.getToastConfig()
+      );
+      /* updatePostById(post._id, post)
         .then((res) => {
           console.log(res);
           history.push('/bai-dang');
@@ -142,7 +176,7 @@ const CreateOrEditBaiDang = () => {
         .catch((err) => {
           console.log('update err');
           console.log(err);
-        });
+        }); */
     }
   }
   const onSaveClick = () => {

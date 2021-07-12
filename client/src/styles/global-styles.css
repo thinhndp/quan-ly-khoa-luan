@@ -182,6 +182,15 @@
   background-color: rgba(0,0,0,.03);
 } */
 
+.width-100 {
+  width: 100%;
+}
+
+.t-button-font {
+  font-weight: 700;
+  font-size: 1em;
+}
+
 .t-button {
   background: #fff;
   transition: all .2s ease;
@@ -219,6 +228,10 @@
 
 .ml-l {
   margin-left: 5px;
+}
+
+.mb-15 {
+  margin-bottom: 15px;
 }
 
 .small-icon {

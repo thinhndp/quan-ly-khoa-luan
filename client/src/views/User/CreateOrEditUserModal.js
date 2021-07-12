@@ -6,6 +6,8 @@ import * as Constants from '../../constants/constants';
 import { createUser, updateUserById } from '../../api/userAPI';
 import * as Utils from '../../utils/utils';
 
+import toast from 'react-hot-toast';
+
 const CreateOrEditUserModal = ({ isModalOpen, toggleModal, selected, onClose, onCreated, onUpdated }) => {
   const [ user, setUser ] = useState(Utils.getNewUser);
 
@@ -17,24 +19,52 @@ const CreateOrEditUserModal = ({ isModalOpen, toggleModal, selected, onClose, on
   const onCreateOrUpdateClick = () => {
     console.log(user);
     if (user == null || user._id == null) {
-      createUser(user)
+      toast.promise(
+        createUser(user),
+        {
+          loading: 'Đang tạo',
+          success: (res) => {
+            onCreated();
+            return 'Tạo thành công';
+          },
+          error: (err) => {
+            return err.response.data.message;
+          }
+        },
+        Utils.getToastConfig()
+      );
+      /* createUser(user)
         .then((res) => {
           onCreated();
           console.log(res);
         })
         .catch((err) => {
           console.log(err.response);
-        });
+        }); */
     }
     else {
-      updateUserById(user._id, user)
+      toast.promise(
+        updateUserById(user._id, user),
+        {
+          loading: 'Đang cập nhật',
+          success: (res) => {
+            onCreated();
+            return 'Cập nhật thành công';
+          },
+          error: (err) => {
+            return err.response.data.message;
+          }
+        },
+        Utils.getToastConfig()
+      );
+      /* updateUserById(user._id, user)
         .then((res) => {
           onUpdated();
           console.log(res);
         })
         .catch((err) => {
           console.log(err.response);
-        })
+        }) */
     }
   }
 
@@ -73,7 +103,7 @@ const CreateOrEditUserModal = ({ isModalOpen, toggleModal, selected, onClose, on
                     <option value=''>Chọn...</option>
                     <option value={Constants.USER_ROLE_SINH_VIEN}>Sinh viên</option>
                     <option value={Constants.USER_ROLE_GIANG_VIEN}>Giảng viên</option>
-                    <option value={Constants.USER_ROLE_CB_KHOA}>Cán bộ Khoa</option>
+                    <option value={Constants.USER_ROLE_CB_KHOA}>Cán bộ Nội vụ</option>
                     <option value={Constants.USER_ROLE_CN_KHOA}>Chủ nhiệm Khoa</option>
                   </FormSelect>
                 </FormGroup>

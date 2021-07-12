@@ -32,6 +32,8 @@ import * as Constants from '../../constants/constants';
 import * as Utils from '../../utils/utils';
 import PageTitle from "../../components/common/PageTitle";
 
+import toast from 'react-hot-toast';
+
 const CreateOrEditHoiDongPage = () => {
   let { id } = useParams();
   let history = useHistory();
@@ -90,28 +92,59 @@ const CreateOrEditHoiDongPage = () => {
           console.log(err);
         })
   }, []);
+
   const onUpdateClick = () => {
     console.log(hoiDong);
-    updateHoiDongById(id, hoiDong)
+    toast.promise(
+      updateHoiDongById(id, hoiDong),
+      {
+        loading: 'Đang cập',
+        success: (res) => {
+          console.log(res);
+          history.push('/hoi-dong');
+          return 'Cập nhật thành công';
+        },
+        error: (err) => {
+          return err.response.data.message;
+        }
+      },
+      Utils.getToastConfig()
+    );
+    /* updateHoiDongById(id, hoiDong)
       .then((res) => {
         console.log(res);
         history.push('/hoi-dong');
       })
       .catch((err) => {
         console.log(err);
-      });
+      }); */
   }
 
   const onCreateClick = () => {
     console.log(hoiDong);
-    createHoiDong(hoiDong)
+    toast.promise(
+      createHoiDong(hoiDong),
+      {
+        loading: 'Đang tạo',
+        success: (res) => {
+          console.log(res);
+          history.push('/hoi-dong');
+          return 'Tạo thành công';
+        },
+        error: (err) => {
+          return err.response.data.message;
+        }
+      },
+      Utils.getToastConfig()
+    );
+    /* createHoiDong(hoiDong)
       .then((res) => {
         console.log(res);
         history.push('/hoi-dong');
       })
       .catch((err) => {
         console.log(err);
-      })
+      }) */
   }
 
   const callStartAtPicker = () => {

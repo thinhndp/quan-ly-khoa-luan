@@ -304,7 +304,7 @@ export const getUserRoleText = (abbr) => {
     case Constants.USER_ROLE_GIANG_VIEN:
       return "Giảng viên";
     case Constants.USER_ROLE_CB_KHOA:
-      return "Cán bộ Khoa";
+      return "Cán bộ Nội vụ";
     case Constants.USER_ROLE_CN_KHOA:
       return "Chủ nhiệm Khoa";
     default:
@@ -496,6 +496,10 @@ export const isUserValidGiangVien = (user) => {
   return (user && user.role && (user.role == Constants.USER_ROLE_GIANG_VIEN) && user.relatedInfoGV && user.relatedInfoGV._id);
 }
 
+export const isUserAdmin = (user) => {
+  return (user && user.role && ((user.role == Constants.USER_ROLE_CB_KHOA) || (user.role == Constants.USER_ROLE_CN_KHOA)));
+}
+
 export const getFormattedDate = (dateStr) => {
   var date = new Date(dateStr);
   const offset = date.getTimezoneOffset();
@@ -554,6 +558,17 @@ export const getToastConfig = () => {
 
 export const showErrorToast = (message) => {
   toast.error(message, getToastConfig());
+}
+
+export const isObjHasAllKeys = (obj, keys) => {
+  for (var key of keys) {
+    console.log(key);
+    if (!(key in obj)) {
+      console.log(key);
+      return false;
+    }
+  }
+  return true;
 }
 
 /* export const notify = (type, message) => {

@@ -1,4 +1,6 @@
 import SinhVien from '../models/SinhVien.js';
+import DeTai from '../models/DeTai.js';
+import User from '../models/User.js';
 import * as Utils from '../utils/utils.js';
 
 export const getSinhViens = (req, res) => {
@@ -91,9 +93,16 @@ export const createManySinhViens = (req, res) => {
 export const upsertManySinhViens = (req, res) => {
   const sinhViens = req.body;
   const config = { matchFields: ['maSV'] };
-  SinhVien.upsertMany(sinhViens, config)
+  console.log(sinhViens);
+  let sinhViensToUpsert = sinhViens.map(sv => {
+    if (!sv.status) {
+      return { ...sv, status: 'CDK' };
+    }
+    return sv;
+  })
+  SinhVien.upsertMany(sinhViensToUpsert, config)
     .then(() => {
-      res.status(201).json(sinhViens);
+      res.status(201).json(sinhViensToUpsert);
     })
     .catch((err) => {
       res.status(400).json({ message: err.message });
@@ -112,12 +121,24 @@ export const updateSinhVienById = (req, res) => {
     });
 }
 
-export const deleteSinhVienById = (req, res) => {
-  SinhVien.deleteOne({ _id: req.params.id })
+export const deleteSinhVienById = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const user = await User.findOne({ relatedInfoSV: id });
+    if (user != null) {
+      res.status(400).json({ message: 'Đã có User liên kết với Sinh viên này' });
+      return;
+    }
+    await SinhVien.deleteOne({ _id: req.params.id });
+    res.status(201).json(req.params.id);
+  } catch (error) {
+    res.status(400).json({ message: err.message });
+  }
+/*   SinhVien.deleteOne({ _id: req.params.id })
     .then(() => {
       res.status(201).json(req.params.id);
     })
     .catch((err) => {
       res.status(400).json({ message: err.message });
-    });
+    }); */
 }

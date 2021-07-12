@@ -58,10 +58,12 @@ const SV_MainNavbar = ({ layout, stickyTop }) => {
                 <div>Đề tài</div>
               </div>
             ) }
-            <div className="nav-bar-icon-button" onClick={onAdminClick}>
-              <OpenInBrowserIcon className="icon-button nav-bar-icon" />
-              <div>Quản lý</div>
-            </div>
+            { Utils.isUserAdmin(currentUser) && (
+              <div className="nav-bar-icon-button" onClick={onAdminClick}>
+                <OpenInBrowserIcon className="icon-button nav-bar-icon" />
+                <div>Quản lý</div>
+              </div>
+            ) }
           </div>
           <NavbarNav />
         </Navbar>

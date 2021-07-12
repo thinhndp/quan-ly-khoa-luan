@@ -2,16 +2,19 @@ import mongoose from 'mongoose';
 import { GiangVienSchema } from './GiangVien.js';
 import { SinhVienSchema } from './SinhVien.js';
 import mongoosePaginate from 'mongoose-paginate-v2';
+import upsertMany from '@meanie/mongoose-upsert-many';
 
 const deTaiSchema = mongoose.Schema({
   tenDeTai: {
     type: String,
     required: true,
     trim: true,
+    unique: [true, "Trùng với tên đề tài đã có"],
   },
   englishName: {
     type: String,
     trim: true,
+    unique: [true, "Trùng với tên đề tài đã có"],
   },
   // giangVien: GiangVienSchema,
   giangVien: {
@@ -56,9 +59,31 @@ const deTaiSchema = mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'KyThucHien',
     required: true,
+  },
+  xacNhanGiuaKi: {
+    sinhVien1: {
+      type: {
+        tiepTuc: { type: Boolean, default: true },
+        lyDoDung: { type: String, trim: true },
+      },
+      default: { tiepTuc: true, lyDoDung: '',},
+    },
+    sinhVien2: {
+      type: {
+        tiepTuc: { type: Boolean, default: true },
+        lyDoDung: { type: String, trim: true },
+      },
+      default: { tiepTuc: true, lyDoDung: '' },
+    },
+    thayDoiTen: { type: Boolean, default: false },
+    newName:  { type: String, trim: true },
+    newEnglishName:  { type: String, trim: true },
+    lyDoDoiTen: { type: String, trim: true },
+    pending: { type: Boolean, default: false }
   }
 });
 
+deTaiSchema.plugin(upsertMany);
 deTaiSchema.plugin(mongoosePaginate);
 
 const DeTai = mongoose.model('DeTai', deTaiSchema, 'DeTai');

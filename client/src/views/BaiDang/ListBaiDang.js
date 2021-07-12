@@ -9,7 +9,7 @@ import ViewListIcon from '@material-ui/icons/ViewList';
 import ViewModuleIcon from '@material-ui/icons/ViewModule';
 import ReactQuill from "react-quill";
 
-import { getPostsWithQuery } from '../../api/postAPI';
+import { getPostsWithQuery, deletePostById } from '../../api/postAPI';
 import * as Utils from '../../utils/utils';
 import commonStyles from '../../styles/CommonStyles.module.scss';
 import PageTitle from "../../components/common/PageTitle";
@@ -17,6 +17,10 @@ import ActionButtons from '../../components/common/ActionButtons';
 import PostReader from '../../components/post/PostReader';
 import LyrTable from '../../components/common/LyrTable/LyrTable';
 import * as Constants from '../../constants/constants';
+
+import { confirmAlert } from 'react-confirm-alert';
+import toast from 'react-hot-toast';
+import ConfirmDeleteModal from "../../components/common/ConfirmDeleteModal/ConfirmDeleteModal";
 
 const ListBaiDang = () => {
   const [ viewMode, setViewMode ] = useState(0);
@@ -71,15 +75,38 @@ const ListBaiDang = () => {
     history.push(`/bai-dang/create-or-edit/${id}`);
   }
   const onDeleteClick = (id) => {
-    console.log(id);
-    axios.delete(`http://localhost:5000/posts/${id}`)
+    // console.log(id);
+    confirmAlert({
+      customUI: ({ onClose }) => {
+        return (
+          <ConfirmDeleteModal onClose={onClose} onConfirm={() => {
+            toast.promise(
+              deletePostById(id),
+              {
+                loading: 'Đang xóa',
+                success: (res) => {
+                  getList();
+                  onClose();
+                  return 'Xóa thành công';
+                },
+                error: (err) => {
+                  return err.response.data.message;
+                }
+              },
+              Utils.getToastConfig()
+            );
+          }} />
+        );
+      }
+    });
+    /* axios.delete(`http://localhost:5000/posts/${id}`)
       .then((res) => {
         console.log(res);
         getList();
       })
       .catch((err) => {
         console.log(err);
-      });
+      }); */
   }
 
   const renderPostsView = () => {
@@ -142,11 +169,19 @@ const ListBaiDang = () => {
             <LyrTable
               buttonSection={
                 <div>
-                  <ButtonGroup className="mr-2 btn-group">
+                  {/* <ButtonGroup className="mr-2 btn-group">
                     <Button onClick={() => { switchView(1) }}>
                       <ViewListIcon fontSize="small"/>
                     </Button>
                     <Button onClick={() => { switchView(0) }}>
+                      <ViewModuleIcon fontSize="small"/>
+                    </Button>
+                  </ButtonGroup> */}
+                  <ButtonGroup className="mr-2 btn-group">
+                    <Button className={viewMode == 1 ? "" : "t-button"} onClick={() => { switchView(1) }}>
+                      <ViewListIcon fontSize="small"/>
+                    </Button>
+                    <Button className={viewMode == 0 ? "" : "t-button"} onClick={() => { switchView(0) }}>
                       <ViewModuleIcon fontSize="small"/>
                     </Button>
                   </ButtonGroup>
@@ -179,11 +214,19 @@ const ListBaiDang = () => {
           <LyrTable
             buttonSection={
               <div>
-                <ButtonGroup className="mr-2 btn-group">
+                {/* <ButtonGroup className="mr-2 btn-group">
                   <Button onClick={() => { switchView(1) }}>
                     <ViewListIcon fontSize="small"/>
                   </Button>
                   <Button onClick={() => { switchView(0) }}>
+                    <ViewModuleIcon fontSize="small"/>
+                  </Button>
+                </ButtonGroup> */}
+                <ButtonGroup className="mr-2 btn-group">
+                  <Button className={viewMode == 1 ? "" : "t-button"} onClick={() => { switchView(1) }}>
+                    <ViewListIcon fontSize="small"/>
+                  </Button>
+                  <Button className={viewMode == 0 ? "" : "t-button"} onClick={() => { switchView(0) }}>
                     <ViewModuleIcon fontSize="small"/>
                   </Button>
                 </ButtonGroup>

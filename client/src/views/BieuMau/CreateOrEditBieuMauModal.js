@@ -6,6 +6,8 @@ import * as Constants from '../../constants/constants';
 import { createBieuMau, updateBieuMauById } from '../../api/bieuMauAPI';
 import * as Utils from '../../utils/utils';
 
+import toast from 'react-hot-toast';
+
 const CreateOrEditBieuMauModal = ({ isModalOpen, toggleModal, selected, onClose, onCreated, onUpdated }) => {
   // const [ giangVien, setGiangVien ] = useState(null);
   // let bieuMau;
@@ -33,24 +35,52 @@ const CreateOrEditBieuMauModal = ({ isModalOpen, toggleModal, selected, onClose,
   const onCreateOrUpdateClick = () => {
     console.log(bieuMau);
     if (bieuMau == null || bieuMau._id == null) {
-      createBieuMau(bieuMau)
+      toast.promise(
+        createBieuMau(bieuMau),
+        {
+          loading: 'Đang tạo',
+          success: (res) => {
+            onCreated();
+            return 'Tạo thành công';
+          },
+          error: (err) => {
+            return err.response.data.message;
+          }
+        },
+        Utils.getToastConfig()
+      );
+      /* createBieuMau(bieuMau)
         .then((res) => {
           onCreated();
           console.log(res);
         })
         .catch((err) => {
           console.log(err);
-        });
+        }); */
     }
     else {
-      updateBieuMauById(bieuMau._id, bieuMau)
+      toast.promise(
+        updateBieuMauById(bieuMau._id, bieuMau),
+        {
+          loading: 'Đang cập nhật',
+          success: (res) => {
+            onUpdated();
+            return 'Cập nhật thành công';
+          },
+          error: (err) => {
+            return err.response.data.message;
+          }
+        },
+        Utils.getToastConfig()
+      );
+      /* updateBieuMauById(bieuMau._id, bieuMau)
         .then((res) => {
           onUpdated();
           console.log(res);
         })
         .catch((err) => {
           console.log(err);
-        })
+        }) */
     }
   }
 

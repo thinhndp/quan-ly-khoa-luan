@@ -5,6 +5,7 @@ import GiangVien from '../models/GiangVien.js';
 import User from '../models/User.js';
 import KyThucHien from '../models/KyThucHien.js';
 import HoiDong from '../models/HoiDong.js';
+import SystemSetting from '../models/SystemSetting.js';
 import * as Utils from '../utils/utils.js';
 
 const CLIENT_ID = process.env.GOOGLE_DRIVE_CLIENT_ID;
@@ -154,6 +155,34 @@ export const getDeTaisByKTHId = async (req, res) => {
   }
 }
 
+export const getDeTaisWithPendingApproval = async (req, res) => {
+  // Search and Paging
+  const { search, pagingOptions } = req.body;
+
+  try {
+    let curKTH = await KyThucHien.findOne({ status: 'DDR' });
+
+    if (!curKTH) {
+      res.status(200).json([]);
+    }
+
+    var filters = {
+      tenDeTai: Utils.getIncludeFilter(search),
+      'xacNhanGiuaKi.pending': true,
+      kyThucHien: curKTH._id
+    };
+
+    let deTais = await DeTai.paginate(filters, {
+      ...pagingOptions,
+      populate: 'giangVien sinhVienThucHien kyThucHien ',
+    });
+    res.status(200).json(deTais);
+  }
+  catch(err) {
+    res.status(400).json({ message: err.message });
+  }
+}
+
 export const getCurrrentKTHDeTaisByGiangVien = async (req, res) => {
   const { id } = req.params;
   try {
@@ -266,17 +295,26 @@ export const updateDeTaiById = (req, res) => {
     }) */
 }
 
-export const createManyDeTais = (req, res) => {
-  console.log('createManyDeTais');
+export const createManyDeTais = async (req, res) => {
   const deTais = req.body;
-  console.log(deTais);
-  DeTai.insertMany(deTais)
-    .then(() => {
-      res.status(201).json(deTais);
-    })
-    // .catch((err) => {
-    //   res.status(400).json({ message: err.message });
-    // })
+  try {
+    const sysSetting = await SystemSetting.find();
+    console.log(sysSetting);
+    if (sysSetting == null || sysSetting.length == 0 || sysSetting[0].deXuatToiDa == null) {
+      res.status(400).json({ message: 'Chưa thiết lập số lượng đề xuất tối đa' });
+      return;
+    }
+    const deTaiOfGV = await DeTai.find({ giangVien: deTais[0].giangVien });
+    if (deTaiOfGV.length + deTais.length > sysSetting[0].deXuatToiDa) {
+      res.status(400).json({ message: 'Quá số lượng đề xuất tối đa' });
+      return;
+    }
+    await DeTai.insertMany(deTais);
+    res.status(201).json(deTais);
+  }
+  catch (err) {
+    res.status(400).json({ message: err.message });
+  }
 }
 
 export const deleteDeTaiById = async (req, res) => {
@@ -339,4 +377,72 @@ export const applyForDeTai = (req, res) => {
     .catch((err) => {
       res.status(400).json({ message: err.message });
     })
+}
+
+export const continueApprove = async (req, res) => {
+  const { id, sv } = req.params;
+  const { tiepTuc, lyDoDung } = req.body;
+  console.log(sv);
+  try {
+    if (sv == '2') {
+      await DeTai.findByIdAndUpdate(id,
+        { $set: { 'xacNhanGiuaKi.sinhVien2.tiepTuc': tiepTuc,
+          'xacNhanGiuaKi.sinhVien2.lyDoDung': lyDoDung,
+          'xacNhanGiuaKi.pending': true } });
+    }
+    else {
+      await DeTai.findByIdAndUpdate(id,
+        { $set: { 'xacNhanGiuaKi.sinhVien1.tiepTuc': tiepTuc,
+          'xacNhanGiuaKi.sinhVien1.lyDoDung': lyDoDung,
+          'xacNhanGiuaKi.pending': true } });
+    } 
+    res.status(201).json(req.body);
+  }
+  catch(err) {
+    res.status(400).json({ message: err.message });
+  }
+}
+
+export const updateNameChange = async (req, res) => {
+  const changeList = req.body;
+  console.log(changeList);
+  try {
+    // if (sv == '2') {
+    //   await DeTai.findByIdAndUpdate(id,
+    //     { $set: { 'xacNhanGiuaKi.sinhVien2.tiepTuc': tiepTuc,
+    //       'xacNhanGiuaKi.sinhVien2.lyDoDung': lyDoDung,
+    //       'xacNhanGiuaKi.pending': true } });
+    // }
+    // else {
+    //   await DeTai.findByIdAndUpdate(id,
+    //     { $set: { 'xacNhanGiuaKi.sinhVien1.tiepTuc': tiepTuc,
+    //       'xacNhanGiuaKi.sinhVien1.lyDoDung': lyDoDung,
+    //       'xacNhanGiuaKi.pending': true } });
+    // }
+    var listMSSV = changeList.map((change) => change.maSV);
+    let sinhViens = await SinhVien.find({ maSV: { $in: listMSSV } });
+    var listSVId = sinhViens.map((sv) => sv._id);
+    let deTais = await DeTai.find({ 'sinhVienThucHien': { $in: listSVId } })
+        .populate('giangVien').populate('sinhVienThucHien').populate('kyThucHien');
+    let deTaisToUpdate = [];
+    for (let change of changeList) {
+      let deTai = deTais.filter((dt) => {
+        let listMaSVOfDeTai = dt.sinhVienThucHien.map((sv) => sv.maSV);
+        return listMaSVOfDeTai.includes(change.maSV);
+      })[0];
+      deTai.xacNhanGiuaKi.thayDoiTen = true;
+      deTai.xacNhanGiuaKi.newName = change.tenTVMoi;
+      deTai.xacNhanGiuaKi.newEnglishName = change.tenTAMoi;
+      deTai.xacNhanGiuaKi.lyDoDoiTen = change.lyDo;
+      deTai.xacNhanGiuaKi.pending = true;
+      deTaisToUpdate.push(deTai);
+    }
+
+    const config = { matchFields: ['_id'] };
+    await DeTai.upsertMany(deTaisToUpdate, config)
+    res.status(201).json(deTaisToUpdate);
+  }
+  catch(err) {
+    res.status(400).json({ message: err.message });
+  }
 }

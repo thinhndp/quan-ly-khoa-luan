@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useHistory, useParams } from "react-router-dom";
-import { Container, Row, Col, Card, CardHeader, CardBody, Button, ButtonGroup} from "shards-react";
+import { Container, Row, Col, Card, CardHeader, CardBody, Button,
+    ButtonGroup, FormGroup, FormInput, FormRadio } from "shards-react";
 import { useRecoilValue } from 'recoil';
+import toast from 'react-hot-toast';
 
 import PostReader from '../../components/post/PostReader';
 import LyrCalendar from '../../components/common/LyrCalendar/LyrCalendar';
@@ -11,8 +13,9 @@ import TaskLogList from '../../components/common/TaskLogList/TaskLogList';
 import FileNopOfSvList from '../../components/common/FileNopOfSVList/FileNopOfSvList';
 import DeTaiInfoCard from '../../components/common/InfoCard/DeTaiInfoCard';
 import BackButton from '../../components/common/BackButton';
+import CustomModal from '../../components/common/CustomModal/CustomModal';
 import "./styles.css";
-import { getDeTaiById } from '../../api/deTaiAPI';
+import { getDeTaiById, continueApprove } from '../../api/deTaiAPI';
 import { getTaskLogReportBySVId } from '../../api/reportAPI';
 import { getThuMucs, getThuMucsWithQuery } from '../../api/fileNopAPI';
 import * as Utils from '../../utils/utils';
@@ -25,7 +28,24 @@ const DetailDeTaiPage = () => {
   const [ reportSV2, setReportSV2 ] = useState(null);
   const [ showReport, setShowReport ] = useState(0);
   const [ showFiles, setShowFiles ] = useState(0);
+  const [ isXNModalOpen, setIsXNModalOpen ] = useState(false);
+  const [ isXNModal2Open, setIsXNModal2Open ] = useState(false);
+  const [ approval, setApproval ] = useState({
+    tiepTuc: true,
+    lyDoDung: ''
+  });
+  const [ approval2, setApproval2 ] = useState({
+    tiepTuc: true,
+    lyDoDung: ''
+  });
   var { id } = useParams();
+
+  useEffect(() => {
+    console.log(approval);
+  }, [approval]);
+  useEffect(() => {
+    console.log(approval2);
+  }, [approval2]);
 
   useEffect(() => {
     getDeTaiById(id)
@@ -43,6 +63,12 @@ const DetailDeTaiPage = () => {
 
   useEffect(() => {
     if (deTai) {
+      if (deTai.xacNhanGiuaKi && deTai.xacNhanGiuaKi.sinhVien1) {
+        setApproval({ ...deTai.xacNhanGiuaKi.sinhVien1 });
+      }
+      if (deTai.xacNhanGiuaKi && deTai.xacNhanGiuaKi.sinhVien2) {
+        setApproval2({ ...deTai.xacNhanGiuaKi.sinhVien2 });
+      }
       if (deTai.sinhVienThucHien[0]) {
         getTaskLogReportBySVId(deTai.sinhVienThucHien[0]._id)
           .then((res) => {
@@ -72,10 +98,72 @@ const DetailDeTaiPage = () => {
     }
   }, [deTai]);
 
+  const toggleXNModal = () => {
+    setIsXNModalOpen(!isXNModalOpen);
+  }
+
+  const toggleXNModal2 = () => {
+    setIsXNModal2Open(!isXNModal2Open);
+  }
+
+  const onXNModalClose = (sv) => {
+    if (sv === 1) {
+      if (deTai.xacNhanGiuaKi && deTai.xacNhanGiuaKi.sinhVien1) {
+        setApproval({ ...deTai.xacNhanGiuaKi.sinhVien1 });
+      }
+      else {
+        setApproval({
+          tiepTuc: true,
+          lyDoDung: ''
+        });
+      }
+    }
+    else if (sv === 2) {
+      if (deTai.xacNhanGiuaKi && deTai.xacNhanGiuaKi.sinhVien2) {
+        setApproval2({ ...deTai.xacNhanGiuaKi.sinhVien2 });
+      }
+      else {
+        setApproval2({
+          tiepTuc: true,
+          lyDoDung: ''
+        });
+      }
+    }
+  }
+
+  const onXNClick = (sv) => {
+    var newApproval = (sv == 1) ? approval : approval2;
+    toast.promise(
+      continueApprove(id, sv, newApproval),
+      {
+        loading: 'Đang gửi xác nhận',
+        success: (res) => {
+          setIsXNModalOpen(false);
+          setIsXNModal2Open(false);
+          return 'Đã gửi';
+        },
+        error: (err) => {
+          return err.response.data.message;
+        }
+      },
+      Utils.getToastConfig()
+    );
+  }
+
   return (
     <div className="container min_height_100">
       <div className="public-pages-container">
         <div className="main-area">
+          <div className="flex-row">
+            { deTai.sinhVienThucHien[0] && (
+              <Button onClick={() => { setIsXNModalOpen(true); }}>Xác nhận tiến độ SV {deTai.sinhVienThucHien[0].name}</Button>
+            ) }
+            <div className="mr-05r" />
+            { deTai.sinhVienThucHien[1] && (
+              <Button onClick={() => { setIsXNModal2Open(true); }}>Xác nhận tiến độ SV {deTai.sinhVienThucHien[1].name}</Button>
+            ) }
+          </div>
+          <div className="mb-15" />
           <DeTaiInfoCard deTai={deTai} />
           {/* FILES */}
           <Card className="mb-4">
@@ -154,9 +242,93 @@ const DetailDeTaiPage = () => {
               </CardBody>
             </Card>
           ) }
-          <BackButton mTop="15px" />
+          {/* <BackButton mTop="15px" /> */}
         </div>
       </div>
+      <CustomModal isOpen={isXNModalOpen} toggle={toggleXNModal}
+        title='Xác nhận tiến độ'
+        size="sm"
+        body={
+          <div>
+            <FormGroup>
+              <FormRadio
+                inline
+                name="tiepTuc"
+                checked={approval.tiepTuc}
+                onChange={() => {
+                  setApproval({ tiepTuc: true, lyDoDung: '' })
+                }}
+              >
+                Tiếp tục
+              </FormRadio>
+              <FormRadio
+                inline
+                name="tiepTuc"
+                checked={!approval.tiepTuc}
+                onChange={() => {
+                  setApproval({ ...approval, tiepTuc: false })
+                }}
+              >
+                Buộc dừng
+              </FormRadio>
+            </FormGroup>
+            <FormGroup>
+              <label htmlFor="lyDoDung1">Lý do dừng</label>
+              <FormInput id="lyDoDung1"
+                  disabled={approval.tiepTuc}
+                  onChange={(e) => { setApproval({ ...approval, lyDoDung: e.target.value }) }}
+                  value={approval.lyDoDung} />
+            </FormGroup>
+          </div>
+        }
+        footer={
+          <div>
+            <Button onClick={() => { onXNClick(1) }}>Gửi</Button>
+          </div>
+        }
+      />
+      <CustomModal isOpen={isXNModal2Open} toggle={toggleXNModal2}
+        title='Xác nhận tiến độ'
+        size="sm"
+        body={
+          <div>
+            <FormGroup>
+              <FormRadio
+                inline
+                name="tiepTuc2"
+                checked={approval2.tiepTuc}
+                onChange={() => {
+                  setApproval2({ tiepTuc: true, lyDoDung: '' })
+                }}
+              >
+                Tiếp tục
+              </FormRadio>
+              <FormRadio
+                inline
+                name="tiepTuc2"
+                checked={!approval2.tiepTuc}
+                onChange={() => {
+                  setApproval2({ ...approval2, tiepTuc: false })
+                }}
+              >
+                Buộc dừng
+              </FormRadio>
+            </FormGroup>
+            <FormGroup>
+              <label htmlFor="deXuatToiDa2">Lý do dừng</label>
+              <FormInput id="deXuatToiDa2"
+                  disabled={approval2.tiepTuc}
+                  onChange={(e) => { setApproval2({ ...approval2, lyDoDung: e.target.value }) }}
+                  value={approval2.lyDoDung} />
+            </FormGroup>
+          </div>
+        }
+        footer={
+          <div>
+            <Button onClick={() => { onXNClick(2) }}>Gửi</Button>
+          </div>
+        }
+      />
     </div>
   );
 }

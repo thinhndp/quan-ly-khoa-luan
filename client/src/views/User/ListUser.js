@@ -12,6 +12,10 @@ import ActionButtons from '../../components/common/ActionButtons';
 import CreateOrEditUserModal from './CreateOrEditUserModal';
 import LyrTable from '../../components/common/LyrTable/LyrTable';
 
+import { confirmAlert } from 'react-confirm-alert';
+import toast from 'react-hot-toast';
+import ConfirmDeleteModal from "../../components/common/ConfirmDeleteModal/ConfirmDeleteModal";
+
 const ListUser = () => {
   const [ users, setUsers ] = useState([]);
   const [ selectedUser, setSelectedUser ] = useState(Utils.getNewUser);
@@ -57,14 +61,37 @@ const ListUser = () => {
   }
 
   const onDeleteClick = (id) => {
-    deleteUserById(id)
+    confirmAlert({
+      customUI: ({ onClose }) => {
+        return (
+          <ConfirmDeleteModal onClose={onClose} onConfirm={() => {
+            toast.promise(
+              deleteUserById(id),
+              {
+                loading: 'Đang xóa',
+                success: (res) => {
+                  getList();
+                  onClose();
+                  return 'Xóa thành công';
+                },
+                error: (err) => {
+                  return err.response.data.message;
+                }
+              },
+              Utils.getToastConfig()
+            );
+          }} />
+        );
+      }
+    });
+    /* deleteUserById(id)
       .then((res) => {
         console.log(res);
         getList();
       })
       .catch((err) => {
         console.log(err.response);
-      });
+      }); */
   }
 
   const onEditClick = (user) => {

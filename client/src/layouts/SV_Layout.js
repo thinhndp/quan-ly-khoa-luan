@@ -1,6 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { Container, Row, Col } from "shards-react";
+import { Toaster } from 'react-hot-toast';
 
 import MainNavbar from "../components/layout/SV_MainNavbar/SV_Navbar";
 import MainFooter from "../components/layout/MainFooter";
@@ -16,6 +17,9 @@ const SV_Layout = ({ children, noNavbar, noFooter }) => (
         {!noFooter && <MainFooter />}
       </Col>
     </Row>
+    <div className="toaster-container">
+      <Toaster />
+    </div>
   </Container>
 );
 
