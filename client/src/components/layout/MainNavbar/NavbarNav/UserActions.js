@@ -43,16 +43,23 @@ const UserActions = () => {
       const auth2 = window.gapi.auth2.getAuthInstance()
       console.log(auth2);
       if (auth2 != null) {
-        auth2.signOut().then(auth2.disconnect()
-          .then(() => {
-            console.log('out');
-            localStorage.setItem('token', null);
-            setUser(DEFAULT_USER);
+        auth2.signOut()
+          .then(auth2.disconnect()
+            .then(() => {
+              console.log('out');
+              localStorage.setItem('token', null);
+              setUser(DEFAULT_USER);
+              history.push('/login');
+            }).catch((err) => {
+              console.log(err);
+              Utils.showErrorToast();
+              history.push('/login');
+            }))
+          .catch((err) => {
             history.push('/login');
-          }).catch((err) => {
-            console.log(err);
             Utils.showErrorToast();
-          }))
+          })
+        history.push('/login');
       }
     }
   }
