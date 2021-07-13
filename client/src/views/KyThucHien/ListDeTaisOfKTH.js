@@ -402,7 +402,15 @@ const ListKyThucHien = () => {
         <div>
           <Button className="export-button" onClick={() => { onExportClick() }}>Xuất DS Sinh Viên Thực hiện</Button>
           <span class="pr-05r"/>
+          <Button className="export-button" onClick={() => { onHDExportClick() }}>Xuất DS Báo cáo tiến độ GK</Button>
+          <span class="pr-05r"/>
+          <Button className="export-button" onClick={() => { onHDExportClick() }}>Xuất DS Thay đổi tên</Button>
+          <span class="pr-05r"/>
+          <Button className="export-button" onClick={() => { onHDExportClick() }}>Xuất DS Sinh viên bảo vệ KLTN</Button>
+          <span class="pr-05r"/>
           <Button className="export-button" onClick={() => { onHDExportClick() }}>Xuất DS Hội đồng bảo vệ</Button>
+          <span class="pr-05r"/>
+          <Button className="export-button" onClick={() => { onHDExportClick() }}>Xuất Bảng điểm KLTN</Button>
         </div>
         <div className="de_tai_card_container">
           { deTais.map((deTai) => (

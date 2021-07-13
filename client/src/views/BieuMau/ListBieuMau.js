@@ -57,6 +57,8 @@ const ListBieuMau = () => {
         setResData(res.data);
       })
       .catch((err) => {
+        setResData(Utils.getNewPageData());
+        Utils.showErrorToast(err.response.data.message);
         console.log(err);
       });
   }

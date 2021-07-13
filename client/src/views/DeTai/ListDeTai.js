@@ -128,6 +128,8 @@ const ListDeTai = () => {
           setResData(res.data);
         })
         .catch((err) => {
+          setResData(Utils.getNewPageData());
+          Utils.showErrorToast(err.response.data.message);
           console.log(err.response);
         });
     }
@@ -138,6 +140,8 @@ const ListDeTai = () => {
           setResData(res.data);
         })
         .catch((err) => {
+          setResData(Utils.getNewPageData());
+          Utils.showErrorToast(err.response.data.message);
           console.log(err.response);
         });
     }
@@ -322,11 +326,11 @@ const ListDeTai = () => {
                   selectList: Utils.getHeDaoTaoSL(),
                   field: 'heDaoTao',
                 },
-                {
-                  label: "Điểm số",
-                  type: Constants.FILTER_TYPE_EQ,
-                  field: 'diemSo',
-                },
+                // {
+                //   label: "Điểm số",
+                //   type: Constants.FILTER_TYPE_EQ,
+                //   field: 'diemSo',
+                // },
                 {
                   label: "SV Thực hiện",
                   type: Constants.FILTER_TYPE_EQ,
@@ -353,7 +357,7 @@ const ListDeTai = () => {
                     <td>{Utils.getDeTaiApproveStatusText(deTai.trangThaiDuyet)}</td>
                     <td>{Utils.getDeTaiProgressStatusText(deTai.trangThaiThucHien)}</td>
                     <td>{deTai.heDaoTao}</td>
-                    <td>{deTai.diemSo}</td>
+                    {/* <td>{deTai.diemSo}</td> */}
                     {/* <td>{Utils.getSinhVienNumOfDeTai(deTai)}</td> */}
                     <td><DetailSVThucHienButton deTai={deTai} /></td>
                     <td>

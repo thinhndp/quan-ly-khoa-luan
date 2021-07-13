@@ -9,15 +9,21 @@ import * as Constants from '../../../constants/constants';
 import FilterListIcon from '@material-ui/icons/FilterList';
 import FilterButton from './FilterButton';
 import RefreshIcon from '@material-ui/icons/Refresh';
+import ReactLoading from 'react-loading';
 
 const LyrTable = ({ children, buttonSection, data, getList, tableMode = false, headers = [], flat = false }) => {
   const [ searchInput, setSearchInput ] = useState('');
   const [ pagingOptions, setPagingOptions ] = useState(Utils.getNewPagingOptions());
   const [ filters, setFilters ] = useState({});
+  const [ isLoading, setIsLoading ] = useState(false);
 
   useEffect(() => {
 
   }, []);
+
+  useEffect(() => {
+    setIsLoading(false);
+  }, [data]);
 
   useEffect(() => {
     setPagingOptions({ ...pagingOptions, page: 1 });
@@ -26,6 +32,7 @@ const LyrTable = ({ children, buttonSection, data, getList, tableMode = false, h
   useEffect(() => {
     console.log('onFilterChange');
     console.log(filters);
+    setIsLoading(true);
     getList(searchInput, pagingOptions, filters);
   }, [pagingOptions, filters]);
 
@@ -66,6 +73,7 @@ const LyrTable = ({ children, buttonSection, data, getList, tableMode = false, h
   }
 
   const onRefreshClick = () => {
+    setIsLoading(true);
     getList(searchInput, pagingOptions, filters);
     Utils.showSuccessToast("Đã refresh");
   }
@@ -88,6 +96,11 @@ const LyrTable = ({ children, buttonSection, data, getList, tableMode = false, h
           </div>
         </CardHeader>
         <CardBody className="p-0 pb-3 c-table_container">
+          { isLoading && (
+            <div className="loading-section">
+              <ReactLoading type='spinningBubbles' color='#007bff' height={80} width={80} />
+            </div>
+          ) }
           { !tableMode && children }
           { tableMode && (
             <table className="table mb-0 c-table">
@@ -108,6 +121,12 @@ const LyrTable = ({ children, buttonSection, data, getList, tableMode = false, h
               </thead>
               { children }
             </table>
+          ) }
+          { ((data == null) || (data.docs != null && data.docs.length == 0)) && (
+            <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', margin: '20px' }}>
+              <img style={{ width: '200px', opacity: 0.5 }} src={require('../../../images/no-data.png')} alt="no-data"/>
+              <h4>Không có dữ liệu</h4>
+            </div>
           ) }
           <Pagination pageData={data} onChangePagingOptions={onChangePagingOptions}/>
         </CardBody>

@@ -235,12 +235,14 @@ const EditDeTaiPage = () => {
                           </FormSelect>
                         </Col>
                         <Col md="6" className="form-group">
-                          <label htmlFor="fePhone">Điểm số</label>
-                          <FormInput
-                            type="number"
-                            id="feResult"
-                            value={deTai.diemSo}
-                            onChange={(e) => { setDeTai({ ...deTai, diemSo: e.target.value }) }}
+                          <label>Giảng viên Phản biện</label>
+                          <SelectSearch
+                            value={deTai.giangVien._id}
+                            search
+                            filterOptions={fuzzySearch}
+                            onChange={(e) => { setDeTai({ ...deTai, canBoPhanBien: e }) }}
+                            placeholder="Chọn Giảng viên Phản biện"
+                            options={giangViens.map((gv) => ({ value: gv._id, name: gv.name }))}
                           />
                         </Col>
                       </Row>

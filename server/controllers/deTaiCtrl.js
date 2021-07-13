@@ -14,7 +14,7 @@ const client = new OAuth2Client(CLIENT_ID);
 
 export const getDeTais = (req, res) => {
   console.log('getDeTais');
-  DeTai.find().populate('giangVien').populate('sinhVienThucHien').populate('kyThucHien')
+  DeTai.find().populate('giangVien').populate('sinhVienThucHien').populate('kyThucHien').populate('canBoPhanBien')
     .then((deTais) => {
       res.status(200).json(deTais);
     })
@@ -75,7 +75,7 @@ export const getDeTaisWithQuery = (req, res) => {
 
     DeTai.paginate(filters, {
       ...pagingOptions,
-      populate: 'giangVien sinhVienThucHien kyThucHien',
+      populate: 'giangVien sinhVienThucHien kyThucHien canBoPhanBien',
     }).then((deTais) => {
         var sortedDeTais = deTais.docs.sort((dt1, dt2) => {
           if (!dt1.kyThucHien && !dt2.kyThucHien) {
@@ -108,7 +108,7 @@ export const getDeTaisWithQuery = (req, res) => {
 
 export const getDeTaiById = (req, res) => {
   const { id } = req.params;
-  DeTai.findOne({ _id: id }).populate('giangVien').populate('sinhVienThucHien').populate('kyThucHien')
+  DeTai.findOne({ _id: id }).populate('giangVien').populate('sinhVienThucHien').populate('kyThucHien').populate('canBoPhanBien')
     .then((deTai) => {
       res.status(200).json(deTai);
     })
@@ -119,7 +119,7 @@ export const getDeTaiById = (req, res) => {
 
 export const getDeTaiBySinhVienId = (req, res) => {
   const { id } = req.params;
-  DeTai.findOne({ sinhVienThucHien: id, trangThaiThucHien: { $in: [ 'CDK', 'DTH' ] } }).populate('giangVien').populate('sinhVienThucHien').populate('kyThucHien')
+  DeTai.findOne({ sinhVienThucHien: id, trangThaiThucHien: { $in: [ 'CDK', 'DTH' ] } }).populate('giangVien').populate('sinhVienThucHien').populate('kyThucHien').populate('canBoPhanBien')
     .then((deTai) => {
       res.status(200).json(deTai);
     })
@@ -131,7 +131,7 @@ export const getDeTaiBySinhVienId = (req, res) => {
 export const getDeTaisByKTHId = async (req, res) => {
   const { id } = req.params;
   try {
-    let deTais = await DeTai.find({ kyThucHien: id }).populate('giangVien').populate('sinhVienThucHien').populate('kyThucHien');
+    let deTais = await DeTai.find({ kyThucHien: id }).populate('giangVien').populate('sinhVienThucHien').populate('kyThucHien').populate('canBoPhanBien');
     // deTais = deTais.sort
     deTais = deTais.sort((dt1, dt2) => {
       if (dt1.trangThaiDuyet == 'CD') {
@@ -174,7 +174,7 @@ export const getDeTaisWithPendingApproval = async (req, res) => {
 
     let deTais = await DeTai.paginate(filters, {
       ...pagingOptions,
-      populate: 'giangVien sinhVienThucHien kyThucHien ',
+      populate: 'giangVien sinhVienThucHien kyThucHien canBoPhanBien',
     });
     res.status(200).json(deTais);
   }
@@ -188,7 +188,7 @@ export const getCurrrentKTHDeTaisByGiangVien = async (req, res) => {
   try {
     let curKTH = await KyThucHien.findOne({ status: 'DDR' });
     console.log(curKTH);
-    let deTais = await DeTai.find({ kyThucHien: curKTH._id, giangVien: id }).populate('giangVien').populate('sinhVienThucHien').populate('kyThucHien');
+    let deTais = await DeTai.find({ kyThucHien: curKTH._id, giangVien: id }).populate('giangVien').populate('sinhVienThucHien').populate('kyThucHien').populate('canBoPhanBien');
     console.log(deTais);
     deTais = deTais.sort((dt1, dt2) => {
       if (dt1.trangThaiDuyet == 'CD') {
@@ -266,6 +266,11 @@ export const updateDeTaiById = (req, res) => {
             console.log(user);
             if (resDeTai.trangThaiDuyet != deTai.trangThaiDuyet && !user.canApprove) {
               res.status(400).json({ message: 'User hiện tại không có quyền duyệt' });
+              return;
+            }
+            if (deTai.giangVien == deTai.canBoPhanBien) {
+              res.status(400).json({ message: 'Giảng viên hướng dẫn không thể trùng với giảng viên phản biện' });
+              return;
             }
             console.log('11');
             var newDeTai = new DeTai(deTai);
@@ -426,7 +431,7 @@ export const updateNameChange = async (req, res) => {
     let sinhViens = await SinhVien.find({ maSV: { $in: listMSSV } });
     var listSVId = sinhViens.map((sv) => sv._id);
     let deTais = await DeTai.find({ 'sinhVienThucHien': { $in: listSVId } })
-        .populate('giangVien').populate('sinhVienThucHien').populate('kyThucHien');
+        .populate('giangVien').populate('sinhVienThucHien').populate('kyThucHien').populate('canBoPhanBien');
     let deTaisToUpdate = [];
     for (let change of changeList) {
       let deTai = deTais.filter((dt) => {

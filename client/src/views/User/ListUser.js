@@ -56,6 +56,8 @@ const ListUser = () => {
         setResData(res.data);
       })
       .catch((err) => {
+        setResData(Utils.getNewPageData());
+        Utils.showErrorToast(err.response.data.message);
         console.log(err.response);
       });
   }

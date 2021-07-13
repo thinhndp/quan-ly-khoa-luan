@@ -56,6 +56,8 @@ const ListBaiDang = () => {
       })
       .catch((err) => {
         console.log(err);
+        setResData(Utils.getNewPageData());
+        Utils.showErrorToast(err.response.data.message);
       });
   }
 

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Container, Row, Col, Card, CardHeader, CardBody, Button, ButtonGroup} from "shards-react";
 
 import ColoredTag from '../ColoredTag/ColoredTag';
+import ActionButtons from '../ActionButtons';
 import * as Utils from '../../../utils/utils';
 
 import './styles.css';
@@ -27,7 +28,15 @@ const DeTaiInfoCard = ({ deTai }) => {
     <Card small className="card-post mb-4 info-card">
       <CardBody>
         <div>
-          <h5>{deTai.tenDeTai}</h5>
+          <div style={{ display: 'flex'}}>
+            <h5 style={{ flex: 1 }}>{deTai.tenDeTai}</h5>
+            <div style={{ display: deTai.trangThaiDuyet == Constants.DE_TAI_APPROVE_STATUS_NOT_APPROVED ? 'block' : 'none' }}>
+              <ActionButtons
+                onDeleteClick={() => {  }}
+                onEditClick={() => {  }}
+              />
+            </div>
+          </div>
           <p>{deTai.moTa}</p>
           <p><i class="material-icons icon">info</i><span className="label">Tên tiếng Anh:</span>{deTai.englishName}</p>
           <p><i class="material-icons icon">event</i><span className="label">Kỳ thực hiện:</span>{deTai.kyThucHien.name}</p>
