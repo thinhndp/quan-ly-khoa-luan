@@ -414,8 +414,8 @@ const ListKyThucHien = () => {
         </div>
         <div className="de_tai_card_container">
           { deTais.map((deTai) => (
-            <div className="de_tai_card" onClick={() => { onDeTaiClick(deTai._id) }}>
-              <DeTaiInfoCard deTai={deTai} />
+            <div className="de_tai_card" >
+              <DeTaiInfoCard deTai={deTai} onClick={() => { onDeTaiClick(deTai._id) }} />
             </div>
           )) }
         </div>

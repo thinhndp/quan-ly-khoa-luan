@@ -45,7 +45,8 @@ const SV_UserActions = () => {
             localStorage.setItem('token', null);
             setUser(DEFAULT_USER);
             history.push('/login');
-          }))
+          }));
+        history.push('/login');
       }
     }
   }

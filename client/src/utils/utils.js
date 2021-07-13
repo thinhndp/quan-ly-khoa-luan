@@ -551,6 +551,9 @@ export const getToastConfig = () => {
   return ({
     style: {
       minWidth: '250px',
+      overflow: 'hidden',
+      wordBreak: 'break-all',
+      whiteSpace: 'normal'
     },
     position: 'bottom-center',
   });

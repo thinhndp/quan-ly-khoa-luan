@@ -40,6 +40,10 @@ const ListCurrentDeTaisOfGVPage = () => {
     history.push(`/de-tai-huong-dan/${id}`);
   }
 
+  const onUpdate = () => {
+    getList();
+  }
+
   return (
     <div className="container min_height_100">
       <div className="public-pages-container">
@@ -47,8 +51,8 @@ const ListCurrentDeTaisOfGVPage = () => {
           <h3 className="page-title">Danh sách Đề tài đang hướng dẫn</h3>
           <div className="de_tai_card_container">
             { deTais.map((deTai) => (
-              <div className="de_tai_card" onClick={() => { onDeTaiClick(deTai._id) }}>
-                <DeTaiInfoCard deTai={deTai} />
+              <div className="de_tai_card">
+                <DeTaiInfoCard deTai={deTai} onClick={() => { onDeTaiClick(deTai._id) }} onUpdate={onUpdate} />
               </div>
             )) }
           </div>

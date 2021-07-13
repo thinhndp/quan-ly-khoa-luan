@@ -137,7 +137,7 @@ const ListThuMuc = () => {
                     </div> */}
                     <div>
                       {Utils.getUniqueUploader(thuMuc.files).map((user) => (
-                        <img src={user.picture}/>
+                        <img src={user.picture} alt="user_picture"/>
                       ))}
                     </div>
                   </div>
