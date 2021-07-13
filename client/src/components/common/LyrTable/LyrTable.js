@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Card, CardHeader, CardBody } from "shards-react";
+import { Card, CardHeader, CardBody, Button } from "shards-react";
 
 import './styles.css';
 import Pagination from '../Pagination/Pagination';
@@ -8,6 +8,7 @@ import * as Utils from '../../../utils/utils';
 import * as Constants from '../../../constants/constants';
 import FilterListIcon from '@material-ui/icons/FilterList';
 import FilterButton from './FilterButton';
+import RefreshIcon from '@material-ui/icons/Refresh';
 
 const LyrTable = ({ children, buttonSection, data, getList, tableMode = false, headers = [], flat = false }) => {
   const [ searchInput, setSearchInput ] = useState('');
@@ -64,6 +65,11 @@ const LyrTable = ({ children, buttonSection, data, getList, tableMode = false, h
     setFilters({ ...filtersAfter });
   }
 
+  const onRefreshClick = () => {
+    getList(searchInput, pagingOptions, filters);
+    Utils.showSuccessToast("Đã refresh");
+  }
+
   return (
     <div className="l-table">
       <Card small className={"mb-4"  + (flat ? " flat-card" : "")}>
@@ -73,6 +79,12 @@ const LyrTable = ({ children, buttonSection, data, getList, tableMode = false, h
           </div>
           <div className="query-options">
             <SearchBar onSearch={onSearch} />
+          </div>
+          <div className="pr-05r" />
+          <div>
+            <Button className="t-button" onClick={() => { onRefreshClick() }}>
+              <span><RefreshIcon fontSize="small" /></span>
+            </Button>
           </div>
         </CardHeader>
         <CardBody className="p-0 pb-3 c-table_container">

@@ -92,7 +92,7 @@ const EditDeTaiPage = () => {
       {
         loading: 'Đang cập nhật',
         success: (res) => {
-          history.push('/de-tai');
+          // history.push('/de-tai');
           return 'Cập nhật thành công';
         },
         error: (err) => {
@@ -241,6 +241,34 @@ const EditDeTaiPage = () => {
                             id="feResult"
                             value={deTai.diemSo}
                             onChange={(e) => { setDeTai({ ...deTai, diemSo: e.target.value }) }}
+                          />
+                        </Col>
+                      </Row>
+                      <Row form>
+                      <Col md="6" className="form-group">
+                          <label htmlFor="fePhone">Điểm SV1</label>
+                          <FormInput
+                            type="number"
+                            id="feResult"
+                            value={deTai.diemSo[0]}
+                            onChange={(e) => {
+                              let newDeTai = { ...deTai };
+                              newDeTai.diemSo[0] = e.target.value;
+                              setDeTai(newDeTai)
+                            }}
+                          />
+                        </Col>
+                        <Col md="6" className="form-group">
+                          <label htmlFor="fePhone">Điểm SV2</label>
+                          <FormInput
+                            type="number"
+                            id="feResult"
+                            value={deTai.diemSo[1]}
+                            onChange={(e) => {
+                              let newDeTai = { ...deTai };
+                              newDeTai.diemSo[1] = e.target.value;
+                              setDeTai(newDeTai)
+                            }}
                           />
                         </Col>
                       </Row>

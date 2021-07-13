@@ -169,7 +169,8 @@ const ListDeTai = () => {
   }
 
   const onEditClick = (id) => {
-    history.push(`/de-tai/${id}`);
+    // history.push(`/de-tai/${id}`);
+    window.open(`de-tai/${id}`, "_blank");
   }
   const onDeleteClick = (id) => {
     // console.log(id);

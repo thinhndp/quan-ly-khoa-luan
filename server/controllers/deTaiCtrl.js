@@ -274,6 +274,9 @@ export const updateDeTaiById = (req, res) => {
               .then((savedDetai) => {
                 res.status(200).json(savedDetai);
               })
+              .catch((err) => {
+                res.status(400).json({ message: err.message });
+              })
           })
           .catch((err) => {
             res.status(400).json({ message: err.message });

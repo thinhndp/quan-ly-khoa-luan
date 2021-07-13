@@ -40,11 +40,19 @@ const deTaiSchema = mongoose.Schema({
     type: String,
     enum: [ 'DT', 'CLC' ]
   },
-  diemSo: {
+  /* diemSo: {
     type: Number,
     min: 0,
     max: 10,
     default: 0
+  }, */
+  diemSo: {
+    type: [{
+      type: Number,
+      min: [0, "Điểm số phải nằm trong khoảng 0 đến 10"],
+      max: [10, "Điểm số phải nằm trong khoảng 0 đến 10"],
+    }],
+    default: [ 0, 0 ]
   },
   sinhVienThucHien: {
     type: [{

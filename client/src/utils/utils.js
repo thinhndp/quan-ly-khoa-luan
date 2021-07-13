@@ -102,7 +102,7 @@ export const getNewDeTai = () => {
     trangThaiDuyet: "CD",
     trangThaiThucHien: "CDK",
     heDaoTao: "",
-    diemSo: 0,
+    diemSo: [ 0, 0 ],
     sinhVienThucHien: [],
     moTa: "",
     kyThucHien: "",
@@ -558,6 +558,10 @@ export const getToastConfig = () => {
 
 export const showErrorToast = (message) => {
   toast.error(message, getToastConfig());
+}
+
+export const showSuccessToast = (message) => {
+  toast.success(message, getToastConfig());
 }
 
 export const isObjHasAllKeys = (obj, keys) => {
