@@ -208,30 +208,6 @@ const CreateOrEditHoiDongPage = () => {
                           />
                         </Col>
                         <Col md="6" className="form-group">
-                          <label htmlFor="canBoPhanBien">Cán bộ phản biện</label>
-                          <SelectSearch
-                            value={hoiDong.canBoPhanBien._id}
-                            search
-                            filterOptions={fuzzySearch}
-                            onChange={(e) => { setHoiDong({ ...hoiDong, canBoPhanBien: e }) }}
-                            placeholder="Chọn cán bộ phản biện"
-                            options={giangViens.map((gv) => ({ value: gv._id, name: gv.name }))}
-                          />
-                        </Col>
-                      </Row>
-                      <Row form>
-                        <Col md="6" className="form-group">
-                          <label htmlFor="canBoHuongDan">Cán bộ hướng dẫn</label>
-                          <SelectSearch
-                            value={hoiDong.canBoHuongDan._id}
-                            search
-                            filterOptions={fuzzySearch}
-                            onChange={(e) => { setHoiDong({ ...hoiDong, canBoHuongDan: e }) }}
-                            placeholder="Chọn cán bộ hướng dẫn"
-                            options={giangViens.map((gv) => ({ value: gv._id, name: gv.name }))}
-                          />
-                        </Col>
-                        <Col md="6" className="form-group">
                           <label htmlFor="chuTich">Chủ tịch</label>
                           <SelectSearch
                             value={hoiDong.chuTich._id}

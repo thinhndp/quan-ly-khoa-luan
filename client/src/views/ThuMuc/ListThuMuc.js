@@ -145,7 +145,7 @@ const ListThuMuc = () => {
                   <div className="folder-name">
                     {/* <div>FOLDER</div> */}
                     <div className="main-text truncate">{thuMuc.name}</div>
-                    <div className="sub-text">{Utils.getThuMucStatusText(thuMuc.status)}</div>
+                    {/* <div className="sub-text">{Utils.getThuMucStatusText(thuMuc.status)}</div> */}
                     <div className="sub-text">{thuMuc.files.length} files</div>
                   </div>
                   <div></div>
@@ -162,7 +162,7 @@ const ListThuMuc = () => {
     <Container fluid className="main-content-container px-4">
       {/* Page Header */}
       <Row noGutters className="page-header py-4">
-        <PageTitle sm="4" title="Danh sách Thư Mục" subtitle="QUẢN LÝ THƯ MỤC" className="text-sm-left" />
+        <PageTitle sm="4" title="Danh sách Thư Mục" subtitle="QUẢN LÝ FILE NỘP" className="text-sm-left" />
       </Row>
 
       <Row>

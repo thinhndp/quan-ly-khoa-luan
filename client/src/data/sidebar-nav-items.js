@@ -1,7 +1,7 @@
 export default function() {
   return [
     {
-      title: "Quản lý Kỳ thực hiện Khóa luận",
+      title: "Quản lý Kỳ thực hiện KL",
       htmlBefore: '<i class="material-icons">table_chart</i>',
       to: "/ky-thuc-hien",
     },

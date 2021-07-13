@@ -399,7 +399,7 @@ const ListKyThucHien = () => {
             subtitle="QUẢN LÝ KỲ THỰC HIỆN KHÓA LUẬN" className="text-sm-left" />
       </Row>
       <Row>
-        <div>
+        <div style={{ marginBottom: '10px' }}>
           <Button className="export-button" onClick={() => { onExportClick() }}>Xuất DS Sinh Viên Thực hiện</Button>
           <span class="pr-05r"/>
           <Button className="export-button" onClick={() => { onHDExportClick() }}>Xuất DS Báo cáo tiến độ GK</Button>

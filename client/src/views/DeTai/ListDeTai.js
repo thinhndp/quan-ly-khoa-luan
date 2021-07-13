@@ -356,7 +356,7 @@ const ListDeTai = () => {
                     <td>{(deTai.kyThucHien != null) ? deTai.kyThucHien.name : ''}</td>
                     <td>{Utils.getDeTaiApproveStatusText(deTai.trangThaiDuyet)}</td>
                     <td>{Utils.getDeTaiProgressStatusText(deTai.trangThaiThucHien)}</td>
-                    <td>{deTai.heDaoTao}</td>
+                    <td>{Utils.getHeDaoTaoText(deTai.heDaoTao)}</td>
                     {/* <td>{deTai.diemSo}</td> */}
                     {/* <td>{Utils.getSinhVienNumOfDeTai(deTai)}</td> */}
                     <td><DetailSVThucHienButton deTai={deTai} /></td>

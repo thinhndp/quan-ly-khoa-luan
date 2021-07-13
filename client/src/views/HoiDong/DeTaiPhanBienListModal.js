@@ -31,8 +31,12 @@ const DeTaiPhanBien = ({ isOpen, toggle, selected, onClose }) => {
             <div>
               <Col className="form-group">
                 {/* <label >Các Đề tài</label> */}
+                {/* <div className="blue_link" onClick={() => { onDeTaiClick(deTai._id) }}>{deTai.tenDeTai}</div> */}
                 { hoiDong.deTais.map((deTai) => (
-                  <div className="blue_link" onClick={() => { onDeTaiClick(deTai._id) }}>{deTai.tenDeTai}</div>
+                  <Button className="t-button"
+                      onClick={() => { onDeTaiClick(deTai._id) }}
+                      style={{ width: '100%', marginTop: '10px' }}
+                    >{deTai.tenDeTai}</Button>
                 )) }
               </Col>
             </div>)

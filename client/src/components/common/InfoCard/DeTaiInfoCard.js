@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
+import { useRecoilValue } from 'recoil';
 import { Container, Row, Col, Card, CardHeader, CardBody, Button, ButtonGroup} from "shards-react";
 
+import userAtom, { userAsToken } from '../../../recoil/user';
 import ColoredTag from '../ColoredTag/ColoredTag';
 import ActionButtons from '../ActionButtons';
 import * as Utils from '../../../utils/utils';
@@ -10,6 +12,7 @@ import * as Constants from '../../../constants/constants';
 import { green } from '@material-ui/core/colors';
 
 const DeTaiInfoCard = ({ deTai }) => {
+  const currentUser = useRecoilValue(userAtom);
 
   const getTagColor = (trangThaiDuyet) => {
     switch (trangThaiDuyet) {
@@ -24,13 +27,21 @@ const DeTaiInfoCard = ({ deTai }) => {
     }
   }
 
+  const isGVHD = () => {
+    return (Utils.isUserValidGiangVien(currentUser) && (currentUser.relatedInfoGV._id == deTai.giangVien._id));
+  }
+
+  const isPending = () => {
+    return deTai.trangThaiDuyet == Constants.DE_TAI_APPROVE_STATUS_NOT_APPROVED;
+  }
+
   return (
     <Card small className="card-post mb-4 info-card">
       <CardBody>
         <div>
           <div style={{ display: 'flex'}}>
             <h5 style={{ flex: 1 }}>{deTai.tenDeTai}</h5>
-            <div style={{ display: deTai.trangThaiDuyet == Constants.DE_TAI_APPROVE_STATUS_NOT_APPROVED ? 'block' : 'none' }}>
+            <div style={{ display: (isPending() && isGVHD()) ? 'block' : 'none' }}>
               <ActionButtons
                 onDeleteClick={() => {  }}
                 onEditClick={() => {  }}

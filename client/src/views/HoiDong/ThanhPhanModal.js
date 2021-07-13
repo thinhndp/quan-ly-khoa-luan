@@ -31,16 +31,6 @@ const ThanhPhanModal = ({ isOpen, toggle, selected, onClose }) => {
             <div>
               <Row form>
                 <Col md="6" className="form-group">
-                  <label htmlFor="canBoPhanBien">Cán bộ phản biện</label>
-                  <div id="canBoPhanBien" className="info-text">{hoiDong.canBoPhanBien.name}</div>
-                </Col>
-              </Row>
-              <Row form>
-                <Col md="6" className="form-group">
-                  <label htmlFor="canBoHuongDan">Cán bộ hướng dẫn</label>
-                  <div id="canBoHuongDan" className="info-text">{hoiDong.canBoHuongDan.name}</div>
-                </Col>
-                <Col md="6" className="form-group">
                   <label htmlFor="chuTich">Chủ tịch</label>
                   <div id="chuTich" className="info-text">{hoiDong.chuTich.name}</div>
                 </Col>

@@ -5,6 +5,7 @@ import { Container, Row, Col, Card, CardHeader, CardBody, Button,
 import { useRecoilValue } from 'recoil';
 import toast from 'react-hot-toast';
 
+import userAtom, { userAsToken } from '../../recoil/user';
 import PostReader from '../../components/post/PostReader';
 import LyrCalendar from '../../components/common/LyrCalendar/LyrCalendar';
 import LyrTable from '../../components/common/LyrTable/LyrTable';
@@ -22,6 +23,7 @@ import * as Utils from '../../utils/utils';
 import * as Constants from '../../constants/constants';
 
 const DetailDeTaiPage = () => {
+  const currentUser = useRecoilValue(userAtom);
   // const userToken = useRecoilValue(userAsToken);
   const [ deTai, setDeTai ] = useState(Utils.getNewDeTai());
   const [ reportSV1, setReportSV1 ] = useState(null);
@@ -150,19 +152,25 @@ const DetailDeTaiPage = () => {
     );
   }
 
+  const isGVHD = () => {
+    return (Utils.isUserValidGiangVien(currentUser) && (currentUser.relatedInfoGV._id == deTai.giangVien._id));
+  }
+
   return (
     <div className="container min_height_100">
       <div className="public-pages-container">
         <div className="main-area">
-          <div className="flex-row">
-            { deTai.sinhVienThucHien[0] && (
-              <Button onClick={() => { setIsXNModalOpen(true); }}>Xác nhận tiến độ SV {deTai.sinhVienThucHien[0].name}</Button>
-            ) }
-            <div className="mr-05r" />
-            { deTai.sinhVienThucHien[1] && (
-              <Button onClick={() => { setIsXNModal2Open(true); }}>Xác nhận tiến độ SV {deTai.sinhVienThucHien[1].name}</Button>
-            ) }
-          </div>
+          { isGVHD() && (
+            <div className="flex-row">
+              { deTai.sinhVienThucHien[0] && (
+                <Button onClick={() => { setIsXNModalOpen(true); }}>Xác nhận tiến độ SV {deTai.sinhVienThucHien[0].name}</Button>
+              ) }
+              <div className="mr-05r" />
+              { deTai.sinhVienThucHien[1] && (
+                <Button onClick={() => { setIsXNModal2Open(true); }}>Xác nhận tiến độ SV {deTai.sinhVienThucHien[1].name}</Button>
+              ) }
+            </div>
+          ) }
           <div className="mb-15" />
           <DeTaiInfoCard deTai={deTai} />
           {/* FILES */}
