@@ -58,7 +58,7 @@ const ListKyThucHien = () => {
       })
       .catch((err) => {
         setResData(Utils.getNewPageData());
-        Utils.showErrorToast(err.response.data.message);
+        Utils.showErrorToast(Utils.getFormattedErrMsg(err.response.data.message));
         console.log(err.response);
       });
   }
@@ -79,7 +79,7 @@ const ListKyThucHien = () => {
                   return 'Xóa thành công';
                 },
                 error: (err) => {
-                  return err.response.data.message;
+                  return Utils.getFormattedErrMsg(err.response.data.message);
                 }
               },
               Utils.getToastConfig()
@@ -170,7 +170,7 @@ const ListKyThucHien = () => {
               {
                 kyThucHiens.map((kyThucHien, index) => (
                   <tr key={`ky-thuc-hien_${index}`}>
-                    <td><a href={`/ky-thuc-hien/${kyThucHien._id}`}>{kyThucHien.name}</a></td>
+                    <td><a href={`/ky-thuc-hien/${kyThucHien._id}`} target="_blank">{kyThucHien.name}</a></td>
                     <td>{Utils.getKyThucHienStatusText(kyThucHien.status)}</td>
                     <td>{Utils.getFormattedDate(kyThucHien.startDate)}</td>
                     <td>{Utils.getFormattedDate(kyThucHien.endDate)}</td>

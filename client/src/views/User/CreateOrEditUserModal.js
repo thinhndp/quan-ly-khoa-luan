@@ -28,7 +28,7 @@ const CreateOrEditUserModal = ({ isModalOpen, toggleModal, selected, onClose, on
             return 'Tạo thành công';
           },
           error: (err) => {
-            return err.response.data.message;
+            return Utils.getFormattedErrMsg(err.response.data.message);
           }
         },
         Utils.getToastConfig()
@@ -52,7 +52,7 @@ const CreateOrEditUserModal = ({ isModalOpen, toggleModal, selected, onClose, on
             return 'Cập nhật thành công';
           },
           error: (err) => {
-            return err.response.data.message;
+            return Utils.getFormattedErrMsg(err.response.data.message);
           }
         },
         Utils.getToastConfig()

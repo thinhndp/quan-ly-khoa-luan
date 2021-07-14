@@ -44,6 +44,7 @@ const CreateOrEditHoiDongPage = () => {
   let isUpdate = (id != null);
   const startAtPickerRef = useRef();
   const endAtPickerRef = useRef();
+  // moment.locale("vi");
 
   useEffect(() => {
     /* getHoiDongById(id)
@@ -101,11 +102,11 @@ const CreateOrEditHoiDongPage = () => {
         loading: 'Đang cập',
         success: (res) => {
           console.log(res);
-          history.push('/hoi-dong');
+          // history.push('/hoi-dong');
           return 'Cập nhật thành công';
         },
         error: (err) => {
-          return err.response.data.message;
+          return Utils.getFormattedErrMsg(err.response.data.message);
         }
       },
       Utils.getToastConfig()
@@ -132,7 +133,7 @@ const CreateOrEditHoiDongPage = () => {
           return 'Tạo thành công';
         },
         error: (err) => {
-          return err.response.data.message;
+          return Utils.getFormattedErrMsg(err.response.data.message);
         }
       },
       Utils.getToastConfig()
@@ -260,7 +261,7 @@ const CreateOrEditHoiDongPage = () => {
                             <label htmlFor="feStartAt">Thời gian bắt đầu</label>
                             <FormInput
                               id="feStartAt"
-                              value={hoiDong.startAt}
+                              value={Utils.getLocaleDateTimeString(hoiDong.startAt)}
                               onClick={callStartAtPicker}
                             />
                           </FormGroup>
@@ -281,7 +282,7 @@ const CreateOrEditHoiDongPage = () => {
                             <label htmlFor="feEndAt">Thời gian Kết thúc</label>
                             <FormInput
                               id="feEndAt"
-                              value={hoiDong.endAt}
+                              value={Utils.getLocaleDateTimeString(hoiDong.endAt)}
                               onClick={callEndAtPicker}
                             />
                           </FormGroup>

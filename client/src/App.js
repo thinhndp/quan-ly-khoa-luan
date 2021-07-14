@@ -6,6 +6,8 @@ import routes from "./routes";
 import withTracker from "./withTracker";
 import { RecoilRoot } from 'recoil';
 import { gapi } from 'gapi-script';
+import moment from 'moment';
+import "moment/locale/vi";
 
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./shards-dashboard/styles/shards-dashboards.1.1.0.min.css";
@@ -28,6 +30,7 @@ const DISCOVERY_DOCS = ['https://www.googleapis.com/discovery/v1/apis/drive/v3/r
 const SCOPES = 'https://www.googleapis.com/auth/drive.file';
 
 export default () => {
+  moment.locale("vi");
   useEffect(() => {
     gapi.load('client:auth2', initClient);
   }, []);

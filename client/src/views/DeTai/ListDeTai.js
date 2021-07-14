@@ -103,7 +103,7 @@ const ListDeTai = () => {
               return 'Cập nhật thành công';
             },
             error: (err) => {
-              return err.response.data.message;
+              return Utils.getFormattedErrMsg(err.response.data.message);
             }
           },
           Utils.getToastConfig()
@@ -129,7 +129,7 @@ const ListDeTai = () => {
         })
         .catch((err) => {
           setResData(Utils.getNewPageData());
-          Utils.showErrorToast(err.response.data.message);
+          Utils.showErrorToast(Utils.getFormattedErrMsg(err.response.data.message));
           console.log(err.response);
         });
     }
@@ -141,7 +141,7 @@ const ListDeTai = () => {
         })
         .catch((err) => {
           setResData(Utils.getNewPageData());
-          Utils.showErrorToast(err.response.data.message);
+          Utils.showErrorToast(Utils.getFormattedErrMsg(err.response.data.message));
           console.log(err.response);
         });
     }
@@ -192,7 +192,7 @@ const ListDeTai = () => {
                   return 'Xóa thành công';
                 },
                 error: (err) => {
-                  return err.response.data.message;
+                  return Utils.getFormattedErrMsg(err.response.data.message);
                 }
               },
               Utils.getToastConfig()
@@ -223,7 +223,7 @@ const ListDeTai = () => {
           return 'Cập nhật thành công';
         },
         error: (err) => {
-          return err.response.data.message;
+          return Utils.getFormattedErrMsg(err.response.data.message);
         }
       },
       Utils.getToastConfig()

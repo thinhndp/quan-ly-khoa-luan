@@ -44,7 +44,7 @@ export const createHoiDong = (req, res) => {
   const hoiDong = req.body;
   const newHoiDong = new HoiDong(hoiDong);
 
-  var errMsg = checkErrWhenUpserting(newHoiDong);
+  var errMsg = checkErrWhenUpserting(newHoiDong, true);
 
   if (errMsg != '') {
     res.status(400).json({ message: errMsg });
@@ -60,11 +60,11 @@ export const createHoiDong = (req, res) => {
     });
 };
 
-export const updateHoiDongById = (req, res) => {
+export const updateHoiDongById = async (req, res) => {
   const hoiDong = req.body;
   const id = req.params.id;
 
-  var errMsg = checkErrWhenUpserting(hoiDong);
+  var errMsg = await checkErrWhenUpserting(hoiDong, false);
 
   if (errMsg != '') {
     res.status(400).json({ message: errMsg });
@@ -90,33 +90,41 @@ export const deleteHoiDongById = (req, res) => {
     });
 }
 
-const checkErrWhenUpserting = (hoiDong) => {
+const checkErrWhenUpserting = async (hoiDong, isNew) => {
   if (hoiDong.startAt >= hoiDong.endAt) {
     return "Thời gian kết thúc phải sau thời gian bắt đầu";
   }
 
-  console.log(hoiDong.startAt);
-  console.log(HoiDong.find({ 
-    startAt: { $lt: hoiDong.startAt },
-    endAt: { $gt: hoiDong.startAt }
-  }));
+  // console.log(hoiDong.startAt);
+  // console.log(HoiDong.find({ 
+  //   startAt: { $lt: hoiDong.startAt },
+  //   endAt: { $gt: hoiDong.startAt }
+  // }));
+  if (hoiDong.chuTich == hoiDong.thuKy
+    || hoiDong.chuTich == hoiDong.uyVien
+    || hoiDong.thuKy == hoiDong.uyVien) {
+    return "Cán bộ trong Hội đồng không được trùng nhau";
+  }
 
-  var hdStartBefore = HoiDong.find({ 
+  var hdStartBefore = await HoiDong.find({ 
     startAt: { $lt: hoiDong.startAt },
     endAt: { $gt: hoiDong.startAt },
     phongHoc: hoiDong.phongHoc,
   });
-  var hdStartBetween = HoiDong.find({
+  if (hdStartBefore.length > 0) {
+    if (isNew || hdStartBefore.length > 1 || hdStartBefore[0]._id != hoiDong._id) {
+      return "Trùng thời gian và địa điểm với hội đồng khác";
+    }
+  }
+  var hdStartBetween = await HoiDong.find({
     startAt: { $gte: hoiDong.startAt, $lt: hoiDong.endAt },
     phongHoc: hoiDong.phongHoc,
   });
-
-  if (hdStartBefore.length > 0 || hdStartBetween.length > 0) {
-    console.log('overlap');
-    return "Trùng thời gian và địa điểm với hội đồng khác";
+  if (hdStartBetween.length > 0) {
+    if (isNew || hdStartBetween.length > 1 || hdStartBetween[0]._id != hoiDong._id) {
+      return "Trùng thời gian và địa điểm với hội đồng khác";
+    }
   }
-
-
 
   return '';
 }

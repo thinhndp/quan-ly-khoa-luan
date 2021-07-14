@@ -61,7 +61,7 @@ const DeTaiInfoCard = ({ deTai, onClick, onUpdate }) => {
           return 'Cập nhật thành công';
         },
         error: (err) => {
-          return err.response.data.message;
+          return Utils.getFormattedErrMsg(err.response.data.message);
         }
       },
       Utils.getToastConfig()
@@ -83,7 +83,7 @@ const DeTaiInfoCard = ({ deTai, onClick, onUpdate }) => {
                   return 'Xóa thành công';
                 },
                 error: (err) => {
-                  return err.response.data.message;
+                  return Utils.getFormattedErrMsg(err.response.data.message);
                 }
               },
               Utils.getToastConfig()

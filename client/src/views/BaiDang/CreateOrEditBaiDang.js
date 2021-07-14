@@ -132,11 +132,11 @@ const CreateOrEditBaiDang = () => {
           loading: 'Đang tạo',
           success: (res) => {
             console.log(res);
-            history.push('/bai-dang');
+            // history.push('/bai-dang');
             return 'Tạo thành công';
           },
           error: (err) => {
-            return err.response.data.message;
+            return Utils.getFormattedErrMsg(err.response.data.message);
           }
         },
         Utils.getToastConfig()
@@ -159,11 +159,11 @@ const CreateOrEditBaiDang = () => {
           loading: 'Đang Cập nhật',
           success: (res) => {
             console.log(res);
-            history.push('/bai-dang');
+            // history.push('/bai-dang');
             return 'Cập nhật thành công';
           },
           error: (err) => {
-            return err.response.data.message;
+            return Utils.getFormattedErrMsg(err.response.data.message);
           }
         },
         Utils.getToastConfig()

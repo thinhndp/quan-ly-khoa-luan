@@ -67,3 +67,12 @@ export const continueApprove = (deTaiId, sv, approval) => {
 export const updateNameChange = (changeList) => {
   return axios.post('/de-tais/update-name-change', changeList);
 }
+
+export const getCurrrentKTHDeTais = (search = '', pagingOptions = Utils.getNewPagingOptions(), filters = {}) => {
+  var options = {
+    search: search,
+    pagingOptions: pagingOptions,
+  };
+  const filterStr = Utils.getFilterString(filters);
+  return axios.post(`/de-tais/get-active?${filterStr}`, options);
+}

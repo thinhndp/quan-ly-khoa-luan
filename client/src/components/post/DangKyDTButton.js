@@ -4,7 +4,9 @@ import { useRecoilValue } from 'recoil';
 
 import CustomModal from '../../components/common/CustomModal/CustomModal';
 import SearchBar from '../../components/common/SearchBar/SearchBar';
-import { getDeTais, applyForDeTai } from '../../api/deTaiAPI';
+import LyrTable from '../../components/common/LyrTable/LyrTable';
+
+import { getDeTais, applyForDeTai, getCurrrentKTHDeTais } from '../../api/deTaiAPI';
 import * as Utils from '../../utils/utils';
 import * as Constants from '../../constants/constants';
 import userAtom from '../../recoil/user';
@@ -14,22 +16,29 @@ import "./dang-ki-btn.css";
 const DangKyDTButton = ({ renderAs }) => {
   const [ isOpen, setIsOpen ] = useState(false);
   const [ deTais, setDeTais ] = useState([]);
+  const [ resData, setResData ] = useState(Utils.getNewPageData());
   const user = Utils.getUser();
   const currentUser = useRecoilValue(userAtom);
 
 
   useEffect(() => {
-    getDeTaiList();
+    getList();
   }, []);
 
-  const getDeTaiList = () => {
-    getDeTais()
+  useEffect(() => {
+    setDeTais(resData.docs);
+  }, [resData]);
+
+  const getList = (search = '', pagingOptions = Utils.getNewPagingOptions(), filters = {}) => {
+    getCurrrentKTHDeTais(search, pagingOptions, filters)
       .then((res) => {
         console.log(res);
-        setDeTais(res.data);
+        setResData(res.data);
       })
       .catch((err) => {
         console.log(err);
+        Utils.showErrorToast(Utils.getFormattedErrMsg(err.response.data.message));
+        setResData(Utils.getNewPageData());
       });
   }
   const toggleModal = () => {
@@ -68,9 +77,9 @@ const DangKyDTButton = ({ renderAs }) => {
         size="lg"
         body={
           <div>
-            <SearchBar />
+            {/* <SearchBar /> */}
             <CardBody className="p-0 pb-3">
-              <table className="table mb-0">
+              {/* <table className="table mb-0">
                 <thead className="bg-white">
                   <tr>
                     <th scope="col" className="border-0">
@@ -106,7 +115,56 @@ const DangKyDTButton = ({ renderAs }) => {
                   ))
                 }
                 </tbody>
-              </table>
+              </table> */}
+              <LyrTable
+                data={resData}
+                getList={getList}
+                tableMode={true}
+                flat
+                headers={[
+                  {
+                    label: "Tên Đề tài",
+                    type: Constants.FILTER_TYPE_EQ,
+                    field: 'tenDeTai',
+                  },
+                  {
+                    label: "Giảng viên Hướng dẫn",
+                    type: Constants.FILTER_TYPE_EQ,
+                    field: 'giangVien',
+                  },
+                  {
+                    label: "Hệ đào tạo",
+                    type: Constants.FILTER_TYPE_SL,
+                    selectList: Utils.getHeDaoTaoSL(),
+                    field: 'heDaoTao',
+                  },
+                  {
+                    label: "Đã đăng ký",
+                    type: Constants.FILTER_TYPE_NL,
+                  },
+                  {
+                    label: "Thao tác",
+                    type: Constants.FILTER_TYPE_NL,
+                  },
+                ]}
+              >
+              <tbody>
+                {
+                  deTais.map((deTai, index) => (
+                    <tr key={`de-tai_${index}`}>
+                      <td>{deTai.tenDeTai}</td>
+                      <td>{deTai.giangVien.name}</td>
+                      <td>{Utils.getHeDaoTaoText(deTai.heDaoTao)}</td>
+                      <td>{Utils.getSinhVienNumOfDeTai(deTai)}</td>
+                      <td>
+                        <Button disabled={!(currentUser.relatedInfoSV && currentUser.relatedInfoSV.status == Constants.SINH_VIEN_STATUS_NOT_STARTED)}
+                            onClick={() => { onApplyClick(deTai._id) }}>Đăng ký</Button>
+                      </td>
+                    </tr>
+                  ))
+                }
+                </tbody>
+              </LyrTable>
             </CardBody>
           </div>
         }

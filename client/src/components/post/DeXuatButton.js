@@ -178,7 +178,7 @@ const DeXuatButton = ({ renderAs, onCompleted }) => {
           return 'Đề xuất thành công';
         },
         error: (err) => {
-          return err.response.data.message;
+          return Utils.getFormattedErrMsg(err.response.data.message);
         }
       },
       Utils.getToastConfig()

@@ -68,7 +68,7 @@ const CreateOrEditThuMucModal = ({ isModalOpen, toggleModal, selected, onClose, 
             return 'Tạo thành công';
           },
           error: (err) => {
-            return err.response.data.message;
+            return Utils.getFormattedErrMsg(err.response.data.message);
           }
         },
         Utils.getToastConfig()

@@ -213,7 +213,7 @@ const FilterButton = ({ headerData, onFilter, isActive }) => {
           }
           footer={
             <div className="t-button-group">
-              <Button onClick={onClearClick}>Xóa</Button>
+              <Button onClick={onClearClick} theme="danger">Xóa</Button>
               <div className="mr-05r"/>
               <Button onClick={onFilterClick}>Lọc</Button>
             </div>

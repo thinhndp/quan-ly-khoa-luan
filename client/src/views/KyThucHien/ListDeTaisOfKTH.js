@@ -41,7 +41,7 @@ const ListKyThucHien = () => {
       })
       .catch((err) => {
         console.log(err.response);
-        Utils.showErrorToast(err.response.data.message);
+        Utils.showErrorToast(Utils.getFormattedErrMsg(err.response.data.message));
       });
     getDeTaisWithHoiDong()
       .then((res) => {
@@ -50,7 +50,7 @@ const ListKyThucHien = () => {
       })
       .catch((err) => {
         console.log(err.response);
-        Utils.showErrorToast(err.response.data.message);
+        Utils.showErrorToast(Utils.getFormattedErrMsg(err.response.data.message));
       });
   }
 

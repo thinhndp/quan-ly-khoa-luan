@@ -58,7 +58,7 @@ const ListBieuMau = () => {
       })
       .catch((err) => {
         setResData(Utils.getNewPageData());
-        Utils.showErrorToast(err.response.data.message);
+        Utils.showErrorToast(Utils.getFormattedErrMsg(err.response.data.message));
         console.log(err);
       });
   }
@@ -78,7 +78,7 @@ const ListBieuMau = () => {
                   return 'Xóa thành công';
                 },
                 error: (err) => {
-                  return err.response.data.message;
+                  return Utils.getFormattedErrMsg(err.response.data.message);
                 }
               },
               Utils.getToastConfig()

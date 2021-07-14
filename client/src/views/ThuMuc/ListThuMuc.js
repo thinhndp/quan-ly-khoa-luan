@@ -56,7 +56,7 @@ const ListThuMuc = () => {
       })
       .catch((err) => {
         setResData(Utils.getNewPageData());
-        Utils.showErrorToast(err.response.data.message);
+        Utils.showErrorToast(Utils.getFormattedErrMsg(err.response.data.message));
         console.log(err.response);
       });
   }

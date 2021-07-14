@@ -85,7 +85,7 @@ const ListHoiDong = () => {
       })
       .catch((err) => {
         setResData(Utils.getNewPageData());
-        Utils.showErrorToast(err.response.data.message);
+        Utils.showErrorToast(Utils.getFormattedErrMsg(err.response.data.message));
         console.log(err);
       });
   }
@@ -105,7 +105,7 @@ const ListHoiDong = () => {
                   return 'Xóa thành công';
                 },
                 error: (err) => {
-                  return err.response.data.message;
+                  return Utils.getFormattedErrMsg(err.response.data.message);
                 }
               },
               Utils.getToastConfig()
@@ -125,7 +125,8 @@ const ListHoiDong = () => {
   }
 
   const onEditClick = (hoiDong) => {
-    history.push(`/hoi-dong/create-or-edit/${hoiDong._id}`);
+    // history.push(`/hoi-dong/create-or-edit/${hoiDong._id}`);
+    window.open(`/hoi-dong/create-or-edit/${hoiDong._id}`, '_blank');
   }
 
   const onEditPHClick = (phongHoc) => {
@@ -238,8 +239,8 @@ const ListHoiDong = () => {
                           onClick={() => { setSelectedHD(hoiDong) }}/>
                       </td>
                       <td>{hoiDong.phongHoc.name}</td>
-                      <td>{Utils.getLocaleDateString(hoiDong.startAt)}</td>
-                      <td>{Utils.getLocaleDateString(hoiDong.endAt)}</td>
+                      <td>{Utils.getLocaleDateTimeString(hoiDong.startAt)}</td>
+                      <td>{Utils.getLocaleDateTimeString(hoiDong.endAt)}</td>
                       <td>
                         <LaunchIcon color="primary" className="icon-button"
                           onClick={() => { setSelectedDTHD(hoiDong) }}/>

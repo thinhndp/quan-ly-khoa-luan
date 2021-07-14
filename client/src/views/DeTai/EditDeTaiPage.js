@@ -64,6 +64,7 @@ const EditDeTaiPage = () => {
         .then((res) => {
           console.log(res);
           setGiangViens(res.data);
+          // setGiangViens([ null, ...res.data ]);
         })
         .catch((err) => {
           console.log(err.response);
@@ -96,7 +97,7 @@ const EditDeTaiPage = () => {
           return 'Cập nhật thành công';
         },
         error: (err) => {
-          return err.response.data.message;
+          return Utils.getFormattedErrMsg(err.response.data.message);
         }
       },
       Utils.getToastConfig()
@@ -156,48 +157,68 @@ const EditDeTaiPage = () => {
                       <Row form>
                         <Col md="6" className="form-group">
                           <label>Kỳ thực hiện</label>
-                          <SelectSearch
+                          {/* <SelectSearch
                             value={deTai.kyThucHien != null ? deTai.kyThucHien._id : null}
                             search
                             filterOptions={fuzzySearch}
                             onChange={(e) => { setDeTai({ ...deTai, kyThucHien: e }) }}
                             placeholder="Chọn Kỳ thực hiện Khóa luận"
                             options={kyThucHiens.map((kth) => ({ value: kth._id, name: kth.name }))}
+                          /> */}
+                          <FormInput
+                            id="feKTH"
+                            value={deTai.kyThucHien.name}
+                            disabled={true}
                           />
                         </Col>
                         <Col md="6" className="form-group">
                           <label>Giảng viên Hướng dẫn</label>
-                          <SelectSearch
+                          {/* <SelectSearch
                             value={deTai.giangVien._id}
                             search
                             filterOptions={fuzzySearch}
                             onChange={(e) => { setDeTai({ ...deTai, giangVien: e }) }}
                             placeholder="Chọn Giảng viên Hướng dẫn"
                             options={giangViens.map((gv) => ({ value: gv._id, name: gv.name }))}
+                          /> */}
+                          <FormInput
+                            id="feGVHD"
+                            value={deTai.giangVien.name}
+                            disabled={true}
                           />
                         </Col>
                       </Row>
                       <Row form>
                         <Col md="6" className="form-group">
                           <label>Sinh viên 1</label>
-                          <SelectSearch
+                          {/* <SelectSearch
                             value={deTai.sinhVienThucHien[0] != null ? deTai.sinhVienThucHien[0]._id : ''}
                             search
                             filterOptions={fuzzySearch}
                             onChange={(e) => { setDeTai({ ...deTai, sinhVienThucHien: [ e, ...deTai.sinhVienThucHien.slice(1) ] }) }}
                             placeholder="Chọn Sinh viên 1"
                             options={sinhViens.map((sv) => ({ value: sv._id, name: sv.name }))}
+                          /> */}
+                          <FormInput
+                            id="feSV1"
+                            value={deTai.sinhVienThucHien[0] ? deTai.sinhVienThucHien[0].name : '-'}
+                            disabled={true}
                           />
                         </Col>
                         <Col md="6" className="form-group">
                           <label>Sinh viên 2</label>
-                          <SelectSearch
+                          {/* <SelectSearch
                             value={deTai.sinhVienThucHien[1] != null ? deTai.sinhVienThucHien[1]._id : ''}
                             search
                             filterOptions={fuzzySearch}
                             onChange={(e) => { setDeTai({ ...deTai, sinhVienThucHien: [ ...deTai.sinhVienThucHien.slice(0, 1), e ] }) }}
                             placeholder="Chọn Sinh viên 2"
                             options={sinhViens.map((sv) => ({ value: sv._id, name: sv.name }))}
+                          /> */}
+                          <FormInput
+                            id="feSV2"
+                            value={deTai.sinhVienThucHien[1] ? deTai.sinhVienThucHien[1].name : '-'}
+                            disabled={true}
                           />
                         </Col>
                       </Row>
@@ -237,12 +258,20 @@ const EditDeTaiPage = () => {
                         <Col md="6" className="form-group">
                           <label>Giảng viên Phản biện</label>
                           <SelectSearch
-                            value={deTai.giangVien._id}
+                            value={deTai.canBoPhanBien ? deTai.canBoPhanBien._id : null}
                             search
                             filterOptions={fuzzySearch}
-                            onChange={(e) => { setDeTai({ ...deTai, canBoPhanBien: e }) }}
+                            onChange={(e) => {
+                              console.log(e);
+                              if (e == 'not_selected') {
+                                setDeTai({ ...deTai, canBoPhanBien: null });
+                              }
+                              else {
+                                setDeTai({ ...deTai, canBoPhanBien: e });
+                              }
+                            }}
                             placeholder="Chọn Giảng viên Phản biện"
-                            options={giangViens.map((gv) => ({ value: gv._id, name: gv.name }))}
+                            options={[ { value: 'not_selected', name: 'Chọn Giảng viên Phản biện' }, ...giangViens.map((gv) => ({ value: gv._id, name: gv.name }))]}
                           />
                         </Col>
                       </Row>
@@ -250,6 +279,7 @@ const EditDeTaiPage = () => {
                       <Col md="6" className="form-group">
                           <label htmlFor="fePhone">Điểm SV1</label>
                           <FormInput
+                            disabled={deTai.sinhVienThucHien[0] == null || deTai.sinhVienThucHien[0]._id == null}
                             type="number"
                             id="feResult"
                             value={deTai.diemSo[0]}
@@ -263,6 +293,7 @@ const EditDeTaiPage = () => {
                         <Col md="6" className="form-group">
                           <label htmlFor="fePhone">Điểm SV2</label>
                           <FormInput
+                            disabled={deTai.sinhVienThucHien[1] == null || deTai.sinhVienThucHien[1]._id == null}
                             type="number"
                             id="feResult"
                             value={deTai.diemSo[1]}

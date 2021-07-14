@@ -54,7 +54,7 @@ const ListFile = () => {
       })
       .catch((err) => {
         setResData(Utils.getNewPageData());
-        Utils.showErrorToast(err.response.data.message);
+        Utils.showErrorToast(Utils.getFormattedErrMsg(err.response.data.message));
         console.log(err.response);
       });
   }
@@ -132,7 +132,7 @@ const ListFile = () => {
                       <td><span><img className="small-logo" src={Utils.getFileLogo(fileNop.name)}/></span>{fileNop.name}</td>
                       {/* <td>-</td> */}
                       <td>{fileNop.user.name}</td>
-                      <td>{fileNop.ngayNop}</td>
+                      <td>{Utils.getLocaleDateTimeString(fileNop.ngayNop)}</td>
                       <td>
                         <LinkIcon color="primary" className="icon-button"
                           onClick={() => { onLinkClick(fileNop.driveId) }}/>

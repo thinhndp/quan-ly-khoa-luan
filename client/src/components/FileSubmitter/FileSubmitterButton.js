@@ -165,7 +165,7 @@ const FileSubmitterButton = ({ renderAs, folderId, folderDriveId, onUploaded }) 
           return 'Upload thành công';
         },
         error: (err) => {
-          return err.response.data.message;
+          return Utils.getFormattedErrMsg(err.response.data.message);
         }
       },
       Utils.getToastConfig()

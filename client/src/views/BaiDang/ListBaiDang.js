@@ -57,7 +57,7 @@ const ListBaiDang = () => {
       .catch((err) => {
         console.log(err);
         setResData(Utils.getNewPageData());
-        Utils.showErrorToast(err.response.data.message);
+        Utils.showErrorToast(Utils.getFormattedErrMsg(err.response.data.message));
       });
   }
 
@@ -74,7 +74,8 @@ const ListBaiDang = () => {
   }
   const onEditClick = (id) => {
     // history.push('/bai-dang/create-or-edit', { postId: id });
-    history.push(`/bai-dang/create-or-edit/${id}`);
+    // history.push(`/bai-dang/create-or-edit/${id}`);
+    window.open(`/bai-dang/create-or-edit/${id}`, '_blank');
   }
   const onDeleteClick = (id) => {
     // console.log(id);
@@ -92,7 +93,7 @@ const ListBaiDang = () => {
                   return 'Xóa thành công';
                 },
                 error: (err) => {
-                  return err.response.data.message;
+                  return Utils.getFormattedErrMsg(err.response.data.message);
                 }
               },
               Utils.getToastConfig()
@@ -278,7 +279,7 @@ const ListBaiDang = () => {
                   <tr key={`post_${index}`}>
                     <td>{post.title}</td>
                     <td>Xem</td>
-                    <td>{post.isPosted === true ? post.postedTime : '-'}</td>
+                    <td>{post.isPosted === true ? Utils.getLocaleDateTimeString(post.postedTime) : '-'}</td>
                     <td>{post.type === 'CK' ? 'Công khai' : 'Nội bộ'}</td>
                     <td>{post.isPosted === true ? 'Đã đăng' : 'Chưa đăng'}</td>
                     <td>

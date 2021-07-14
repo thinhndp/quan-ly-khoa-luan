@@ -503,8 +503,8 @@ export const isUserAdmin = (user) => {
 export const getFormattedDate = (dateStr) => {
   var date = new Date(dateStr);
   const offset = date.getTimezoneOffset();
-  console.log('time zone');
-  console.log(offset);
+  // console.log('time zone');
+  // console.log(offset);
   date = new Date(date.getTime() - (offset*60*1000));
   return date.toISOString().split('T')[0];
 }
@@ -512,6 +512,34 @@ export const getFormattedDate = (dateStr) => {
 export const getLocaleDateString = (dateStr) => {
   var date = new Date(dateStr);
   return date.toLocaleDateString();
+}
+
+export const getLocaleDateTimeString = (dateStr) => {
+  if (dateStr == null) {
+    return '';
+  }
+  var date = new Date(dateStr);
+  const offset = date.getTimezoneOffset();
+  date = new Date(date.getTime() - (offset*60*1000));
+  var res;
+  try {
+    res = date.toISOString().substr(0, 19).replace('T', ' ');
+  }
+  catch (err) {
+    res = '';
+  }
+  finally {
+    return res;
+  }
+}
+
+export const getLocaleDateTimeStringFromDate = (date) => {
+  if (date == null) {
+    return '';
+  }
+  const offset = date.getTimezoneOffset();
+  date = new Date(date.getTime() - (offset*60*1000));
+  return date.toISOString().substr(0, 19).replace('T', ' ');
 }
 
 const calTotalSpentTime = (dayReport) => {
@@ -552,7 +580,7 @@ export const getToastConfig = () => {
     style: {
       minWidth: '250px',
       overflow: 'hidden',
-      wordBreak: 'break-all',
+      wordBreak: 'break-word',
       whiteSpace: 'normal'
     },
     position: 'bottom-center',
@@ -576,6 +604,19 @@ export const isObjHasAllKeys = (obj, keys) => {
     }
   }
   return true;
+}
+
+export const getFormattedErrMsg = (msg) => {
+  try {
+    var formattedMsg = msg;
+    if (formattedMsg.includes('Token used too late')) {
+      return 'Đã hết phiên hiệu lực, vui lòng đăng nhập lại.';
+    }
+    return formattedMsg;
+  }
+  catch (err) {
+    return 'Lỗi không xác định xảy ra';
+  }
 }
 
 /* export const notify = (type, message) => {

@@ -41,7 +41,7 @@ export const getDeTaisWithQuery = (req, res) => {
     trangThaiDuyet: '',
     trangThaiThucHien: '',
     heDaoTao: '',
-    diemSo: { $gte: '0', $lte: '10' },
+    // diemSo: { $gte: '0', $lte: '10' },
     sinhVienThucHien: '',
     kyThucHien: '',
     moTa: '',
@@ -63,7 +63,7 @@ export const getDeTaisWithQuery = (req, res) => {
       trangThaiDuyet: Utils.getIncludeFilter(rawFilters.trangThaiDuyet),
       trangThaiThucHien: Utils.getIncludeFilter(rawFilters.trangThaiThucHien),
       heDaoTao: Utils.getIncludeFilter(rawFilters.heDaoTao),
-      diemSo: { $gte: '0', $lte: '10' },
+      // diemSo: { $gte: '0', $lte: '10' },
       sinhVienThucHien: { $in: sinhVienIds },
       kyThucHien: { $in: kyThucHienIds },
       moTa: Utils.getIncludeFilter(rawFilters.moTa),
@@ -212,6 +212,50 @@ export const getCurrrentKTHDeTaisByGiangVien = async (req, res) => {
   }
 }
 
+export const getCurrrentKTHDeTais = async (req, res) => {
+  try {
+    let curKTH = await KyThucHien.findOne({ status: 'DDR' });
+    console.log(curKTH);
+    // Search and Paging
+    const { search, pagingOptions } = req.body;
+
+    // Filters
+    const reqQuery = { ...req.query };
+    const removeFields = [ "sort" ];
+    removeFields.forEach((val) => delete reqQuery[val]);
+    let queryStr = JSON.stringify(reqQuery);
+    queryStr = Utils.getConvertedQueryString(queryStr);
+
+    const queryFilters = JSON.parse(queryStr);
+    var rawFilters = {
+      tenDeTai: '',
+      giangVien: '',
+      heDaoTao: '',
+    }
+    rawFilters = { ...rawFilters, ...queryFilters };
+
+    let giangViens = await GiangVien.find({ name: Utils.getIncludeFilter(rawFilters.giangVien) });
+    const giangVienIds = giangViens.map(gv => gv._id);
+
+    var filters = {
+      tenDeTai: rawFilters.tenDeTai == '' ? Utils.getIncludeFilter(search) : Utils.getIncludeFilter(rawFilters.tenDeTai),
+      giangVien: { $in: giangVienIds },
+      heDaoTao: Utils.getIncludeFilter(rawFilters.heDaoTao),
+      trangThaiDuyet: 'DD',
+      kyThucHien: curKTH._id,
+    };
+
+    let deTais = await DeTai.paginate(filters, {
+      ...pagingOptions,
+      populate: 'giangVien sinhVienThucHien',
+    });
+    res.status(200).json(deTais);
+  }
+  catch (err) {
+    res.status(400).json({ message: err.message });
+  }
+}
+
 export const getDeTaisWithHoiDong = async (req, res) => {
   try {
     let hoiDongs = await HoiDong.find()
@@ -260,7 +304,7 @@ export const updateDeTaiById = (req, res) => {
     console.log(userInfo);
     User.findOne({ email: userInfo.email })
       .then((user) => {
-        DeTai.findOne({ _id: id })
+        DeTai.findOne({ _id: id }).populate('giangVien').populate('canBoPhanBien')
           .then((resDeTai) => {
             console.log('**user**');
             console.log(user);
@@ -268,12 +312,15 @@ export const updateDeTaiById = (req, res) => {
               res.status(400).json({ message: 'User hiện tại không có quyền duyệt' });
               return;
             }
-            if (deTai.giangVien == deTai.canBoPhanBien) {
-              res.status(400).json({ message: 'Giảng viên hướng dẫn không thể trùng với giảng viên phản biện' });
+            console.log(deTai);
+            if (deTai.canBoPhanBien != null && (deTai.giangVien._id == deTai.canBoPhanBien._id)) {
+              res.status(400).json({ message: 'Giảng viên hướng dẫn không thể trùng với Giảng viên phản biện' });
               return;
             }
             console.log('11');
             var newDeTai = new DeTai(deTai);
+            console.log('newDeTai');
+            console.log(newDeTai);
             newDeTai.isNew = false;
             newDeTai.save()
               .then((savedDetai) => {
