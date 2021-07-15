@@ -16,7 +16,7 @@ import 'react-calendar/dist/Calendar.css';
 import 'react-confirm-alert/src/react-confirm-alert.css';
 import 'font-awesome/css/font-awesome.css'
 
-axios.defaults.baseURL = 'http://localhost:5000';
+axios.defaults.baseURL = 'http://localhost:8080';
 
 // Client ID and API key from the Developer Console
 const CLIENT_ID = process.env.REACT_APP_GOOGLE_DRIVE_CLIENT_ID;
