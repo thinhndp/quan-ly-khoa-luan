@@ -32,6 +32,7 @@ const UserActions = () => {
 
   useEffect(() => {
     // setUser(Utils.getUser());
+    console.log('***user');
     console.log(user);
   }, []);
 
@@ -96,9 +97,16 @@ const UserActions = () => {
           <i className="material-icons">&#xE896;</i> Transactions
         </DropdownItem> */}
         {/* <DropdownItem divider /> */}
-        <DropdownItem tag={Link} onClick={onLogOutClick} className="text-danger">
-          <i className="material-icons text-danger">&#xE879;</i> Đăng xuất
-        </DropdownItem>
+        { (user != null && user._id != 'guess') && (
+          <DropdownItem tag={Link} onClick={onLogOutClick} className="text-danger">
+            <i className="material-icons text-danger">&#xE879;</i> Đăng xuất
+          </DropdownItem>
+        ) }
+        { (user == null || user._id == 'guess') && (
+          <DropdownItem tag={Link} onClick={onLogOutClick} className="text-success">
+            <i className="material-icons text-success">&#xE879;</i> Đăng nhập
+          </DropdownItem>
+        ) }
         {/* <div className="hiddenn">
           <GoogleLogout
             clientId={process.env.REACT_APP_GOOGLE_LOG_IN_CLIENT_ID}

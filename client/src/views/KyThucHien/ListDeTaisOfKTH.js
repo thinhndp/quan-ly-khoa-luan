@@ -398,6 +398,9 @@ const ListKyThucHien = () => {
           || !deTai.sinhVienThucHien || deTai.sinhVienThucHien.length < 1) {
         return;
       }
+      if (!deTai.xacNhanGiuaKi || !deTai.xacNhanGiuaKi.pending == true) {
+        return;
+      }
       for (var i = 0; i < deTai.sinhVienThucHien.length; i++) {
         var newName = '';
         var newEnglishName = '';
