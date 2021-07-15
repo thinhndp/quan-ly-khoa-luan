@@ -212,6 +212,14 @@
   color: #007bff;
 }
 
+.t-button-secondary {
+  color: #5a6169;
+}
+
+.t-button-secondary:hover {
+  background: #5a6169;
+}
+
 .t-button-group {
   display: flex;
 }

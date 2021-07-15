@@ -47,10 +47,7 @@ const CreateOrEditThuMucModal = ({ isModalOpen, toggleModal, selected, onClose, 
 
   const createThuMuc = async() => {
     const res = await Services.createFolder(thuMuc.name);
-    console.log('id');
-    console.log(res.result.id);
-    const res2 = await Services.setPermission(res.result.id);
-    console.log(res2);
+    await Services.setPermission(res.result.id);
     return API.createThuMuc({ ...thuMuc, driveId: res.result.id });
   }
 
@@ -68,7 +65,7 @@ const CreateOrEditThuMucModal = ({ isModalOpen, toggleModal, selected, onClose, 
             return 'Tạo thành công';
           },
           error: (err) => {
-            return Utils.getFormattedErrMsg(err.response.data.message);
+            return Utils.getFormattedErrMsg(err);
           }
         },
         Utils.getToastConfig()
@@ -99,6 +96,22 @@ const CreateOrEditThuMucModal = ({ isModalOpen, toggleModal, selected, onClose, 
       //   .catch((err) => {
       //     console.log(err);
       //   })
+    }
+    else {
+      toast.promise(
+        API.updateThuMucById(thuMuc._id, thuMuc),
+        {
+          loading: 'Đang cập nhật',
+          success: (res) => {
+            onUpdate();
+            return 'Cập nhật thành công';
+          },
+          error: (err) => {
+            return Utils.getFormattedErrMsg(err);
+          }
+        },
+        Utils.getToastConfig()
+      );
     }
     // updateGiangVienById(giangVien._id, giangVien)
     //   .then((res) => {
@@ -155,7 +168,7 @@ const CreateOrEditThuMucModal = ({ isModalOpen, toggleModal, selected, onClose, 
                 }}
               />
             </MuiPickersUtilsProvider> */}
-            <FormGroup>
+            {/* <FormGroup>
               <div id="mui-date-hidden" style={{ display: 'none' }}>
                 <MuiPickersUtilsProvider utils={MomentUtils}>
                   <DateTimePicker value={thuMuc.deadline}
@@ -173,7 +186,7 @@ const CreateOrEditThuMucModal = ({ isModalOpen, toggleModal, selected, onClose, 
                 value={thuMuc.deadline}
                 onClick={callDateTimePicker}
               />
-            </FormGroup>
+            </FormGroup> */}
             {/* <FormGroup>
               <label htmlFor="feLink">Link</label>
               <FormInput

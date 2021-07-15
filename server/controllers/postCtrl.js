@@ -24,12 +24,14 @@ export const getPostsWithQuery = (req, res) => {
   queryStr = Utils.getConvertedQueryString(queryStr);
 
   const queryFilters = JSON.parse(queryStr);
+  console.log(queryFilters);
   var rawFilters = {
     title: '',
     content: '',
     type: '',
     isPosted: '',
     postedTime: { $gte: '1970-01-01T00:00:00.000Z', $lte: '2036-12-31T23:59:59.000Z' },
+    deadline: { $gte: '1970-01-01T00:00:00.000Z', $lte: '2036-12-31T23:59:59.000Z' },
   }
   rawFilters = { ...rawFilters, ...queryFilters };
   var filters = {
@@ -38,12 +40,19 @@ export const getPostsWithQuery = (req, res) => {
     type: Utils.getIncludeFilter(rawFilters.type),
     isPosted: rawFilters.isPosted == 'POSTED' ? true : false,
     postedTime: rawFilters.postedTime,
+    deadline: rawFilters.deadline,
   };
   if (rawFilters.isPosted == '') {
     delete filters.isPosted;
   }
   if (filters.postedTime.$lte && !filters.postedTime.$gte) {
     filters.postedTime.$gte = '1970-01-01T00:00:01.000Z'
+  }
+  if (filters.deadline.$lte && !filters.deadline.$gte) {
+    filters.deadline.$gte = '1970-01-01T00:00:01.000Z'
+  }
+  if (queryFilters.deadline == null) {
+    delete filters.deadline;
   }
   console.log(filters);
 

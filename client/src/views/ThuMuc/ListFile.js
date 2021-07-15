@@ -22,10 +22,11 @@ const ListFile = () => {
   const [ fileNops, setFileNops ] = useState([]);
   const [ isOpenModal, setIsOpenModal ] = useState(false);
   const [ selectedFileNop, setSelectedThuMuc ] = useState({});
+  const [ thuMucName, setThuMucName ] = useState('Thư mục');
   let { folderId } = useParams();
   let history = useHistory();
   let thuMuc = history.location.state;
-  const [ resData, setResData ] = useState(Utils.getNewPageData());
+  const [ resData, setResData ] = useState({ ...Utils.getNewPageData(), thuMucName: 'Thư mục' });
 
   useEffect(() => {
     getList();
@@ -33,6 +34,7 @@ const ListFile = () => {
 
   useEffect(() => {
     setFileNops(resData.docs);
+    setThuMucName(resData.thuMucName);
   }, [resData]);
 
   /* const getList = () => {
@@ -54,7 +56,7 @@ const ListFile = () => {
       })
       .catch((err) => {
         setResData(Utils.getNewPageData());
-        Utils.showErrorToast(Utils.getFormattedErrMsg(err.response.data.message));
+        Utils.showErrorToast(Utils.getFormattedErrMsg(err));
         console.log(err.response);
       });
   }
@@ -90,7 +92,7 @@ const ListFile = () => {
     <Container fluid className="main-content-container px-4">
       {/* Page Header */}
       <Row noGutters className="page-header py-4">
-        <PageTitle sm="4" title="Danh sách File" subtitle="QUẢN LÝ FILE NỘP" className="text-sm-left" />
+        <PageTitle sm="4" title={`Danh sách File của ${thuMucName}`} subtitle="QUẢN LÝ FILE NỘP" className="text-sm-left" />
       </Row>
 
       <Row>

@@ -35,7 +35,7 @@ const BieuMauListModal = ({ isModalOpen, toggleModal, onClose, onSelectBM }) => 
       })
       .catch((err) => {
         console.log(err);
-        Utils.showErrorToast(Utils.getFormattedErrMsg(err.response.data.message));
+        Utils.showErrorToast(Utils.getFormattedErrMsg(err));
         setResData(Utils.getNewPageData());
       });
   }

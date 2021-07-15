@@ -259,7 +259,8 @@ export const getCurrrentKTHDeTais = async (req, res) => {
 export const getDeTaisWithHoiDong = async (req, res) => {
   try {
     let hoiDongs = await HoiDong.find()
-      .populate({ path: 'deTais', populate: [{ path: 'sinhVienThucHien', model: 'SinhVien' }, { path: 'giangVien', model: 'GiangVien' }] }).populate('canBoPhanBien')
+      .populate({ path: 'deTais', populate: [{ path: 'sinhVienThucHien', model: 'SinhVien' },
+          { path: 'giangVien', model: 'GiangVien' }, { path: 'canBoPhanBien', model: 'GiangVien' }] }).populate('canBoPhanBien')
       .populate('canBoHuongDan').populate('chuTich').populate('thuKy')
       .populate('uyVien')
     var deTais = [];
@@ -270,7 +271,6 @@ export const getDeTaisWithHoiDong = async (req, res) => {
           var newDeTai = {
             ...JSON.parse(JSON.stringify(deTai)),
             hoiDong: hoiDong,
-            canBoPhanBien: hoiDong.canBoPhanBien,
             chuTich: hoiDong.chuTich,
             thuKy: hoiDong.thuKy,
             uyVien: hoiDong.uyVien,
@@ -390,7 +390,7 @@ export const deleteDeTaiById = async (req, res) => {
 }
 
 export const applyForDeTai = (req, res) => {
-  console.log('applyForDeTai');
+  // console.log('applyForDeTai');
   const { sinhVienId, deTaiId } = req.body;
   const dtPromise = DeTai.findOne({ _id: deTaiId });
   const svPromise = SinhVien.findOne({ _id: sinhVienId });
@@ -398,28 +398,21 @@ export const applyForDeTai = (req, res) => {
     .then((prRes) => {
       let deTai = prRes[0];
       let sinhVien = prRes[1];
-      console.log('alo');
-      // console.log(deTai);
-      // console.log(sinhVien);
       if (sinhVien != null) {
-        /* if (sinhVien.status != 'CDK') {
-          console.log("Sinh viên đã đăng ký");
-          throw new Error("Sinh viên đã đăng ký");
-        } */
+        if (sinhVien.status != 'CDK') {
+          res.status(400).json({ message: 'Sinh viên đã đăng ký' });
+          return;
+        }
+
+        if (deTai != null && deTai.sinhVienThucHien != null && deTai.sinhVienThucHien.length >= 2) {
+          res.status(400).json({ message: 'Số lượng đăng ký vượt mức tối đa' });
+          return;
+        }
 
         sinhVien.status = 'DTH';
         deTai.sinhVienThucHien = [ ...deTai.sinhVienThucHien, sinhVienId ];
+        deTai.trangThaiThucHien = 'DTH';
         console.log(deTai);
-        if (deTai.sinhVien1 == null) {
-          deTai.sinhVien1 = sinhVien;
-        }
-        else if (deTai.sinhVien2 == null) {
-          deTai.sinhVien2 = sinhVien;
-        }
-        else {
-          console.log("Số lượng đăng ký vượt mức tối đa");
-          throw new Error("Số lượng đăng ký vượt mức tối đa");
-        }
         const svUpdatePromise = SinhVien.findByIdAndUpdate({ _id: sinhVien._id }, { status: 'DTH' });
         const dtUpdatePromise = DeTai.findByIdAndUpdate({ _id: deTai._id }, deTai);
         Promise.all([ svUpdatePromise, dtUpdatePromise ])
@@ -428,10 +421,55 @@ export const applyForDeTai = (req, res) => {
             res.status(201).json(pr2Res);
           })
       }
+      else {
+        res.status(400).json({ message: 'User không hợp lệ' });
+      }
     })
     .catch((err) => {
       res.status(400).json({ message: err.message });
     })
+}
+
+export const cancelDeTaiApplication = async(req, res) => {
+  try {
+    const { sinhVienId, deTaiId } = req.body;
+    const deTai = await DeTai.findOne({ _id: deTaiId });
+    if (deTai == null) {
+      res.status(400).json({ message: 'Không tìm thấy đề tài' });
+      return;
+    }
+    const sinhVien = await SinhVien.findOne({ _id: sinhVienId });
+    if (sinhVien == null) {
+      res.status(400).json({ message: 'Không tìm thấy sinh viên' });
+      return;
+    }
+    if (!deTai.sinhVienThucHien || deTai.sinhVienThucHien == 0) {
+      res.status(400).json({ message: 'Đề tài chưa có sinh viên đăng ký' });
+      return;
+    }
+    var lengthBefore = deTai.sinhVienThucHien.length;
+    deTai.sinhVienThucHien = deTai.sinhVienThucHien.filter((sv) => {
+      console.log(sv);
+      console.log(sinhVienId);
+      return sv != sinhVienId
+    });
+    var lengthAfter = deTai.sinhVienThucHien.length;
+    if (lengthBefore == lengthAfter) {
+      res.status(400).json({ message: 'Sinh viên không thuộc đề tài này' });
+      return;
+    }
+    sinhVien.status = 'CDK';
+    if (lengthAfter == 0) {
+      deTai.trangThaiThucHien = 'CDK';
+    }
+    const svUpdatePromise = SinhVien.findByIdAndUpdate(sinhVienId, { status: 'CDK' });
+    const dtUpdatePromise = DeTai.findByIdAndUpdate(deTaiId, deTai);
+    const pr2Res = await Promise.all([ svUpdatePromise, dtUpdatePromise ]);
+    res.status(201).json(pr2Res);
+  }
+  catch (err) {
+    res.status(400).json({ message: err.message });
+  }
 }
 
 export const continueApprove = async (req, res) => {
@@ -498,6 +536,37 @@ export const updateNameChange = async (req, res) => {
     res.status(201).json(deTaisToUpdate);
   }
   catch(err) {
+    res.status(400).json({ message: err.message });
+  }
+}
+
+export const approveMidTerm = async(req, res) => {
+  try {
+    const { id } = req.params;
+    const deTai = await DeTai.findById(id);
+    if (!deTai.xacNhanGiuaKi) {
+      res.status(400).json({ message: 'Đề tài không có xác nhận giữa kỳ' });
+    }
+    var updatedDeTai = new DeTai(deTai);
+    updatedDeTai.isNew = false;
+
+    if (deTai.xacNhanGiuaKi.thayDoiTen && deTai.xacNhanGiuaKi.newName != null && deTai.xacNhanGiuaKi.newName != '') {
+      updatedDeTai.tenDeTai = deTai.xacNhanGiuaKi.newName;
+    }
+    if (deTai.xacNhanGiuaKi.thayDoiTen && deTai.xacNhanGiuaKi.newEnglishName != null && deTai.xacNhanGiuaKi.newEnglishName != '') {
+      updatedDeTai.englishName = deTai.xacNhanGiuaKi.newEnglishName;
+    }
+    if (deTai.xacNhanGiuaKi.sinhVien1 && deTai.xacNhanGiuaKi.sinhVien1.tiepTuc == false) {
+      await SinhVien.findByIdAndUpdate(deTai.sinhVienThucHien[0]._id, { status: 'DD' });
+    }
+    if (deTai.sinhVienThucHien.length > 1 && deTai.xacNhanGiuaKi.sinhVien2 && deTai.xacNhanGiuaKi.sinhVien2.tiepTuc == false) {
+      await SinhVien.findByIdAndUpdate(deTai.sinhVienThucHien[1]._id, { status: 'DD' });
+    }
+    updatedDeTai.xacNhanGiuaKi.pending = false;
+    await updatedDeTai.save();
+    res.status(201).json(updatedDeTai);
+  }
+  catch (err) {
     res.status(400).json({ message: err.message });
   }
 }

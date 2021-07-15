@@ -55,7 +55,7 @@ const CreateOrEditKyThucHienModal = ({ isModalOpen, toggleModal, selected, onClo
             return 'Tạo thành công';
           },
           error: (err) => {
-            return Utils.getFormattedErrMsg(err.response.data.message);
+            return Utils.getFormattedErrMsg(err);
           }
         },
         Utils.getToastConfig()
@@ -79,7 +79,7 @@ const CreateOrEditKyThucHienModal = ({ isModalOpen, toggleModal, selected, onClo
             return 'Cập nhật thành công';
           },
           error: (err) => {
-            return Utils.getFormattedErrMsg(err.response.data.message);
+            return Utils.getFormattedErrMsg(err);
           }
         },
         Utils.getToastConfig()
@@ -142,7 +142,7 @@ const CreateOrEditKyThucHienModal = ({ isModalOpen, toggleModal, selected, onClo
                   <label htmlFor="feStartAt">Thời gian bắt đầu</label>
                   <FormInput
                     id="feStartAt"
-                    value={kyThucHien.startDate}
+                    value={Utils.getLocaleDateString(kyThucHien.startDate)}
                     onClick={callStartAtPicker}
                   />
                 </FormGroup>
@@ -163,7 +163,7 @@ const CreateOrEditKyThucHienModal = ({ isModalOpen, toggleModal, selected, onClo
                   <label htmlFor="feEndAt">Thời gian Kết thúc</label>
                   <FormInput
                     id="feEndAt"
-                    value={kyThucHien.endDate}
+                    value={Utils.getLocaleDateString(kyThucHien.endDate)}
                     onClick={callEndAtPicker}
                   />
                 </FormGroup>

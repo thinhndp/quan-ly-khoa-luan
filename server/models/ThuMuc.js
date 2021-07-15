@@ -38,7 +38,7 @@ const thuMucSchema = mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'KyThucHien'
   }
-});
+}, { timestamps: true });
 
 thuMucSchema.plugin(mongoosePaginate);
 

@@ -4,9 +4,9 @@ import FileNop from '../models/FileNop.js';
 import User from '../models/User.js';
 
 export const getThuMucs = (req, res) => {
-  ThuMuc.find()
+  ThuMuc.find().sort({ createdAt: -1 })
     .then((thuMucs) => {
-      let bulkArr = [];
+      /* let bulkArr = [];
       let returnedThuMucs = [];
       for (let thuMuc of thuMucs) {
         const status = (thuMuc.deadline < Date.now()) ? 'Closed' : 'Open';
@@ -21,8 +21,8 @@ export const getThuMucs = (req, res) => {
         thuMucWNewStatus.status = status;
         returnedThuMucs.push(thuMucWNewStatus);
       }
-      ThuMuc.bulkWrite(bulkArr);
-      res.status(200).json(returnedThuMucs);
+      ThuMuc.bulkWrite(bulkArr); */
+      res.status(200).json(thuMucs);
     })
     .catch((err) => {
       res.status(400).json({ message: err.message });
@@ -83,16 +83,21 @@ export const createThuMuc = (req, res) => {
     .then(() => {
       res.status(201).json(newThuMuc);
     })
-    // .catch((err) => {
-    //   res.status(400).json({ message: err.message });
-    // });
+    .catch((err) => {
+      res.status(400).json({ message: err.message });
+    });
 };
 
 export const updateThuMucById = (req, res) => {
   const thuMuc = req.body;
   const id = req.params.id;
-
-  ThuMuc.updateOne({ _id: id }, thuMuc)
+  /* if (!thuMuc.name || thuMuc.name.length < 1) {
+    res.status(400).json({ message: 'Xin hãy nhập tên thư mục' });
+  } */
+  // ThuMuc.updateOne({ _id: id }, thuMuc)
+  var updatedThuMuc = new ThuMuc(thuMuc);
+  updatedThuMuc.isNew = false;
+  updatedThuMuc.save()
     .then(() => {
       res.status(201).json(thuMuc);
     })
@@ -101,14 +106,20 @@ export const updateThuMucById = (req, res) => {
     });
 }
 
-export const deleteThuMuc = (req, res) => {
-  ThuMuc.deleteOne({ _id: req.params.id })
-    .then(() => {
-      res.status(201).json(req.params.id);
-    })
-    .catch((err) => {
-      res.status(400).json({ message: err.message });
-    });
+export const deleteThuMuc = async(req, res) => {
+  try {
+    const { id } = req.params;
+    const thuMuc = await ThuMuc.findById(id);
+    if (thuMuc.files != null && thuMuc.files.length > 0) {
+      res.status(400).json({ message: 'Thư mục đã tồn tại file' });
+      return;
+    }
+    await ThuMuc.deleteOne({ _id: req.params.id });
+    res.status(201).json(req.params.id);
+  }
+  catch (err) {
+    res.status(400).json({ message: err.message });
+  }
 }
 
 export const getFilesOfFolder = (req, res) => {
@@ -138,6 +149,7 @@ export const getFilesOfFolderWithQuery = (req, res) => {
       console.log(returnData);
       returnData.totalPages = Math.ceil(matchFiles.length / limit);
       // page = page <=
+      returnData.thuMucName = thuMuc.name;
       returnData.docs = matchFiles.slice((page - 1) * limit, page * limit);
       returnData.totalDocs = matchFiles.length;
       returnData.pagingCounter = (page - 1) * limit + 1;

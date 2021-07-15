@@ -57,7 +57,7 @@ const ListBaiDang = () => {
       .catch((err) => {
         console.log(err);
         setResData(Utils.getNewPageData());
-        Utils.showErrorToast(Utils.getFormattedErrMsg(err.response.data.message));
+        Utils.showErrorToast(Utils.getFormattedErrMsg(err));
       });
   }
 
@@ -93,7 +93,7 @@ const ListBaiDang = () => {
                   return 'Xóa thành công';
                 },
                 error: (err) => {
-                  return Utils.getFormattedErrMsg(err.response.data.message);
+                  return Utils.getFormattedErrMsg(err);
                 }
               },
               Utils.getToastConfig()
@@ -256,6 +256,11 @@ const ListBaiDang = () => {
                 field: 'postedTime',
               },
               {
+                label: "Deadline",
+                type: Constants.FILTER_TYPE_FTD,
+                field: 'deadline',
+              },
+              {
                 label: "Loại tin",
                 type: Constants.FILTER_TYPE_SL,
                 selectList: Utils.getThongBaoTypeSL(),
@@ -280,6 +285,7 @@ const ListBaiDang = () => {
                     <td>{post.title}</td>
                     <td>Xem</td>
                     <td>{post.isPosted === true ? Utils.getLocaleDateTimeString(post.postedTime) : '-'}</td>
+                    <td>{post.deadline != null ? Utils.getLocaleDateTimeString(post.deadline) : '-'}</td>
                     <td>{post.type === 'CK' ? 'Công khai' : 'Nội bộ'}</td>
                     <td>{post.isPosted === true ? 'Đã đăng' : 'Chưa đăng'}</td>
                     <td>

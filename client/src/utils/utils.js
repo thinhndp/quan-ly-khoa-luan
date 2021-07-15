@@ -58,8 +58,12 @@ export const getNewBieuMau = () => {
   return ({ name: "", link: "" });
 }
 
+export const getNewThuMuc = () => {
+  return ({ name: "" });
+}
+
 export const getNewKyThucHien = () => {
-  return ({ name: "", status: "CBD", startDate: null, endDate: null });
+  return ({ name: "", status: "CBD", startDate: "", endDate: "" });
 }
 
 export const getNewPhongHoc = () => {
@@ -420,15 +424,24 @@ export const getTrueFalseSL = () => {
 }
 
 export const getSinhVienNumOfDeTai = (deTai) => {
-  let count = 0;
-  if (deTai != null) {
-    if (deTai.sinhVien1 != null) {
-      count += 1;
-    }
-    if (deTai.sinhVien2 != null) {
-      count += 1;
-    }
+  if (deTai.sinhVienThucHien == null) {
+    return 0;
   }
+  let count = 0;
+  if (deTai.sinhVienThucHien[0] != null && deTai.sinhVienThucHien[0]._id != null) {
+    count++;
+  }
+  if (deTai.sinhVienThucHien[1] != null && deTai.sinhVienThucHien[1]._id != null) {
+    count++;
+  }
+  // if (deTai != null) {
+  //   if (deTai.sinhVien1 != null) {
+  //     count += 1;
+  //   }
+  //   if (deTai.sinhVien2 != null) {
+  //     count += 1;
+  //   }
+  // }
   return count;
 }
 
@@ -511,6 +524,12 @@ export const getFormattedDate = (dateStr) => {
 
 export const getLocaleDateString = (dateStr) => {
   var date = new Date(dateStr);
+  if (date.toLocaleDateString() == 'Invalid Date') {
+    return '';
+  }
+  if (date.toLocaleDateString() == '1/1/1970') {
+    return '-';
+  }
   return date.toLocaleDateString();
 }
 
@@ -606,9 +625,11 @@ export const isObjHasAllKeys = (obj, keys) => {
   return true;
 }
 
-export const getFormattedErrMsg = (msg) => {
+export const getFormattedErrMsg = (err) => {
   try {
-    var formattedMsg = msg;
+    console.log(err);
+    console.log(err.response);
+    var formattedMsg = err.response.data.message;
     if (formattedMsg.includes('Token used too late')) {
       return 'Đã hết phiên hiệu lực, vui lòng đăng nhập lại.';
     }
@@ -616,6 +637,19 @@ export const getFormattedErrMsg = (msg) => {
   }
   catch (err) {
     return 'Lỗi không xác định xảy ra';
+  }
+}
+
+export const compareDateWithNow = (date) => {
+  var now = new Date();
+  if (now == date) {
+    return 0;
+  }
+  if (now > date) {
+    return -1;
+  }
+  if (now < date) {
+    return 1;
   }
 }
 

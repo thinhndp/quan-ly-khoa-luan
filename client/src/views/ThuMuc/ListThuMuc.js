@@ -9,8 +9,11 @@ import FolderIcon from '@material-ui/icons/Folder';
 import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
 
-import { getThuMucs, getThuMucsWithQuery } from '../../api/fileNopAPI';
+import { getThuMucs, getThuMucsWithQuery, deleteThuMuc } from '../../api/fileNopAPI';
 import * as Utils from '../../utils/utils';
+import { confirmAlert } from 'react-confirm-alert';
+import toast from 'react-hot-toast';
+import ConfirmDeleteModal from "../../components/common/ConfirmDeleteModal/ConfirmDeleteModal";
 
 import PageTitle from "../../components/common/PageTitle";
 import ActionButtons from '../../components/common/ActionButtons';
@@ -37,6 +40,12 @@ const ListThuMuc = () => {
     setThuMucs(resData.docs);
   }, [resData]);
 
+  useEffect(() => {
+    if (selectedThuMuc._id != null) {
+      setIsOpenModal(true);
+    }
+  }, [selectedThuMuc]);
+
   /* const getList = () => {
     getThuMucs()
       .then((res) => {
@@ -56,7 +65,7 @@ const ListThuMuc = () => {
       })
       .catch((err) => {
         setResData(Utils.getNewPageData());
-        Utils.showErrorToast(Utils.getFormattedErrMsg(err.response.data.message));
+        Utils.showErrorToast(Utils.getFormattedErrMsg(err));
         console.log(err.response);
       });
   }
@@ -66,19 +75,36 @@ const ListThuMuc = () => {
   }
 
   const onDeleteClick = (id) => {
-    // deleteSinhVienById(id)
-    //   .then((res) => {
-    //     console.log(res);
-    //     getList();
-    //   })
-    //   .catch((err) => {
-    //     console.log(err);
-    //   });
+    console.log('delete');
+    confirmAlert({
+      customUI: ({ onClose }) => {
+        return (
+          <ConfirmDeleteModal onClose={onClose} onConfirm={() => {
+            toast.promise(
+              deleteThuMuc(id),
+              {
+                loading: 'Đang xóa',
+                success: (res) => {
+                  getList();
+                  onClose();
+                  return 'Xóa thành công';
+                },
+                error: (err) => {
+                  return Utils.getFormattedErrMsg(err);
+                }
+              },
+              Utils.getToastConfig()
+            );
+          }} />
+        );
+      }
+    });
   }
 
-  const onEditClick = (id) => {
+  const onEditClick = (thuMuc) => {
     // history.push('/sinh-vien/edit', { sinhVienId: id });
     // history.push(`/sinh-vien/edit/${id}`);
+    setSelectedThuMuc(thuMuc);
   }
 
   const toggleModal = () => {
@@ -86,11 +112,10 @@ const ListThuMuc = () => {
   }
 
   const onModalClose = () => {
-    setSelectedThuMuc({});
+    setSelectedThuMuc(Utils.getNewThuMuc());
   }
 
   const onUpdateThuMuc = () => {
-    setSelectedThuMuc({});
     getList();
     setIsOpenModal(false);
   }
@@ -123,9 +148,9 @@ const ListThuMuc = () => {
                         <PublishIcon color="inherit" className="icon-button" />
                       }/>
                   <EditIcon color="inherit" className="icon-button"
-                      onClick={() => {}}/>
+                      onClick={() => { onEditClick(thuMuc) }}/>
                   <DeleteIcon color="inherit" className="icon-button"
-                      onClick={() => {}}/>
+                      onClick={() => { onDeleteClick(thuMuc._id) }}/>
                 </div>
                 <div className="info-container truncate">
                   <div className="submitted">
@@ -198,12 +223,12 @@ const ListThuMuc = () => {
                       <th scope="col" className="border-0">
                         Số file đã nộp
                       </th>
-                      <th scope="col" className="border-0">
+                      {/* <th scope="col" className="border-0">
                         Hạn nộp
                       </th>
                       <th scope="col" className="border-0">
                         Trạng thái
-                      </th>
+                      </th> */}
                       <th scope="col" className="border-0">
                         Upload file
                       </th>
@@ -219,12 +244,11 @@ const ListThuMuc = () => {
                           <td>{thuMuc.name}</td>
                           {/* <td>-</td> */}
                           <td>{thuMuc.files.length}</td>
-                          <td>{thuMuc.deadline}</td>
-                          <td>{Utils.getThuMucStatusText(thuMuc.status)}</td>
+                          {/* <td>{thuMuc.deadline}</td>
+                          <td>{Utils.getThuMucStatusText(thuMuc.status)}</td> */}
                           <td>
                             <FileSubmitterButton onUploaded={onFileUploaded} folderId={thuMuc._id} renderAs={
-                              <PublishIcon color="primary" className="icon-button"
-                                onClick={onEditClick}/>
+                              <PublishIcon color="primary" className="icon-button" />
                             }/>
                             {/* <div>
                               <PublishIcon color="primary" className="icon-button"
@@ -234,7 +258,7 @@ const ListThuMuc = () => {
                           <td>
                             <ActionButtons
                               onDeleteClick={() => { onDeleteClick(thuMuc._id) }}
-                              onEditClick={() => { onEditClick(thuMuc._id) }} />
+                              onEditClick={() => { onEditClick(thuMuc) }} />
                           </td>
                         </tr>
                       ))

@@ -7,9 +7,10 @@ import {
   Dropdown, DropdownToggle, DropdownMenu, DropdownItem
 } from "shards-react";
 import SubmitterPicker from "../SubmitterPicker/SubmitterPicker";
+import * as Utils from '../../utils/utils';
 
 const SidebarActions = ({ title, onSaveClick, onPreviewClick, post, onLoaiTinChange, onHasDXButtonChange,
-    onHasDKDTButtonChange, onPostClick, onThuMucChange, thuMuc }) => {
+    onHasDKDTButtonChange, onPostClick, onThuMucChange, thuMuc, onDeadlineClick }) => {
   const [ isOpenLoaiTin, setIsOpenLoaiTin ] = useState(false);
   const [ isOpenDXButton, setIsOpenDXButton ] = useState(false);
   const [ isOpenDKDTButton, setIsOpenDKDTButton ] = useState(false);
@@ -125,6 +126,16 @@ const SidebarActions = ({ title, onSaveClick, onPreviewClick, post, onLoaiTinCha
                   <DropdownItem onClick={() => onHasDKDTButtonChange(false)}>Không</DropdownItem>
                 </DropdownMenu>
               </Dropdown>
+            </span>
+            <span className="d-flex mb-2">
+              <i className="material-icons mr-1">visibility</i>
+              <strong className="mr-1">Deadline:</strong>{" "}
+              <strong style={{ color: "#007BFF" }}>{Utils.getLocaleDateString(post.deadline)}</strong>{" "}
+              <div className="ml-auto">
+                <a className="ml-auto" href="#" onClick={onDeadlineClick}>
+                  Sửa
+                </a>
+              </div>
             </span>
             {/* <span className="d-flex mb-2">
               <i className="material-icons mr-1">calendar_today</i>

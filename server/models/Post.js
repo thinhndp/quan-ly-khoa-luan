@@ -41,7 +41,11 @@ const postSchema = mongoose.Schema({
     type: [ mongoose.Schema.Types.ObjectId ],
     ref: 'BieuMau',
     default: []
-  }
+  },
+  deadline: {
+    type: Date,
+    default: null,
+  },
   /* submitterObj: {
     name: {
       type: String,

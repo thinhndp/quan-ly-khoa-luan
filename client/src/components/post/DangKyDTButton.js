@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { Button, FormGroup, FormInput, FormSelect, FormTextarea, CardBody } from "shards-react";
-import { useRecoilValue } from 'recoil';
+import { useRecoilValue, useRecoilState } from 'recoil';
+import toast from 'react-hot-toast';
 
 import CustomModal from '../../components/common/CustomModal/CustomModal';
 import SearchBar from '../../components/common/SearchBar/SearchBar';
 import LyrTable from '../../components/common/LyrTable/LyrTable';
 
-import { getDeTais, applyForDeTai, getCurrrentKTHDeTais } from '../../api/deTaiAPI';
+import { getDeTais, applyForDeTai, getCurrrentKTHDeTais, cancelDeTaiApplication } from '../../api/deTaiAPI';
 import * as Utils from '../../utils/utils';
 import * as Constants from '../../constants/constants';
 import userAtom from '../../recoil/user';
@@ -17,8 +18,8 @@ const DangKyDTButton = ({ renderAs }) => {
   const [ isOpen, setIsOpen ] = useState(false);
   const [ deTais, setDeTais ] = useState([]);
   const [ resData, setResData ] = useState(Utils.getNewPageData());
-  const user = Utils.getUser();
-  const currentUser = useRecoilValue(userAtom);
+  // const currentUser = useRecoilValue(userAtom);
+  const [currentUser, setCurrentUser] = useRecoilState(userAtom);
 
 
   useEffect(() => {
@@ -37,7 +38,7 @@ const DangKyDTButton = ({ renderAs }) => {
       })
       .catch((err) => {
         console.log(err);
-        Utils.showErrorToast(Utils.getFormattedErrMsg(err.response.data.message));
+        Utils.showErrorToast(Utils.getFormattedErrMsg(err));
         setResData(Utils.getNewPageData());
       });
   }
@@ -49,14 +50,69 @@ const DangKyDTButton = ({ renderAs }) => {
     const sinhVienId = currentUser.relatedInfoSV;
     console.log(deTaiId);
     console.log(sinhVienId);
-    applyForDeTai(deTaiId, sinhVienId)
+    /* applyForDeTai(deTaiId, sinhVienId)
       .then((res) => {
         console.log(res);
         setIsOpen(false);
       })
       .catch((err) => {
         console.log(err);
-      })
+      }) */
+    toast.promise(
+      applyForDeTai(deTaiId, sinhVienId),
+      {
+        loading: 'Đang đăng ký',
+        success: (res) => {
+          setIsOpen(false);
+          var newUserInfo = { ...currentUser, relatedInfoSV: { ...currentUser.relatedInfoSV, status: Constants.SINH_VIEN_STATUS_IN_PROGRESS } };
+          setCurrentUser(newUserInfo);
+          return 'Đăng ký thành công';
+        },
+        error: (err) => {
+          console.log(err);
+          // return 'Utils.getFormattedErrMsg(err)';
+          return Utils.getFormattedErrMsg(err);
+        }
+      },
+      Utils.getToastConfig()
+    );
+  }
+
+  const onCancelClick = (deTaiId) => {
+    const sinhVienId = currentUser.relatedInfoSV._id;
+    toast.promise(
+      cancelDeTaiApplication(deTaiId, sinhVienId),
+      {
+        loading: 'Đang hủy đăng ký',
+        success: (res) => {
+          setIsOpen(false);
+          var newUserInfo = { ...currentUser, relatedInfoSV: { ...currentUser.relatedInfoSV, status: Constants.SINH_VIEN_STATUS_NOT_STARTED } };
+          // console.log(newUserInfo);
+          // newUserInfo.relatedInfoSV.status = Constants.SINH_VIEN_STATUS_NOT_STARTED;
+          setCurrentUser(newUserInfo);
+          return 'Hủy đăng ký thành công';
+        },
+        error: (err) => {
+          return Utils.getFormattedErrMsg(err);
+        }
+      },
+      Utils.getToastConfig()
+    );
+  }
+
+  const isCurrentUsersDeTai = (deTai) => {
+    if (!Utils.isUserValidSinhVien(currentUser)) {
+      return false;
+    }
+    if (!deTai.sinhVienThucHien || deTai.sinhVienThucHien.length == 0) {
+      return false;
+    }
+    for (var sinhVien of deTai.sinhVienThucHien) {
+      if (sinhVien._id == currentUser.relatedInfoSV._id) {
+        return true;
+      }
+    }
+    return false;
   }
 
   return (
@@ -79,43 +135,6 @@ const DangKyDTButton = ({ renderAs }) => {
           <div>
             {/* <SearchBar /> */}
             <CardBody className="p-0 pb-3">
-              {/* <table className="table mb-0">
-                <thead className="bg-white">
-                  <tr>
-                    <th scope="col" className="border-0">
-                      Tên Đề tài
-                    </th>
-                    <th scope="col" className="border-0">
-                      Giảng viên Hướng dẫn
-                    </th>
-                    <th scope="col" className="border-0">
-                      Hệ đào tạo
-                    </th>
-                    <th scope="col" className="border-0">
-                      Đã đăng ký
-                    </th>
-                    <th scope="col" className="border-0">
-                      Đăng ký đề tài
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                {
-                  deTais.map((deTai, index) => (
-                    <tr key={`de-tai_${index}`}>
-                      <td>{deTai.tenDeTai}</td>
-                      <td>{deTai.giangVien.name}</td>
-                      <td>{deTai.heDaoTao}</td>
-                      <td>{Utils.getSinhVienNumOfDeTai(deTai)}</td>
-                      <td>
-                        <Button disabled={!(currentUser.relatedInfoSV && currentUser.relatedInfoSV.status == Constants.SINH_VIEN_STATUS_NOT_STARTED)}
-                            onClick={() => { onApplyClick(deTai._id) }}>Đăng ký</Button>
-                      </td>
-                    </tr>
-                  ))
-                }
-                </tbody>
-              </table> */}
               <LyrTable
                 data={resData}
                 getList={getList}
@@ -157,8 +176,13 @@ const DangKyDTButton = ({ renderAs }) => {
                       <td>{Utils.getHeDaoTaoText(deTai.heDaoTao)}</td>
                       <td>{Utils.getSinhVienNumOfDeTai(deTai)}</td>
                       <td>
-                        <Button disabled={!(currentUser.relatedInfoSV && currentUser.relatedInfoSV.status == Constants.SINH_VIEN_STATUS_NOT_STARTED)}
-                            onClick={() => { onApplyClick(deTai._id) }}>Đăng ký</Button>
+                        { isCurrentUsersDeTai(deTai) && (
+                          <Button theme="danger" onClick={() => { onCancelClick(deTai._id) }}>Hủy đăng ký</Button>
+                        ) }
+                        { !isCurrentUsersDeTai(deTai) && (
+                          <Button disabled={!(currentUser.relatedInfoSV && currentUser.relatedInfoSV.status == Constants.SINH_VIEN_STATUS_NOT_STARTED)}
+                              onClick={() => { onApplyClick(deTai._id) }}>Đăng ký</Button>
+                        ) }
                       </td>
                     </tr>
                   ))

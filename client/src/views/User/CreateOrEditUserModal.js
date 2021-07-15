@@ -28,7 +28,7 @@ const CreateOrEditUserModal = ({ isModalOpen, toggleModal, selected, onClose, on
             return 'Tạo thành công';
           },
           error: (err) => {
-            return Utils.getFormattedErrMsg(err.response.data.message);
+            return Utils.getFormattedErrMsg(err);
           }
         },
         Utils.getToastConfig()
@@ -52,7 +52,7 @@ const CreateOrEditUserModal = ({ isModalOpen, toggleModal, selected, onClose, on
             return 'Cập nhật thành công';
           },
           error: (err) => {
-            return Utils.getFormattedErrMsg(err.response.data.message);
+            return Utils.getFormattedErrMsg(err);
           }
         },
         Utils.getToastConfig()
@@ -76,7 +76,7 @@ const CreateOrEditUserModal = ({ isModalOpen, toggleModal, selected, onClose, on
       body={
         <div>
           <div>
-            <FormGroup>
+            {/* <FormGroup>
               <label htmlFor="feEmail">Email</label>
               <FormInput
                 id="feEmail"
@@ -91,7 +91,7 @@ const CreateOrEditUserModal = ({ isModalOpen, toggleModal, selected, onClose, on
                 value={user.name}
                 onChange={(e) => { setUser({ ...user, name: e.target.value }) }}
               />
-            </FormGroup>
+            </FormGroup> */}
             <Row form>
               <Col md="6" className="form-group">
                 <FormGroup>

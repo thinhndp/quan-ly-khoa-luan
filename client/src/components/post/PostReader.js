@@ -14,12 +14,25 @@ const PostReader = ({ post, asPreview }) => {
   const currentUser = useRecoilValue(userAtom);
 
   const canUserSubmitFile = () => {
+    if (post.deadline != null && Utils.compareDateWithNow(Date.parse(post.deadline)) == -1) {
+      return false;
+    }
     return (asPreview == null && post.submitter != null && post.submitter._id != null && currentUser && (currentUser.role != Constants.USER_ROLE_GUEST));
   }
 
   const canUserDKDT = () => {
+    if (post.deadline != null && Utils.compareDateWithNow(Date.parse(post.deadline)) == -1) {
+      return false;
+    }
     return (asPreview == null && post.hasDKDTButton && Utils.isUserValidSinhVien(currentUser)
         && (currentUser.relatedInfoSV.status != Constants.SINH_VIEN_STATUS_ABANDONED && currentUser.relatedInfoSV.status != Constants.SINH_VIEN_STATUS_DONE))
+  }
+
+  const canUserDeXuat = () => {
+    if (post.deadline != null && Utils.compareDateWithNow(Date.parse(post.deadline)) == -1) {
+      return false;
+    }
+    return (asPreview == null && post.hasDeXuatButton && Utils.isUserValidGiangVien(currentUser))
   }
 
   return (
@@ -41,7 +54,7 @@ const PostReader = ({ post, asPreview }) => {
           }
         />
       )}
-      { (asPreview == null && post.hasDeXuatButton) && (
+      { canUserDeXuat() && (
         <DeXuatButton
           renderAs={
             <div className="blue_link">Click để Nộp đề xuất</div>

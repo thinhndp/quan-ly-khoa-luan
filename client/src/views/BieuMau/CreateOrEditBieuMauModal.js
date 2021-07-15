@@ -44,7 +44,7 @@ const CreateOrEditBieuMauModal = ({ isModalOpen, toggleModal, selected, onClose,
             return 'Tạo thành công';
           },
           error: (err) => {
-            return Utils.getFormattedErrMsg(err.response.data.message);
+            return Utils.getFormattedErrMsg(err);
           }
         },
         Utils.getToastConfig()
@@ -68,7 +68,7 @@ const CreateOrEditBieuMauModal = ({ isModalOpen, toggleModal, selected, onClose,
             return 'Cập nhật thành công';
           },
           error: (err) => {
-            return Utils.getFormattedErrMsg(err.response.data.message);
+            return Utils.getFormattedErrMsg(err);
           }
         },
         Utils.getToastConfig()

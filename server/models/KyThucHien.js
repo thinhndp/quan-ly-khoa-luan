@@ -16,11 +16,6 @@ const kyThucHien = mongoose.Schema({
   },
   endDate: {
     type: Date
-  },
-  kyThucHien: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'KyThucHien',
-    required: true,
   }
 });
 

@@ -16,7 +16,7 @@ import commonStyles from '../../styles/CommonStyles.module.scss';
 import styles from './styles.module.scss';
 import PageTitle from "../../components/common/PageTitle";
 import ActionButtons from '../../components/common/ActionButtons';
-import { getDeTaisWithQuery, deleteDeTaiById, getDeTaisWithPendingApproval, updateNameChange } from '../../api/deTaiAPI';
+import { getDeTaisWithQuery, deleteDeTaiById, getDeTaisWithPendingApproval, updateNameChange, approveMidTerm } from '../../api/deTaiAPI';
 import { getSystemSettings, updateSystemSetting } from '../../api/systemSettingAPI';
 import CustomModal from '../../components/common/CustomModal/CustomModal';
 import { FormGroup } from "@material-ui/core";
@@ -103,7 +103,7 @@ const ListDeTai = () => {
               return 'Cập nhật thành công';
             },
             error: (err) => {
-              return Utils.getFormattedErrMsg(err.response.data.message);
+              return Utils.getFormattedErrMsg(err);
             }
           },
           Utils.getToastConfig()
@@ -129,7 +129,7 @@ const ListDeTai = () => {
         })
         .catch((err) => {
           setResData(Utils.getNewPageData());
-          Utils.showErrorToast(Utils.getFormattedErrMsg(err.response.data.message));
+          Utils.showErrorToast(Utils.getFormattedErrMsg(err));
           console.log(err.response);
         });
     }
@@ -141,7 +141,7 @@ const ListDeTai = () => {
         })
         .catch((err) => {
           setResData(Utils.getNewPageData());
-          Utils.showErrorToast(Utils.getFormattedErrMsg(err.response.data.message));
+          Utils.showErrorToast(Utils.getFormattedErrMsg(err));
           console.log(err.response);
         });
     }
@@ -192,7 +192,7 @@ const ListDeTai = () => {
                   return 'Xóa thành công';
                 },
                 error: (err) => {
-                  return Utils.getFormattedErrMsg(err.response.data.message);
+                  return Utils.getFormattedErrMsg(err);
                 }
               },
               Utils.getToastConfig()
@@ -223,7 +223,7 @@ const ListDeTai = () => {
           return 'Cập nhật thành công';
         },
         error: (err) => {
-          return Utils.getFormattedErrMsg(err.response.data.message);
+          return Utils.getFormattedErrMsg(err);
         }
       },
       Utils.getToastConfig()
@@ -237,6 +237,23 @@ const ListDeTai = () => {
       .catch((err) => {
         console.log(err);
       }) */
+  }
+
+  const onApproveMidTermClick = (deTaiId) => {
+    toast.promise(
+      approveMidTerm(deTaiId),
+      {
+        loading: 'Đang cập nhật',
+        success: (res) => {
+          getDeTaiList();
+          return 'Cập nhật thành công';
+        },
+        error: (err) => {
+          return Utils.getFormattedErrMsg(err);
+        }
+      },
+      Utils.getToastConfig()
+    );
   }
 
   const onGVClick = (id) => {
@@ -448,8 +465,7 @@ const ListDeTai = () => {
                         : '-'
                     }</td>
                     <td>
-                      <ActionButtons onEditClick={() => onEditClick(deTai._id)}
-                          onDeleteClick={() => onDeleteClick(deTai._id)} />
+                      <Button onClick={() => { onApproveMidTermClick(deTai._id) }}>Xác nhận</Button>
                     </td>
                   </tr>
                 ))

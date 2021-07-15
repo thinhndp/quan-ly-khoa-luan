@@ -11,16 +11,21 @@ import "./styles.css";
 const SubmitterPicker = ({ renderAs, onSelectThuMuc }) => {
   const [ isOpen, setIsOpen ] = useState(false);
   const [ thuMucs, setThuMucs ] = useState([]);
+  const [ resData, setResData ] = useState([]);
 
   useEffect(() => {
     getList();
   }, []);
 
+  useEffect(() => {
+    setThuMucs(resData.slice(0, 7));
+  }, [resData]);
+
   const getList = () => {
     getThuMucs()
       .then((res) => {
         console.log(res);
-        setThuMucs(res.data);
+        setResData(res.data);
       })
       .catch((err) => {
         console.log(err);
@@ -50,6 +55,19 @@ const SubmitterPicker = ({ renderAs, onSelectThuMuc }) => {
     setIsOpen(false);
   }
 
+  const onSearch = (value) => {
+    if (value == '') {
+      setThuMucs(resData.slice(0, 7));
+      return;
+    }
+    var matches = resData.filter((res) => {
+      // console.log
+      var name = res.name.toLowerCase();
+      return name.includes(value);
+    })
+    setThuMucs([ ...matches ]);
+  }
+
   return (
     <div>
       {
@@ -67,7 +85,7 @@ const SubmitterPicker = ({ renderAs, onSelectThuMuc }) => {
         title="Danh sách thư mục"
         body={
           <div id="submitter_picker">
-            <SearchBar />
+            <SearchBar onSearch={onSearch} />
             <CardBody className="p-0 pb-3">
               {/* <table className="table mb-0">
                 <thead className="bg-white">
@@ -106,10 +124,15 @@ const SubmitterPicker = ({ renderAs, onSelectThuMuc }) => {
                 </tbody>
               </table> */}
               <div>
-                <div className="blue_link cancel_option" onClick={() => onSelect(null)}>Không sử dụng</div>
+                {/* <div className="blue_link cancel_option" onClick={() => onSelect(null)}>Không sử dụng</div> */}
+                <Button theme="secondary" className="t-button t-button-secondary" onClick={() => onSelect(null)}
+                  style={{ width: '100%', marginTop: '10px' }}>Không sử dụng</Button>
+                {/* <div className="blue_link" onClick={() => onSelect(thuMuc)}>{thuMuc.name}</div> */}
                 {
                   thuMucs.map((thuMuc) => (
-                    <div className="blue_link" onClick={() => onSelect(thuMuc)}>{thuMuc.name}</div>
+                    <Button className="t-button" onClick={() => onSelect(thuMuc)}
+                        style={{ width: '100%', marginTop: '10px' }}
+                      >{thuMuc.name}</Button>
                   ))
                 }
               </div>

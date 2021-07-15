@@ -61,7 +61,7 @@ const DeTaiInfoCard = ({ deTai, onClick, onUpdate }) => {
           return 'Cập nhật thành công';
         },
         error: (err) => {
-          return Utils.getFormattedErrMsg(err.response.data.message);
+          return Utils.getFormattedErrMsg(err);
         }
       },
       Utils.getToastConfig()
@@ -83,7 +83,7 @@ const DeTaiInfoCard = ({ deTai, onClick, onUpdate }) => {
                   return 'Xóa thành công';
                 },
                 error: (err) => {
-                  return Utils.getFormattedErrMsg(err.response.data.message);
+                  return Utils.getFormattedErrMsg(err);
                 }
               },
               Utils.getToastConfig()
@@ -115,6 +115,7 @@ const DeTaiInfoCard = ({ deTai, onClick, onUpdate }) => {
               <p><i class="material-icons icon">event</i><span className="label">Kỳ thực hiện:</span>{deTai.kyThucHien.name}</p>
               <p><i class="material-icons icon">school</i><span className="label">Hệ đào tạo:</span>{Utils.getHeDaoTaoText(deTai.heDaoTao)}</p>
               <p><i class="material-icons icon">person</i><span className="label">GV Hướng dẫn:</span>{deTai.giangVien.name}</p>
+              <p><i class="material-icons icon">person</i><span className="label">GV Phản biện:</span>{deTai.canBoPhanBien ? deTai.canBoPhanBien.name : '-'}</p>
               <p><i class="material-icons icon">people</i><span className="label">SV Thực hiện:</span>{
                 deTai.sinhVienThucHien.map((sinhVien, index) => index != 0 ? `, ${sinhVien.name}` : sinhVien.name)
               }</p>

@@ -145,7 +145,7 @@ const DetailDeTaiPage = () => {
           return 'Đã gửi';
         },
         error: (err) => {
-          return Utils.getFormattedErrMsg(err.response.data.message);
+          return Utils.getFormattedErrMsg(err);
         }
       },
       Utils.getToastConfig()

@@ -60,12 +60,20 @@ export const applyForDeTai = (deTaiId, sinhVienId) => {
   return axios.post('/de-tais/apply', { deTaiId: deTaiId, sinhVienId: sinhVienId });
 }
 
+export const cancelDeTaiApplication = (deTaiId, sinhVienId) => {
+  return axios.post('/de-tais/cancel', { deTaiId: deTaiId, sinhVienId: sinhVienId });
+}
+
 export const continueApprove = (deTaiId, sv, approval) => {
   return axios.post(`/de-tais/continue-approve/${deTaiId}/${sv}`, approval);
 }
 
 export const updateNameChange = (changeList) => {
   return axios.post('/de-tais/update-name-change', changeList);
+}
+
+export const approveMidTerm = (id) => {
+  return axios.post(`/de-tais/approve-midterm/${id}`);
 }
 
 export const getCurrrentKTHDeTais = (search = '', pagingOptions = Utils.getNewPagingOptions(), filters = {}) => {

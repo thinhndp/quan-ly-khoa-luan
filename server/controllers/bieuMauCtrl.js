@@ -71,7 +71,10 @@ export const updateBieuMauById = (req, res) => {
   const bieuMau = req.body;
   const id = req.params.id;
 
-  BieuMau.updateOne({ _id: id }, bieuMau)
+  var updatedBieuMau = new BieuMau(bieuMau);
+  updatedBieuMau.isNew = false;
+  // BieuMau.updateOne({ _id: id }, bieuMau)
+  updatedBieuMau.save()
     .then(() => {
       res.status(201).json(bieuMau);
     })

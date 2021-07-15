@@ -2,7 +2,7 @@ import express from 'express';
 
 import { getDeTais, getDeTaisWithQuery, getDeTaiById, updateDeTaiById, createManyDeTais, deleteDeTaiById, applyForDeTai,
     getDeTaiBySinhVienId, getDeTaisByKTHId, getDeTaisWithHoiDong, getCurrrentKTHDeTaisByGiangVien, continueApprove,
-    getDeTaisWithPendingApproval, updateNameChange, getCurrrentKTHDeTais } from '../controllers/deTaiCtrl.js';
+    getDeTaisWithPendingApproval, updateNameChange, getCurrrentKTHDeTais, cancelDeTaiApplication, approveMidTerm } from '../controllers/deTaiCtrl.js';
 
 const router = express.Router();
 
@@ -19,7 +19,9 @@ router.post('/update/:id', updateDeTaiById);
 router.post('/create-many/', createManyDeTais);
 router.delete('/:id', deleteDeTaiById);
 router.post('/apply/', applyForDeTai);
+router.post('/cancel/', cancelDeTaiApplication);
 router.post('/continue-approve/:id/:sv', continueApprove);
 router.post('/update-name-change', updateNameChange);
+router.post('/approve-midterm/:id', approveMidTerm);
 
 export default router;

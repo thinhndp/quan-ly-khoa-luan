@@ -58,7 +58,7 @@ const ListSinhVien = () => {
       })
       .catch((err) => {
         setResData(Utils.getNewPageData());
-        Utils.showErrorToast(Utils.getFormattedErrMsg(err.response.data.message));
+        Utils.showErrorToast(Utils.getFormattedErrMsg(err));
         console.log(err);
       });
   }
@@ -94,7 +94,7 @@ const ListSinhVien = () => {
               return 'Cập nhật thành công';
             },
             error: (err) => {
-              return Utils.getFormattedErrMsg(err.response.data.message);
+              return Utils.getFormattedErrMsg(err);
             }
           },
           Utils.getToastConfig()
@@ -135,7 +135,7 @@ const ListSinhVien = () => {
                 },
                 error: (err) => {
                   console.log(err.response);
-                  return Utils.getFormattedErrMsg(err.response.data.message);
+                  return Utils.getFormattedErrMsg(err);
                 }
               },
               Utils.getToastConfig()

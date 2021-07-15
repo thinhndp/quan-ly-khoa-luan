@@ -1,11 +1,14 @@
 import React, { useState, useEffect, useMemo, useRef } from "react";
-import { Container, Row, Col, Card, CardBody, Form, FormInput, Button } from "shards-react";
+import { Container, Row, Col, Card, CardBody, Form, FormInput, Button, FormGroup, ButtonGroup } from "shards-react";
 import { useRecoilValue } from 'recoil';
 import moment from 'moment';
 import ReactQuill from "react-quill";
 import axios from "axios";
 import DeXuatButton from "../../components/post/DeXuatButton";
 import { useHistory, useParams } from "react-router-dom";
+import CustomModal from '../../components/common/CustomModal/CustomModal';
+import MomentUtils from '@date-io/moment';
+import { DateTimePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
 
 import "react-quill/dist/quill.snow.css";
 import "../../assets/quill.css";
@@ -29,10 +32,17 @@ const CreateOrEditBaiDang = () => {
   const [ content, setContent ] = useState('');
   const [ isShowPreview, setIsShowPreview ] = useState(false);
   const [ isBieuMauListOpen, setIsBieuMauListOpen ] = useState(false);
+  const [ isDeadlineModalOpen, setIsDeadlineModalOpen ] = useState(false);
 
   let history = useHistory();
   let { id } = useParams();
   let isUpdate = (id != null);
+
+  const dateTimePickerRef = useRef();
+  const callDateTimePicker = () => {
+    console.log(dateTimePickerRef);
+    dateTimePickerRef.current.click();
+  }
 
   const quillRef = React.useRef(null);
   const modules = useMemo(() => ({
@@ -136,7 +146,7 @@ const CreateOrEditBaiDang = () => {
             return 'Tạo thành công';
           },
           error: (err) => {
-            return Utils.getFormattedErrMsg(err.response.data.message);
+            return Utils.getFormattedErrMsg(err);
           }
         },
         Utils.getToastConfig()
@@ -163,7 +173,7 @@ const CreateOrEditBaiDang = () => {
             return 'Cập nhật thành công';
           },
           error: (err) => {
-            return Utils.getFormattedErrMsg(err.response.data.message);
+            return Utils.getFormattedErrMsg(err);
           }
         },
         Utils.getToastConfig()
@@ -241,7 +251,8 @@ const CreateOrEditBaiDang = () => {
             <SidebarActions onSaveClick={onSaveClick} onPreviewClick={onPreviewClick}
               post={newPost} onLoaiTinChange={onLoaiTinChange} onPostClick={onPostClick}
               onThuMucChange={onThuMucChange} thuMuc={submitter}
-              onHasDXButtonChange={onHasDXButtonChange} onHasDKDTButtonChange={onHasDKDTButtonChange}/>
+              onHasDXButtonChange={onHasDXButtonChange} onHasDKDTButtonChange={onHasDKDTButtonChange}
+              onDeadlineClick={() => { setIsDeadlineModalOpen(true) }}/>
             {/* <SidebarCategories /> */}
           </Col>
         </Row>
@@ -279,6 +290,51 @@ const CreateOrEditBaiDang = () => {
         </div>
       }
       <BieuMauListModal isModalOpen={isBieuMauListOpen} toggleModal={toggleBMModal} onClose={onBMClose} onSelectBM={onSelectBM} />
+      <CustomModal isOpen={isDeadlineModalOpen} toggle={() => { setIsDeadlineModalOpen(!isDeadlineModalOpen) }}
+        title={"Đặt deadline"}
+        body={
+          <div>
+            <div>
+              <FormGroup>
+                <div id="mui-date-hidden" style={{ display: 'none' }}>
+                  <MuiPickersUtilsProvider utils={MomentUtils}>
+                    <DateTimePicker value={newPost.deadline}
+                        onChange={(date) => {
+                          if (date) {
+                            setNewPost({...newPost, deadline: date.toISOString()});
+                          }
+                        }}
+                        innerRef={dateTimePickerRef} />
+                  </MuiPickersUtilsProvider>
+                </div>
+                <label htmlFor="feDeadline">Deadline</label>
+                <FormInput
+                  id="feDeadline"
+                  value={Utils.getLocaleDateTimeString(newPost.deadline)}
+                  onClick={callDateTimePicker}
+                />
+              </FormGroup>
+              {/* <FormGroup>
+                <label htmlFor="feLink">Link</label>
+                <FormInput
+                  id="feLink"
+                  value={thuMuc.link}
+                  onChange={(e) => { setThuMuc({ ...thuMuc, link: e.target.value }) }}
+                />
+              </FormGroup> */}
+            </div>
+          </div>
+        }
+        footer={
+          <div>
+            <div style={{ display: 'flex' }}>
+              <Button theme="secondary" onClick={() => { setNewPost({...newPost, deadline: null}) }}>Xóa</Button>
+              <div className="pr-05r"/>
+              <Button onClick={ () => { setIsDeadlineModalOpen(false) }}>OK</Button>
+            </div>
+          </div>
+        }
+      />
     </Container>
   );
 }

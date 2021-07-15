@@ -64,9 +64,9 @@ export const getFilesOfFolderWithQuery = (folderId, search = '', pagingOptions =
 //   return axios.post('/de-tais/create-many', deTais);
 // }
 
-// export const deleteDeTaiById = (id) => {
-//   return axios.delete(`/de-tais/${id}`);
-// }
+export const deleteThuMuc = (id) => {
+  return axios.delete(`/thu-mucs/${id}`);
+}
 
 // export const applyForDeTai = (deTaiId, sinhVienId) => {
 //   return axios.post('/de-tais/apply', { deTaiId: deTaiId, sinhVienId: sinhVienId });

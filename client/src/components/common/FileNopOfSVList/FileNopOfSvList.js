@@ -32,7 +32,7 @@ const FileNopOfSvList = ({ sinhVienId, flat = false }) => {
       })
       .catch((err) => {
         setResData(Utils.getNewPageData());
-        Utils.showErrorToast(Utils.getFormattedErrMsg(err.response.data.message));
+        Utils.showErrorToast(Utils.getFormattedErrMsg(err));
         console.log(err.response);
       });
   }
