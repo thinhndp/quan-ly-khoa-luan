@@ -16,7 +16,8 @@ import commonStyles from '../../styles/CommonStyles.module.scss';
 import styles from './styles.module.scss';
 import PageTitle from "../../components/common/PageTitle";
 import ActionButtons from '../../components/common/ActionButtons';
-import { getDeTaisWithQuery, deleteDeTaiById, getDeTaisWithPendingApproval, updateNameChange, approveMidTerm } from '../../api/deTaiAPI';
+import { getDeTaisWithQuery, deleteDeTaiById, getDeTaisWithPendingApproval, updateNameChange, approveMidTerm,
+  getDeTaisWithNameChange, undoApproveMidTerm } from '../../api/deTaiAPI';
 import { getSystemSettings, updateSystemSetting } from '../../api/systemSettingAPI';
 import CustomModal from '../../components/common/CustomModal/CustomModal';
 import { FormGroup } from "@material-ui/core";
@@ -51,7 +52,28 @@ const ListDeTai = () => {
   }, [listMode]);
 
   useEffect(() => {
-    setDeTais(resData.docs);
+    if (listMode == 0) {
+      setDeTais(resData.docs);
+    }
+    else {
+      let sortedList = [ ...resData.docs ];
+      sortedList.sort((dt1, dt2) => {
+        if (!dt1.xacNhanGiuaKi.status || dt1.xacNhanGiuaKi.status == Constants.DE_TAI_NAME_CHANGE_REJECTED) {
+          return 1;
+        }
+        if (!dt2.xacNhanGiuaKi.status || dt2.xacNhanGiuaKi.status == Constants.DE_TAI_NAME_CHANGE_REJECTED) {
+          return -1;
+        }
+        if (dt1.xacNhanGiuaKi.status == Constants.DE_TAI_NAME_CHANGE_APPROVED && (dt1.xacNhanGiuaKi.status != dt2.xacNhanGiuaKi.status)) {
+          return 1;
+        }
+        if (dt1.xacNhanGiuaKi.status == Constants.DE_TAI_NAME_CHANGE_NOT_APPROVED && (dt1.xacNhanGiuaKi.status != dt2.xacNhanGiuaKi.status)) {
+          return -1;
+        }
+        return 0;
+      })
+      setDeTais(sortedList);
+    }
   }, [resData]);
 
   useEffect(() => {
@@ -134,7 +156,8 @@ const ListDeTai = () => {
         });
     }
     else if (listMode == 1) {
-      getDeTaisWithPendingApproval(search, pagingOptions, filters)
+      // getDeTaisWithPendingApproval(search, pagingOptions, filters)
+      getDeTaisWithNameChange(search, pagingOptions, filters)
         .then((res) => {
           console.log(res);
           setResData(res.data);
@@ -239,14 +262,31 @@ const ListDeTai = () => {
       }) */
   }
 
-  const onApproveMidTermClick = (deTaiId) => {
+  const onApproveMidTermClick = (deTaiId, action, type = 'NAME') => {
     toast.promise(
-      approveMidTerm(deTaiId),
+      approveMidTerm(deTaiId, { type: type, action: action }),
       {
         loading: 'Đang cập nhật',
         success: (res) => {
           getDeTaiList();
           return 'Cập nhật thành công';
+        },
+        error: (err) => {
+          return Utils.getFormattedErrMsg(err);
+        }
+      },
+      Utils.getToastConfig()
+    );
+  }
+
+  const onUndoApproveMidTermClick = (deTaiId, type = 'NAME') => {
+    toast.promise(
+      undoApproveMidTerm(deTaiId, { type: type }),
+      {
+        loading: 'Đang hoàn tác',
+        success: (res) => {
+          getDeTaiList();
+          return 'Hoàn tác thành công';
         },
         error: (err) => {
           return Utils.getFormattedErrMsg(err);
@@ -415,6 +455,7 @@ const ListDeTai = () => {
                 {
                   label: "Tên Đề tài",
                   type: Constants.FILTER_TYPE_EQ,
+                  field: 'tenDeTai',
                 },
                 {
                   label: "Tên mới",
@@ -429,16 +470,10 @@ const ListDeTai = () => {
                   type: Constants.FILTER_TYPE_NL,
                 },
                 {
-                  label: "Sinh viên",
-                  type: Constants.FILTER_TYPE_NL,
-                },
-                {
-                  label: "SV1 tiếp tục thực hiện",
-                  type: Constants.FILTER_TYPE_NL,
-                },
-                {
-                  label: "SV2 tiếp tục thực hiện",
-                  type: Constants.FILTER_TYPE_NL,
+                  label: "Trạng thái",
+                  type: Constants.FILTER_TYPE_SL,
+                  selectList: Utils.getDeTaiNameChangeStatusSL(),
+                  field: 'xacNhanGiuaKi.status',
                 },
                 {
                   label: "Thao tác",
@@ -450,22 +485,39 @@ const ListDeTai = () => {
               {
                 deTais.map((deTai, index) => (
                   <tr key={`de-tai_${index}`}>
-                    <td>{deTai.tenDeTai}</td>
+                    <td>{(deTai.xacNhanGiuaKi.oldName != '') ? deTai.xacNhanGiuaKi.oldName : deTai.tenDeTai}</td>
                     <td>{(deTai.xacNhanGiuaKi.newName && deTai.xacNhanGiuaKi.newName != '')
                           ? deTai.xacNhanGiuaKi.newName : '-'}
                     </td>
-                    <td>{deTai.englishName}</td>
+                    <td>{(deTai.xacNhanGiuaKi.oldEngName != '') ? deTai.xacNhanGiuaKi.oldEngName : deTai.tenDeTai}</td>
                     <td>{(deTai.xacNhanGiuaKi.newEnglishName && deTai.xacNhanGiuaKi.newEnglishName != '')
                           ? deTai.xacNhanGiuaKi.newEnglishName : '-'}</td>
-                    <td><DetailSVThucHienButton deTai={deTai} /></td>
+                    <td>{(deTai.xacNhanGiuaKi.status)
+                          ? Utils.getDeTaiNameChangeStatusText(deTai.xacNhanGiuaKi.status) : '-'}</td>
+                    {/* <td><DetailSVThucHienButton deTai={deTai} /></td>
                     <td>{deTai.xacNhanGiuaKi.sinhVien1.tiepTuc ? 'Có' : 'Không'}</td>
                     <td>{
                       deTai.sinhVienThucHien.length > 1
                         ? (deTai.xacNhanGiuaKi.sinhVien2.tiepTuc ? 'Có' : 'Không')
                         : '-'
-                    }</td>
-                    <td>
-                      <Button onClick={() => { onApproveMidTermClick(deTai._id) }}>Xác nhận</Button>
+                    }</td> */}
+                    <td className='flex-row' style={{ justifyContent: 'center' }}>
+                      { (deTai.xacNhanGiuaKi.status && deTai.xacNhanGiuaKi.status == Constants.DE_TAI_NAME_CHANGE_NOT_APPROVED)
+                        && (
+                          <div className='flex-col'>
+                            <Button onClick={() => { onApproveMidTermClick(deTai._id, 'APPROVE') }}>Xác nhận</Button>
+                            <div className='pt-05r'/>
+                            <Button theme='danger' onClick={() => { onApproveMidTermClick(deTai._id, 'REJECT') }}>Từ chối</Button>
+                          </div>
+                        )
+                      }
+                      { (deTai.xacNhanGiuaKi.status && deTai.xacNhanGiuaKi.status != Constants.DE_TAI_NAME_CHANGE_NOT_APPROVED)
+                        && (
+                          <div>
+                            <Button theme='secondary' onClick={() => { onUndoApproveMidTermClick(deTai._id) }}>Hoàn tác</Button>
+                          </div>
+                        )
+                      }
                     </td>
                   </tr>
                 ))

@@ -299,6 +299,36 @@ export const getDeTaiApproveStatusSL = () => {
   ]);
 }
 
+export const getDeTaiNameChangeStatusText = (abbr) => {
+  switch(abbr) {
+    case Constants.DE_TAI_NAME_CHANGE_NOT_APPROVED:
+      return "Chưa xác nhận";
+    case Constants.DE_TAI_NAME_CHANGE_APPROVED:
+      return "Đã xác nhận";
+    case Constants.DE_TAI_NAME_CHANGE_REJECTED:
+      return "Đã từ chối";
+    default:
+      return "-";
+  }
+}
+
+export const getDeTaiNameChangeStatusSL = () => {
+  return ([
+    {
+      value: Constants.DE_TAI_NAME_CHANGE_NOT_APPROVED,
+      label: getDeTaiNameChangeStatusText(Constants.DE_TAI_NAME_CHANGE_NOT_APPROVED)
+    },
+    {
+      value: Constants.DE_TAI_NAME_CHANGE_APPROVED,
+      label: getDeTaiNameChangeStatusText(Constants.DE_TAI_NAME_CHANGE_APPROVED)
+    },
+    {
+      value: Constants.DE_TAI_NAME_CHANGE_REJECTED,
+      label: getDeTaiNameChangeStatusText(Constants.DE_TAI_NAME_CHANGE_REJECTED)
+    },
+  ]);
+}
+
 export const getUserRoleText = (abbr) => {
   switch(abbr) {
     case Constants.USER_ROLE_GUEST:

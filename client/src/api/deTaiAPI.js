@@ -23,6 +23,15 @@ export const getDeTaisWithPendingApproval = (search = '', pagingOptions = Utils.
   return axios.post(`/de-tais/get-pending-approval?${filterStr}`, options);
 }
 
+export const getDeTaisWithNameChange = (search = '', pagingOptions = Utils.getNewPagingOptions(), filters = {}) => {
+  var options = {
+    search: search,
+    pagingOptions: pagingOptions,
+  };
+  const filterStr = Utils.getFilterString(filters);
+  return axios.post(`/de-tais/get-name-change?${filterStr}`, options);
+}
+
 export const getDeTaiById = (id) => {
   return axios.get(`/de-tais/${id}`);
 }
@@ -72,8 +81,12 @@ export const updateNameChange = (changeList) => {
   return axios.post('/de-tais/update-name-change', changeList);
 }
 
-export const approveMidTerm = (id) => {
-  return axios.post(`/de-tais/approve-midterm/${id}`);
+export const approveMidTerm = (id, options) => {
+  return axios.post(`/de-tais/approve-midterm/${id}`, options);
+}
+
+export const undoApproveMidTerm = (id, options) => {
+  return axios.post(`/de-tais/undo-approve-midterm/${id}`, options);
 }
 
 export const getCurrrentKTHDeTais = (search = '', pagingOptions = Utils.getNewPagingOptions(), filters = {}) => {

@@ -183,6 +183,48 @@ export const getDeTaisWithPendingApproval = async (req, res) => {
   }
 }
 
+export const getDeTaisWithNameChange = async (req, res) => {
+  try {
+    // Search and Paging
+    const { search, pagingOptions } = req.body;
+    let curKTH = await KyThucHien.findOne({ status: 'DDR' });
+
+    if (!curKTH) {
+      res.status(200).json([]);
+    }
+
+    // Filters
+    const reqQuery = { ...req.query };
+    const removeFields = [ "sort" ];
+    removeFields.forEach((val) => delete reqQuery[val]);
+    let queryStr = JSON.stringify(reqQuery);
+    queryStr = Utils.getConvertedQueryString(queryStr);
+
+    const queryFilters = JSON.parse(queryStr);
+    var rawFilters = {
+      tenDeTai: '',
+      'xacNhanGiuaKi.status': ''
+    }
+    rawFilters = { ...rawFilters, ...queryFilters };
+
+    var filters = {
+      tenDeTai: rawFilters.tenDeTai == '' ? Utils.getIncludeFilter(search) : Utils.getIncludeFilter(rawFilters.tenDeTai),
+      'xacNhanGiuaKi.thayDoiTen': true,
+      kyThucHien: curKTH._id,
+      'xacNhanGiuaKi.status': Utils.getIncludeFilter(rawFilters['xacNhanGiuaKi.status']),
+    };
+
+    let deTais = await DeTai.paginate(filters, {
+      ...pagingOptions,
+      populate: 'giangVien sinhVienThucHien kyThucHien canBoPhanBien',
+    });
+    res.status(200).json(deTais);
+  }
+  catch(err) {
+    res.status(400).json({ message: err.message });
+  }
+}
+
 export const getCurrrentKTHDeTaisByGiangVien = async (req, res) => {
   const { id } = req.params;
   try {
@@ -543,6 +585,7 @@ export const updateNameChange = async (req, res) => {
 export const approveMidTerm = async(req, res) => {
   try {
     const { id } = req.params;
+    const { type, action } = req.body;
     const deTai = await DeTai.findById(id);
     if (!deTai.xacNhanGiuaKi) {
       res.status(400).json({ message: 'Đề tài không có xác nhận giữa kỳ' });
@@ -550,19 +593,75 @@ export const approveMidTerm = async(req, res) => {
     var updatedDeTai = new DeTai(deTai);
     updatedDeTai.isNew = false;
 
-    if (deTai.xacNhanGiuaKi.thayDoiTen && deTai.xacNhanGiuaKi.newName != null && deTai.xacNhanGiuaKi.newName != '') {
-      updatedDeTai.tenDeTai = deTai.xacNhanGiuaKi.newName;
+    if (type == 'NAME') {
+      if (action == 'APPROVE') {
+        if (deTai.xacNhanGiuaKi.thayDoiTen && deTai.xacNhanGiuaKi.newName != null && deTai.xacNhanGiuaKi.newName != '') {
+          updatedDeTai.xacNhanGiuaKi.oldName = deTai.tenDeTai;
+          updatedDeTai.tenDeTai = deTai.xacNhanGiuaKi.newName;
+        }
+        if (deTai.xacNhanGiuaKi.thayDoiTen && deTai.xacNhanGiuaKi.newEnglishName != null && deTai.xacNhanGiuaKi.newEnglishName != '') {
+          updatedDeTai.xacNhanGiuaKi.oldEngName = deTai.englishName;
+          updatedDeTai.englishName = deTai.xacNhanGiuaKi.newEnglishName;
+        }
+        updatedDeTai.xacNhanGiuaKi.status = 'DXN';
+      }
+      else if (action == 'REJECT') {
+        updatedDeTai.xacNhanGiuaKi.status = 'DTC';
+      }
+      updatedDeTai.xacNhanGiuaKi.pending = false;
     }
-    if (deTai.xacNhanGiuaKi.thayDoiTen && deTai.xacNhanGiuaKi.newEnglishName != null && deTai.xacNhanGiuaKi.newEnglishName != '') {
-      updatedDeTai.englishName = deTai.xacNhanGiuaKi.newEnglishName;
+    if (type == 'PROGRESS') {
+      if (action == 'APPROVE') {
+        if (deTai.xacNhanGiuaKi.sinhVien1 && deTai.xacNhanGiuaKi.sinhVien1.tiepTuc == false) {
+          await SinhVien.findByIdAndUpdate(deTai.sinhVienThucHien[0]._id, { status: 'DD' });
+        }
+        if (deTai.sinhVienThucHien.length > 1 && deTai.xacNhanGiuaKi.sinhVien2 && deTai.xacNhanGiuaKi.sinhVien2.tiepTuc == false) {
+          await SinhVien.findByIdAndUpdate(deTai.sinhVienThucHien[1]._id, { status: 'DD' });
+        }
+      }
+      else if (action == 'REJECT') {
+
+      }
+      updatedDeTai.xacNhanGiuaKi.progressPending = false;
     }
-    if (deTai.xacNhanGiuaKi.sinhVien1 && deTai.xacNhanGiuaKi.sinhVien1.tiepTuc == false) {
-      await SinhVien.findByIdAndUpdate(deTai.sinhVienThucHien[0]._id, { status: 'DD' });
+    // updatedDeTai.xacNhanGiuaKi.pending = false;
+    await updatedDeTai.save();
+    res.status(201).json(updatedDeTai);
+  }
+  catch (err) {
+    res.status(400).json({ message: err.message });
+  }
+}
+
+export const undoApproveMidTerm = async(req, res) => {
+  try {
+    const { id } = req.params;
+    const { type } = req.body;
+    const deTai = await DeTai.findById(id);
+    if (!deTai.xacNhanGiuaKi) {
+      res.status(400).json({ message: 'Đề tài không có xác nhận giữa kỳ' });
     }
-    if (deTai.sinhVienThucHien.length > 1 && deTai.xacNhanGiuaKi.sinhVien2 && deTai.xacNhanGiuaKi.sinhVien2.tiepTuc == false) {
-      await SinhVien.findByIdAndUpdate(deTai.sinhVienThucHien[1]._id, { status: 'DD' });
+    var updatedDeTai = new DeTai(deTai);
+    updatedDeTai.isNew = false;
+
+    if (type == 'NAME') {
+      if (deTai.xacNhanGiuaKi.status == 'DXN') {
+        updatedDeTai.tenDeTai = deTai.xacNhanGiuaKi.oldName;
+        updatedDeTai.englishName = deTai.xacNhanGiuaKi.oldEngName;
+      }
+      updatedDeTai.xacNhanGiuaKi.status = 'CXN';
+      updatedDeTai.xacNhanGiuaKi.pending = true;
     }
-    updatedDeTai.xacNhanGiuaKi.pending = false;
+    if (type == 'PROGRESS') {
+      if (deTai.xacNhanGiuaKi.sinhVien1 && deTai.xacNhanGiuaKi.sinhVien1.tiepTuc == false) {
+        await SinhVien.findByIdAndUpdate(deTai.sinhVienThucHien[0]._id, { status: 'DTH' });
+      }
+      if (deTai.sinhVienThucHien.length > 1 && deTai.xacNhanGiuaKi.sinhVien2 && deTai.xacNhanGiuaKi.sinhVien2.tiepTuc == false) {
+        await SinhVien.findByIdAndUpdate(deTai.sinhVienThucHien[1]._id, { status: 'DTH' });
+      }
+      updatedDeTai.xacNhanGiuaKi.progressPending = true;
+    }
+    // updatedDeTai.xacNhanGiuaKi.pending = false;
     await updatedDeTai.save();
     res.status(201).json(updatedDeTai);
   }

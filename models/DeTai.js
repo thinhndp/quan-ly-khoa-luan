@@ -87,7 +87,16 @@ const deTaiSchema = mongoose.Schema({
     newName:  { type: String, trim: true },
     newEnglishName:  { type: String, trim: true },
     lyDoDoiTen: { type: String, trim: true },
-    pending: { type: Boolean, default: false }
+    pending: { type: Boolean, default: false },
+    status: {
+      type: String,
+      enum: [ 'CXN', 'DXN', 'DTC' ],
+      default: 'CXN'
+    },
+    progressPending: { type: Boolean, default: false },
+    progressRejected: { type: Boolean, default: false },
+    oldName: { type: String, default: '' },
+    oldEngName: { type: String, default: '' }
   }
 });
 
