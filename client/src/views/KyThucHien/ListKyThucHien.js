@@ -7,6 +7,7 @@ import { getKyThucHiens, deleteKyThucHienById, updateKyThucHienById, createKyThu
   } from '../../api/kyThucHienAPI';
 import * as Utils from '../../utils/utils';
 import * as Constants from '../../constants/constants';
+import LaunchIcon from '@material-ui/icons/Launch';
 
 import PageTitle from "../../components/common/PageTitle";
 import ActionButtons from '../../components/common/ActionButtons';
@@ -122,6 +123,10 @@ const ListKyThucHien = () => {
     setIsOpenModal(!isOpenModal);
   }
 
+  const onViewThuMucClick = (kthId) => {
+    window.open(`/thu-muc/get-by-kth/${kthId}`, '_blank');
+  }
+
   return (
     <Container fluid className="main-content-container px-4">
       {/* Page Header */}
@@ -143,6 +148,10 @@ const ListKyThucHien = () => {
                 label: "Tên",
                 type: Constants.FILTER_TYPE_EQ,
                 field: 'name',
+              },
+              {
+                label: "Các thư mục nộp file",
+                type: Constants.FILTER_TYPE_NL,
               },
               {
                 label: "Trạng thái",
@@ -171,6 +180,10 @@ const ListKyThucHien = () => {
                 kyThucHiens.map((kyThucHien, index) => (
                   <tr key={`ky-thuc-hien_${index}`}>
                     <td><a href={`/ky-thuc-hien/${kyThucHien._id}`} target="_blank">{kyThucHien.name}</a></td>
+                    <td>
+                      <LaunchIcon color="primary" className="icon-button"
+                          onClick={() => { onViewThuMucClick(kyThucHien._id) }}/>
+                    </td>
                     <td>{Utils.getKyThucHienStatusText(kyThucHien.status)}</td>
                     <td>{Utils.getFormattedDate(kyThucHien.startDate)}</td>
                     <td>{Utils.getFormattedDate(kyThucHien.endDate)}</td>

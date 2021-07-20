@@ -109,6 +109,11 @@ const DetailSVThucHienButton = ({ deTai }) => {
                       <label htmlFor="feDiemTB">Điểm TB tích lũy</label>
                       <div id="feDiemTB" className="info-text">{sinhVien.diemTB}</div>
                     </Col>
+                    {/* TTTH */}
+                    <Col md="6" className="form-group">
+                      <label htmlFor="feStatus">TT Thực hiện</label>
+                      <div id="feStatus" className="info-text">{Utils.getSinhVienStatusText(sinhVien.status)}</div>
+                    </Col>
                   </Row>
                 </div>
               ))

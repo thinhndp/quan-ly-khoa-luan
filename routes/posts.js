@@ -7,8 +7,8 @@ const router = express.Router();
 
 router.get('/', getPosts);
 router.post('/q', getPostsWithQuery);
-router.get('/public', getPublicPosts);
-router.get('/private', getPrivatePosts);
+router.post('/public', getPublicPosts);
+router.post('/private', getPrivatePosts);
 router.get('/', getPosts);
 router.get('/:id', getPostById);
 router.get('/with-submitter/:id', getPostWSubmitterById);

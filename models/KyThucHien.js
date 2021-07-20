@@ -17,7 +17,7 @@ const kyThucHien = mongoose.Schema({
   endDate: {
     type: Date
   }
-});
+},{ timestamps: true });
 
 kyThucHien.plugin(mongoosePaginate);
 

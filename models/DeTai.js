@@ -94,11 +94,15 @@ const deTaiSchema = mongoose.Schema({
       default: 'CXN'
     },
     progressPending: { type: Boolean, default: false },
-    progressRejected: { type: Boolean, default: false },
+    progressStatus: {
+      type: String,
+      enum: [ 'CGV', 'CXN', 'DXN', 'DTC' ],
+      default: 'CGV'
+    },
     oldName: { type: String, default: '' },
     oldEngName: { type: String, default: '' }
   }
-});
+}, { timestamps: true });
 
 deTaiSchema.plugin(upsertMany);
 deTaiSchema.plugin(mongoosePaginate);

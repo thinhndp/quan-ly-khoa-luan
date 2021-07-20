@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import axios from "axios";
-import { useHistory } from "react-router-dom";
+import { useHistory, useParams } from "react-router-dom";
 import { Container, Row, Col, Card, CardHeader, CardBody, Button, ButtonGroup } from "shards-react";
 import PublishIcon from '@material-ui/icons/Publish';
 import ViewListIcon from '@material-ui/icons/ViewList';
@@ -14,6 +14,7 @@ import * as Utils from '../../utils/utils';
 import { confirmAlert } from 'react-confirm-alert';
 import toast from 'react-hot-toast';
 import ConfirmDeleteModal from "../../components/common/ConfirmDeleteModal/ConfirmDeleteModal";
+import * as Constants from '../../constants/constants';
 
 import PageTitle from "../../components/common/PageTitle";
 import ActionButtons from '../../components/common/ActionButtons';
@@ -30,6 +31,7 @@ const ListThuMuc = () => {
   const [ isOpenModal, setIsOpenModal ] = useState(false);
   const [ selectedThuMuc, setSelectedThuMuc ] = useState({});
   const [ resData, setResData ] = useState(Utils.getNewPageData());
+  let { kthId } = useParams();
 
   let history = useHistory();
   useEffect(() => {
@@ -57,8 +59,11 @@ const ListThuMuc = () => {
       });
   } */
 
-  const getList = (search = '', pagingOptions = Utils.getNewPagingOptions()) => {
-    getThuMucsWithQuery(search, pagingOptions)
+  const getList = (search = '', pagingOptions = Utils.getNewPagingOptions(), filters = {}) => {
+    if (kthId) {
+      filters = { ...filters, kyThucHien: { value: kthId, type: Constants.FILTER_TYPE_EQ } };
+    }
+    getThuMucsWithQuery(search, pagingOptions, filters)
       .then((res) => {
         console.log(res);
         setResData(res.data);
@@ -208,133 +213,62 @@ const ListThuMuc = () => {
             }
             data={resData}
             getList={getList}
+            tableMode={viewMode == 1}
+            headers={[
+              {
+                label: "Tên",
+                type: Constants.FILTER_TYPE_EQ,
+                field: 'name',
+              },
+              {
+                label: "Số file đã nộp",
+                type: Constants.FILTER_TYPE_NL,
+              },
+              {
+                label: "Upload file",
+                type: Constants.FILTER_TYPE_NL,
+              },
+              {
+                label: "Thao tác",
+                type: Constants.FILTER_TYPE_NL,
+              },
+            ]}
           >
-            <div>
-              { viewMode == 0 && (
-                renderFoldersView()
-              ) }
-              { viewMode == 1 && (
-                <table className="table mb-0 c-table">
-                  <thead className="bg-light">
-                    <tr>
-                      <th scope="col" className="border-0">
-                        Tên
-                      </th>
-                      <th scope="col" className="border-0">
-                        Số file đã nộp
-                      </th>
-                      {/* <th scope="col" className="border-0">
-                        Hạn nộp
-                      </th>
-                      <th scope="col" className="border-0">
-                        Trạng thái
-                      </th> */}
-                      <th scope="col" className="border-0">
-                        Upload file
-                      </th>
-                      <th scope="col" className="border-0">
-                        Action
-                      </th>
+            { viewMode == 0 && (
+              <div>
+                { renderFoldersView() }
+              </div>
+            ) }
+            { viewMode == 1 && (
+              <tbody>
+                {
+                  thuMucs.map((thuMuc, index) => (
+                    <tr key={`thu-muc_${index}`}>
+                      <td>{thuMuc.name}</td>
+                      {/* <td>-</td> */}
+                      <td>{thuMuc.files.length}</td>
+                      {/* <td>{thuMuc.deadline}</td>
+                      <td>{Utils.getThuMucStatusText(thuMuc.status)}</td> */}
+                      <td>
+                        <FileSubmitterButton onUploaded={onFileUploaded} folderId={thuMuc._id} renderAs={
+                          <PublishIcon color="primary" className="icon-button" />
+                        }/>
+                        {/* <div>
+                          <PublishIcon color="primary" className="icon-button"
+                            onClick={onEditClick}/>
+                        </div> */}
+                      </td>
+                      <td>
+                        <ActionButtons
+                          onDeleteClick={() => { onDeleteClick(thuMuc._id) }}
+                          onEditClick={() => { onEditClick(thuMuc) }} />
+                      </td>
                     </tr>
-                  </thead>
-                  <tbody>
-                    {
-                      thuMucs.map((thuMuc, index) => (
-                        <tr key={`thu-muc_${index}`}>
-                          <td>{thuMuc.name}</td>
-                          {/* <td>-</td> */}
-                          <td>{thuMuc.files.length}</td>
-                          {/* <td>{thuMuc.deadline}</td>
-                          <td>{Utils.getThuMucStatusText(thuMuc.status)}</td> */}
-                          <td>
-                            <FileSubmitterButton onUploaded={onFileUploaded} folderId={thuMuc._id} renderAs={
-                              <PublishIcon color="primary" className="icon-button" />
-                            }/>
-                            {/* <div>
-                              <PublishIcon color="primary" className="icon-button"
-                                onClick={onEditClick}/>
-                            </div> */}
-                          </td>
-                          <td>
-                            <ActionButtons
-                              onDeleteClick={() => { onDeleteClick(thuMuc._id) }}
-                              onEditClick={() => { onEditClick(thuMuc) }} />
-                          </td>
-                        </tr>
-                      ))
-                    }
-                  </tbody>
-                </table>
-              ) }
-            </div>
+                  ))
+                }
+              </tbody>
+            ) }
           </LyrTable>
-          {/* <Card small className="mb-4">
-            <CardHeader className="border-bottom">
-              <ButtonGroup className="mr-2 btn-group">
-                <Button onClick={() => { switchView(1) }}>
-                  <ViewListIcon fontSize="small"/>
-                </Button>
-                <Button onClick={() => { switchView(0) }}>
-                  <ViewModuleIcon fontSize="small"/>
-                </Button>
-              </ButtonGroup>
-              <Button onClick={toggleModal}>Tạo mới</Button>
-            </CardHeader>
-            <CardBody className="p-0 pb-3">
-              { viewMode == 0 && (
-                renderFoldersView()
-              ) }
-              { viewMode == 1 && (
-                <table className="table mb-0">
-                  <thead className="bg-light">
-                    <tr>
-                      <th scope="col" className="border-0">
-                        Tên
-                      </th>
-                      <th scope="col" className="border-0">
-                        Số file đã nộp
-                      </th>
-                      <th scope="col" className="border-0">
-                        Hạn nộp
-                      </th>
-                      <th scope="col" className="border-0">
-                        Trạng thái
-                      </th>
-                      <th scope="col" className="border-0">
-                        Upload file
-                      </th>
-                      <th scope="col" className="border-0">
-                        Action
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {
-                      thuMucs.map((thuMuc, index) => (
-                        <tr key={`thu-muc_${index}`}>
-                          <td>{thuMuc.name}</td>
-                          <td>{thuMuc.files.length}</td>
-                          <td>{thuMuc.deadline}</td>
-                          <td>{Utils.getThuMucStatusText(thuMuc.status)}</td>
-                          <td>
-                            <FileSubmitterButton onUploaded={onFileUploaded} folderId={thuMuc._id} renderAs={
-                              <PublishIcon color="primary" className="icon-button"
-                                onClick={onEditClick}/>
-                            }/>
-                          </td>
-                          <td>
-                            <ActionButtons
-                              onDeleteClick={() => { onDeleteClick(thuMuc._id) }}
-                              onEditClick={() => { onEditClick(thuMuc._id) }} />
-                          </td>
-                        </tr>
-                      ))
-                    }
-                  </tbody>
-                </table>
-              ) }
-            </CardBody>
-          </Card> */}
         </Col>
       </Row>
       <CreateOrEditThuMucModal selected={selectedThuMuc} isModalOpen={isOpenModal}

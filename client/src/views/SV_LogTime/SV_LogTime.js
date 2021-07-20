@@ -9,6 +9,7 @@ import LyrTable from '../../components/common/LyrTable/LyrTable';
 import Heatmap from '../../components/common/Chart/Heatmap';
 import TaskLogList from '../../components/common/TaskLogList/TaskLogList';
 import DeTaiInfoCard from '../../components/common/InfoCard/DeTaiInfoCard';
+import FileNopOfSvList from '../../components/common/FileNopOfSVList/FileNopOfSvList';
 import "./styles.css";
 import { getDeTaiBySinhVienId } from '../../api/deTaiAPI';
 import { getTaskLogReportBySVId } from '../../api/reportAPI';
@@ -39,7 +40,7 @@ const SV_LogTime = () => {
         .catch((err) => {
           console.log(err.response);
         });
-  
+
       getTaskLogReportBySVId(currentUser.relatedInfoSV._id)
         .then((res) => {
           console.log('report');
@@ -64,6 +65,21 @@ const SV_LogTime = () => {
       <div className="public-pages-container">
         <div className="main-area">
           <DeTaiInfoCard deTai={deTai} />
+          { currentUser.relatedInfoSV != null && (
+            <Card className="mb-4">
+              <CardBody>
+                <div className="section-title">
+                  <div className="title-and-button">
+                    <h5>File đã nộp</h5>
+                  </div>
+                  <div className="full-width-line"/>
+                </div>
+                <div>
+                  <FileNopOfSvList sinhVienId={currentUser.relatedInfoSV._id} flat={true}/>
+                </div>
+              </CardBody>
+            </Card>
+          ) }
           { (report != null) && (
             <div className="">
               <Heatmap series={ Utils.getHeatmapSeriesFromReportData(report) } height={330}/>

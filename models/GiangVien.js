@@ -27,7 +27,7 @@ export const GiangVienSchema = mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'HoiDong'
   },
-});
+}, { timestamps: true });
 
 GiangVienSchema.plugin(upsertMany);
 GiangVienSchema.plugin(mongoosePaginate);

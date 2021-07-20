@@ -1,10 +1,12 @@
 import express from 'express';
 
-import { getPhongHocs, createPhongHoc, deletePhongHoc, getPhongHocById, updatePhongHocById } from '../controllers/phongHocCtrl.js';
+import { getPhongHocs, createPhongHoc, deletePhongHoc, getPhongHocById,
+    updatePhongHocById, getPhongHocsWithQuery } from '../controllers/phongHocCtrl.js';
 
 const router = express.Router();
 
 router.get('/', getPhongHocs);
+router.post('/q', getPhongHocsWithQuery);
 router.get('/:id', getPhongHocById);
 router.post('/', createPhongHoc);
 router.post('/:id', updatePhongHocById);

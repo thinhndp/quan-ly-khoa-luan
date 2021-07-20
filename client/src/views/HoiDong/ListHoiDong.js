@@ -18,6 +18,7 @@ import LyrTable from '../../components/common/LyrTable/LyrTable';
 import { confirmAlert } from 'react-confirm-alert';
 import toast from 'react-hot-toast';
 import ConfirmDeleteModal from "../../components/common/ConfirmDeleteModal/ConfirmDeleteModal";
+import DSPhongHocButton from "../../components/other/DSPhongHocButton";
 
 const ListHoiDong = () => {
   const [ hoiDongs, setHoiDongs ] = useState([]);
@@ -188,10 +189,11 @@ const ListHoiDong = () => {
         <Col>
           <LyrTable
             buttonSection={
-              <div>
+              <div className='flex-row'>
                 <Button onClick={onCreateClick}>Tạo Hội đồng</Button>
                 <span class="pr-05r"/>
-                <Button onClick={() => { setIsOpenPHModal(true) }}>Thêm Phòng học</Button>
+                {/* <Button onClick={() => { setIsOpenPHModal(true) }}>Thêm Phòng học</Button> */}
+                <DSPhongHocButton />
               </div>
             }
             data={resData}

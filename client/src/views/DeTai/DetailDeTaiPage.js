@@ -174,33 +174,40 @@ const DetailDeTaiPage = () => {
           <div className="mb-15" />
           <DeTaiInfoCard deTai={deTai} />
           {/* FILES */}
-          <Card className="mb-4">
-            <CardBody>
-              <div className="section-title">
-                <div className="title-and-button">
-                  <h5>File đã nộp</h5>
-                  <ButtonGroup>
-                    <Button className={ showFiles == 0 ? "" : "t-button"} onClick={() => {setShowFiles(0)}}
-                      disabled={deTai.sinhVienThucHien[0] == null}
-                    >
-                      { deTai.sinhVienThucHien[0] ? deTai.sinhVienThucHien[0].name : "Sinh viên 1" }
-                    </Button>
-                    <Button className={ showFiles == 1 ? "" : "t-button"} onClick={() => {setShowFiles(1)}}
-                      disabled={deTai.sinhVienThucHien[1] == null}
-                    >
-                      { deTai.sinhVienThucHien[1] ? deTai.sinhVienThucHien[1].name : "Sinh viên 2" }
-                    </Button>
-                  </ButtonGroup>
+          { deTai.sinhVienThucHien.length > 0 && (
+            <Card className="mb-4">
+              <CardBody>
+                <div className="section-title">
+                  <div className="title-and-button">
+                    <h5>File đã nộp</h5>
+                    <ButtonGroup>
+                      <Button className={ showFiles == 0 ? "" : "t-button"} onClick={() => {setShowFiles(0)}}
+                        disabled={deTai.sinhVienThucHien[0] == null}
+                      >
+                        { deTai.sinhVienThucHien[0] ? deTai.sinhVienThucHien[0].name : "Sinh viên 1" }
+                      </Button>
+                      <Button className={ showFiles == 1 ? "" : "t-button"} onClick={() => {setShowFiles(1)}}
+                        disabled={deTai.sinhVienThucHien[1] == null}
+                      >
+                        { deTai.sinhVienThucHien[1] ? deTai.sinhVienThucHien[1].name : "Sinh viên 2" }
+                      </Button>
+                    </ButtonGroup>
+                  </div>
+                  <div className="full-width-line"/>
                 </div>
-                <div className="full-width-line"/>
-              </div>
-              { (deTai.sinhVienThucHien[0] != null && showFiles == 0) && (
-                <div>
-                  <FileNopOfSvList sinhVienId={deTai.sinhVienThucHien[0]._id} flat={true}/>
-                </div>
-              ) }
-            </CardBody>
-          </Card>
+                { (deTai.sinhVienThucHien[0] != null && showFiles == 0) && (
+                  <div>
+                    <FileNopOfSvList sinhVienId={deTai.sinhVienThucHien[0]._id} flat={true}/>
+                  </div>
+                ) }
+                { (deTai.sinhVienThucHien[1] != null && showFiles == 1) && (
+                  <div>
+                    <FileNopOfSvList sinhVienId={deTai.sinhVienThucHien[1]._id} flat={true}/>
+                  </div>
+                ) }
+              </CardBody>
+            </Card>
+          )}
           {/* PROGRESS */}
           { (reportSV1 || reportSV2) && (
             <Card className="">

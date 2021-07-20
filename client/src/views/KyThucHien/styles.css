@@ -1,6 +1,7 @@
 .de_tai_card_container {
   display: flex;
   flex-wrap: wrap;
+  flex: 1;
 }
 
 .de_tai_card {

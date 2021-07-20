@@ -226,8 +226,8 @@ export const getDeTaisWithNameChange = async (req, res) => {
 }
 
 export const getCurrrentKTHDeTaisByGiangVien = async (req, res) => {
-  const { id } = req.params;
-  try {
+  /* try {
+    const { id } = req.params;
     let curKTH = await KyThucHien.findOne({ status: 'DDR' });
     console.log(curKTH);
     let deTais = await DeTai.find({ kyThucHien: curKTH._id, giangVien: id }).populate('giangVien').populate('sinhVienThucHien').populate('kyThucHien').populate('canBoPhanBien');
@@ -247,6 +247,65 @@ export const getCurrrentKTHDeTaisByGiangVien = async (req, res) => {
       }
       return 0;
     })
+    res.status(200).json(deTais);
+  }
+  catch (err) {
+    res.status(400).json({ message: err.message });
+  } */
+
+  try {
+    const { id } = req.params;
+    let curKTH = await KyThucHien.findOne({ status: 'DDR' });
+    console.log(curKTH);
+
+    // Search and Paging
+    const { search, pagingOptions } = req.body;
+
+    var filters = {
+      tenDeTai: Utils.getIncludeFilter(search),
+      giangVien: id,
+      kyThucHien: curKTH._id
+    };
+
+    let deTais = await DeTai.paginate(filters, {
+      ...pagingOptions,
+      populate: 'giangVien sinhVienThucHien kyThucHien canBoPhanBien',
+    });
+
+    res.status(200).json(deTais);
+  }
+  catch (err) {
+    res.status(400).json({ message: err.message });
+  }
+}
+
+export const getPastDeTaisByGiangVien = async (req, res) => {
+  try {
+    const { id } = req.params;
+    let curKTH = await KyThucHien.findOne({ status: 'DDR' });
+    console.log(curKTH);
+
+    // Search and Paging
+    const { search, pagingOptions } = req.body;
+
+    var filters = {
+      tenDeTai: Utils.getIncludeFilter(search),
+      giangVien: id,
+      kyThucHien: { $ne: curKTH._id }
+      // $and: [ { "kyThucHien": { $ne: curKTH._id } }, { "kyThucHien": { $ne: null } } ],
+      // kyThucHien: { $nin: [ null, curKTH._id, undefined ] },
+      // $not: { kyThucHien: { $in: [ null, curKTH._id ] } }
+    };
+
+    let deTais = await DeTai.paginate(filters, {
+      ...pagingOptions,
+      populate: 'giangVien sinhVienThucHien kyThucHien canBoPhanBien',
+      sort: { updatedAt: -1 }
+    });
+    let validDeTais = deTais.docs.filter((dt) => dt.kyThucHien != null);
+    deTais.docs = [ ...validDeTais ];
+    console.log('deTais');
+    console.log(deTais);
     res.status(200).json(deTais);
   }
   catch (err) {
@@ -273,6 +332,7 @@ export const getCurrrentKTHDeTais = async (req, res) => {
       tenDeTai: '',
       giangVien: '',
       heDaoTao: '',
+      'xacNhanGiuaKi.progressStatus': ''
     }
     rawFilters = { ...rawFilters, ...queryFilters };
 
@@ -285,6 +345,7 @@ export const getCurrrentKTHDeTais = async (req, res) => {
       heDaoTao: Utils.getIncludeFilter(rawFilters.heDaoTao),
       trangThaiDuyet: 'DD',
       kyThucHien: curKTH._id,
+      'xacNhanGiuaKi.progressStatus': Utils.getIncludeFilter(rawFilters['xacNhanGiuaKi.progressStatus']),
     };
 
     let deTais = await DeTai.paginate(filters, {
@@ -523,13 +584,13 @@ export const continueApprove = async (req, res) => {
       await DeTai.findByIdAndUpdate(id,
         { $set: { 'xacNhanGiuaKi.sinhVien2.tiepTuc': tiepTuc,
           'xacNhanGiuaKi.sinhVien2.lyDoDung': lyDoDung,
-          'xacNhanGiuaKi.pending': true } });
+          'xacNhanGiuaKi.progressStatus': 'CXN' } });
     }
     else {
       await DeTai.findByIdAndUpdate(id,
         { $set: { 'xacNhanGiuaKi.sinhVien1.tiepTuc': tiepTuc,
           'xacNhanGiuaKi.sinhVien1.lyDoDung': lyDoDung,
-          'xacNhanGiuaKi.pending': true } });
+          'xacNhanGiuaKi.progressStatus': 'CXN' } });
     } 
     res.status(201).json(req.body);
   }
@@ -618,9 +679,10 @@ export const approveMidTerm = async(req, res) => {
         if (deTai.sinhVienThucHien.length > 1 && deTai.xacNhanGiuaKi.sinhVien2 && deTai.xacNhanGiuaKi.sinhVien2.tiepTuc == false) {
           await SinhVien.findByIdAndUpdate(deTai.sinhVienThucHien[1]._id, { status: 'DD' });
         }
+        updatedDeTai.xacNhanGiuaKi.progressStatus = 'DXN';
       }
       else if (action == 'REJECT') {
-
+        updatedDeTai.xacNhanGiuaKi.progressStatus = 'DTC';
       }
       updatedDeTai.xacNhanGiuaKi.progressPending = false;
     }
@@ -659,6 +721,7 @@ export const undoApproveMidTerm = async(req, res) => {
       if (deTai.sinhVienThucHien.length > 1 && deTai.xacNhanGiuaKi.sinhVien2 && deTai.xacNhanGiuaKi.sinhVien2.tiepTuc == false) {
         await SinhVien.findByIdAndUpdate(deTai.sinhVienThucHien[1]._id, { status: 'DTH' });
       }
+      updatedDeTai.xacNhanGiuaKi.progressStatus = 'CXN';
       updatedDeTai.xacNhanGiuaKi.progressPending = true;
     }
     // updatedDeTai.xacNhanGiuaKi.pending = false;

@@ -10,7 +10,7 @@ export const BieuMauSchema = mongoose.Schema({
     type: String,
     required: true
   }
-});
+}, { timestamps: true });
 
 BieuMauSchema.path('link').validate((val) => {
   if (!val) {

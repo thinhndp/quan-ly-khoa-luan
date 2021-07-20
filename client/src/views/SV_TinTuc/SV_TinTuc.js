@@ -5,6 +5,7 @@ import { useRecoilValue } from 'recoil';
 
 import PostReader from '../../components/post/PostReader';
 import LyrCalendar from '../../components/common/LyrCalendar/LyrCalendar';
+import LyrTable from '../../components/common/LyrTable/LyrTable';
 import "./styles.css";
 import { getPublicPosts, getPrivatePosts } from '../../api/postAPI';
 import userAtom from '../../recoil/user';
@@ -14,28 +15,40 @@ const SV_TinTuc = () => {
   const currentUser = useRecoilValue(userAtom);
   const [ tinTucs, setTinTucs ] = useState([]);
   let history = useHistory();
+  const [ resData, setResData ] = useState(Utils.getNewPageData());
+
   useEffect(() => {
+    getList();
+  }, []);
+
+  useEffect(() => {
+    setTinTucs(resData.docs);
+  }, [resData]);
+
+  const getList = (search = '', pagingOptions = Utils.getNewPagingOptions(), filters = {}) => {
     if (Utils.getUserTier(currentUser) == 0) {
-      getPrivatePosts()
+      getPrivatePosts(search, pagingOptions, filters)
         .then((res) => {
           console.log(res);
-          setTinTucs(res.data);
+          setResData(res.data);
         })
         .catch((err) => {
-          console.log(err);
+          setResData(Utils.getNewPageData());
+          Utils.showErrorToast(Utils.getFormattedErrMsg(err));
         })
     }
     else {
-      getPublicPosts()
+      getPublicPosts(search, pagingOptions, filters)
         .then((res) => {
           console.log(res);
-          setTinTucs(res.data);
+          setResData(res.data);
         })
         .catch((err) => {
-          console.log(err);
+          setResData(Utils.getNewPageData());
+          Utils.showErrorToast(Utils.getFormattedErrMsg(err));
         })
     }
-  }, []);
+  }
 
   const onClickPost = (id) => {
     history.push(`/thong-bao/${id}`);
@@ -45,7 +58,7 @@ const SV_TinTuc = () => {
     <div className="container min_height_100">
       <div className="public-pages-container">
         <div className="posts-container main-area">
-          { tinTucs.map((post) => (
+          {/* { tinTucs.map((post) => (
             <Card small className="card-post mb-4">
               <CardBody>
                 <div className="relative_wrap">
@@ -56,7 +69,32 @@ const SV_TinTuc = () => {
                 </div>
               </CardBody>
             </Card>
-          ))}
+          ))} */}
+          <LyrTable
+            buttonSection={
+              <div>
+                <h4>Thông báo mới</h4>
+              </div>
+            }
+            data={resData}
+            getList={getList}
+            flat
+          >
+            <div>
+              { tinTucs.map((post) => (
+                <Card small className="card-post mb-4 flat-card">
+                  <CardBody>
+                    <div className="relative_wrap">
+                      <h5 className="clickable title" onClick={() => { onClickPost(post._id) }}>{post.title}</h5>
+                      <PostReader post={post} asPreview/>
+                      <div className="absolute_child-rb">
+                      </div>
+                    </div>
+                  </CardBody>
+                </Card>
+              ))}
+            </div>
+          </LyrTable>
         </div>
         <LyrCalendar />
       </div>

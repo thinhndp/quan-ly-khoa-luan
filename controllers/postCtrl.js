@@ -66,7 +66,27 @@ export const getPostsWithQuery = (req, res) => {
 };
 
 export const getPublicPosts = (req, res) => {
-  Post.find({ type: 'CK', isPosted: true  }).sort({ postedTime: -1 })
+  /* Post.find({ type: 'CK', isPosted: true  }).sort({ postedTime: -1 })
+    .then((posts) => {
+      res.status(200).json(posts);
+    })
+    .catch((err) => {
+      res.status(400).json({ message: err.message });
+    });
+ */
+  // Search and Paging
+  const { search, pagingOptions } = req.body;
+
+  var filters = {
+    title: Utils.getIncludeFilter(search),
+    isPosted: true,
+    type: Utils.getIncludeFilter('CK'),
+  };
+
+  Post.paginate(filters, {
+      ...pagingOptions,
+      sort: { postedTime: -1 }
+    })
     .then((posts) => {
       res.status(200).json(posts);
     })
@@ -76,7 +96,26 @@ export const getPublicPosts = (req, res) => {
 };
 
 export const getPrivatePosts = (req, res) => {
-  Post.find({ isPosted: true }).sort({ postedTime: -1 })
+  /* Post.find({ isPosted: true }).sort({ postedTime: -1 })
+    .then((posts) => {
+      res.status(200).json(posts);
+    })
+    .catch((err) => {
+      res.status(400).json({ message: err.message });
+    }); */
+
+  // Search and Paging
+  const { search, pagingOptions } = req.body;
+
+  var filters = {
+    title: Utils.getIncludeFilter(search),
+    isPosted: true,
+  };
+
+  Post.paginate(filters, {
+      ...pagingOptions,
+      sort: { postedTime: -1 }
+    })
     .then((posts) => {
       res.status(200).json(posts);
     })

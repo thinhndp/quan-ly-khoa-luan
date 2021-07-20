@@ -47,7 +47,7 @@ export const FileNopSchema = mongoose.Schema({
     type: String,
     required: true
   }
-});
+}, { timestamps: true });
 
 FileNopSchema.plugin(upsertMany);
 FileNopSchema.plugin(mongoosePaginate);

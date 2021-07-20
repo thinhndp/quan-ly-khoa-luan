@@ -36,7 +36,7 @@ class SidebarMainNavbar extends React.Component {
                 className="d-inline-block align-top mr-1"
                 style={{ maxWidth: "25px" }}
                 src={require("../../../images/avatars/logo-uit.png")}
-                alt="Shards Dashboard"
+                alt="Logo UIT"
               />
               {!hideLogoText && (
                 <span className="d-none d-md-inline ml-1">

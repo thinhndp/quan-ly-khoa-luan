@@ -59,7 +59,7 @@ const postSchema = mongoose.Schema({
       required: true
     }
   }, */
-});
+}, { timestamps: true });
 
 postSchema.plugin(mongoosePaginate);
 

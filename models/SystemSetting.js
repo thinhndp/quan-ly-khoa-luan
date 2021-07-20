@@ -9,7 +9,7 @@ const systemSettingSchema = mongoose.Schema({
     type: String,
     default: 'DEFAULT'
   }
-});
+}, { timestamps: true });
 
 const SystemSetting = mongoose.model('SystemSetting', systemSettingSchema, 'SystemSetting');
 

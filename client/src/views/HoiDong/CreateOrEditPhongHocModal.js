@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Button, FormInput, FormGroup} from "shards-react";
+import toast from 'react-hot-toast';
 
 import CustomModal from '../../components/common/CustomModal/CustomModal';
 import * as Constants from '../../constants/constants';
@@ -16,24 +17,52 @@ const CreateOrEditPhongHocModal = ({ isModalOpen, toggleModal, selected, onClose
   const onCreateOrUpdateClick = () => {
     console.log(phongHoc);
     if (phongHoc == null || phongHoc._id == null) {
-      createPhongHoc(phongHoc)
+      /* createPhongHoc(phongHoc)
         .then((res) => {
           onCreated();
           console.log(res);
         })
         .catch((err) => {
           console.log(err);
-        });
+        }); */
+      toast.promise(
+        createPhongHoc(phongHoc),
+        {
+          loading: 'Đang tạo',
+          success: (res) => {
+            onCreated();
+            return 'Tạo thành công';
+          },
+          error: (err) => {
+            return Utils.getFormattedErrMsg(err);
+          }
+        },
+        Utils.getToastConfig()
+      );
     }
     else {
-      updatePhongHocById(phongHoc._id, phongHoc)
+      /* updatePhongHocById(phongHoc._id, phongHoc)
         .then((res) => {
           onUpdated();
           console.log(res);
         })
         .catch((err) => {
           console.log(err);
-        })
+        }) */
+      toast.promise(
+        updatePhongHocById(phongHoc._id, phongHoc),
+        {
+          loading: 'Đang cập nhật',
+          success: (res) => {
+            onUpdated();
+            return 'Cập nhật thành công';
+          },
+          error: (err) => {
+            return Utils.getFormattedErrMsg(err);
+          }
+        },
+        Utils.getToastConfig()
+      );
     }
   }
 

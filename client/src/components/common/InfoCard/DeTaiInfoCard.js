@@ -18,7 +18,7 @@ import './styles.css';
 import * as Constants from '../../../constants/constants';
 import { green } from '@material-ui/core/colors';
 
-const DeTaiInfoCard = ({ deTai, onClick, onUpdate }) => {
+const DeTaiInfoCard = ({ deTai, onClick, onUpdate, flat = false }) => {
   const currentUser = useRecoilValue(userAtom);
   const [ isEditModalOpen, setIsEditModalOpen ] = useState(false);
   const [ deTaiToUpdate, setDeTaiToUpdate ] = useState({ ...deTai });
@@ -96,7 +96,7 @@ const DeTaiInfoCard = ({ deTai, onClick, onUpdate }) => {
 
   return (
     <div>
-      <Card small className="card-post mb-4 info-card">
+      <Card small className={"card-post mb-4 info-card" + (flat ? " flat-card" : "")}>
         <CardBody>
           <div>
             <div style={{ display: 'flex'}}>
@@ -116,9 +116,12 @@ const DeTaiInfoCard = ({ deTai, onClick, onUpdate }) => {
               <p><i class="material-icons icon">school</i><span className="label">Hệ đào tạo:</span>{Utils.getHeDaoTaoText(deTai.heDaoTao)}</p>
               <p><i class="material-icons icon">person</i><span className="label">GV Hướng dẫn:</span>{deTai.giangVien.name}</p>
               <p><i class="material-icons icon">person</i><span className="label">GV Phản biện:</span>{deTai.canBoPhanBien ? deTai.canBoPhanBien.name : '-'}</p>
-              <p><i class="material-icons icon">people</i><span className="label">SV Thực hiện:</span>{
-                deTai.sinhVienThucHien.map((sinhVien, index) => index != 0 ? `, ${sinhVien.name}` : sinhVien.name)
-              }</p>
+              <p><i class="material-icons icon">people</i><span className="label">SV Thực hiện:</span>
+                {
+                  deTai.sinhVienThucHien.map((sinhVien, index) => index != 0 ? `, ${sinhVien.name}` : sinhVien.name)
+                }
+                { deTai.sinhVienThucHien.length == 0 ? '-' : '' }
+              </p>
               <div className="status-tag">
                 <ColoredTag label={ Utils.getDeTaiApproveStatusText(deTai.trangThaiDuyet) } color={ getTagColor(deTai.trangThaiDuyet) }/>
               </div>

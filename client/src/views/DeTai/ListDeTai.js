@@ -17,7 +17,7 @@ import styles from './styles.module.scss';
 import PageTitle from "../../components/common/PageTitle";
 import ActionButtons from '../../components/common/ActionButtons';
 import { getDeTaisWithQuery, deleteDeTaiById, getDeTaisWithPendingApproval, updateNameChange, approveMidTerm,
-  getDeTaisWithNameChange, undoApproveMidTerm } from '../../api/deTaiAPI';
+  getDeTaisWithNameChange, undoApproveMidTerm, getCurrrentKTHDeTais } from '../../api/deTaiAPI';
 import { getSystemSettings, updateSystemSetting } from '../../api/systemSettingAPI';
 import CustomModal from '../../components/common/CustomModal/CustomModal';
 import { FormGroup } from "@material-ui/core";
@@ -158,6 +158,18 @@ const ListDeTai = () => {
     else if (listMode == 1) {
       // getDeTaisWithPendingApproval(search, pagingOptions, filters)
       getDeTaisWithNameChange(search, pagingOptions, filters)
+        .then((res) => {
+          console.log(res);
+          setResData(res.data);
+        })
+        .catch((err) => {
+          setResData(Utils.getNewPageData());
+          Utils.showErrorToast(Utils.getFormattedErrMsg(err));
+          console.log(err.response);
+        });
+    }
+    else if (listMode == 2) {
+      getCurrrentKTHDeTais(search, pagingOptions, filters)
         .then((res) => {
           console.log(res);
           setResData(res.data);
@@ -323,7 +335,7 @@ const ListDeTai = () => {
         <Button className={listMode == 0 ? "t-button-font" : "t-button"} onClick={() => { setListMode(0) }}>
           Tất cả đề tài
         </Button>
-        <Button className={listMode == 1 ? "t-button-font" : "t-button"} onClick={() => { setListMode(1) }}>
+        <Button className={listMode != 0 ? "t-button-font" : "t-button"} onClick={() => { setListMode(1) }}>
           Đề tài chờ xác nhận Giữa kỳ
         </Button>
       </ButtonGroup>
@@ -438,6 +450,15 @@ const ListDeTai = () => {
                   {/* <span class="pr-05r"/>
                   <Button onClick={toggleDKModal}>Tùy chỉnh điều kiện</Button> */}
                   <span class="pr-05r"/>
+                  <ButtonGroup className="mr-2 btn-group">
+                    <Button className={listMode == 1 ? "" : "t-button small-font"} onClick={() => { setListMode(1) }}>
+                      Xác nhận đổi tên
+                    </Button>
+                    <Button className={listMode == 2 ? "" : "t-button small-font"} onClick={() => { setListMode(2) }}>
+                      Xác nhận tiến độ sinh viên
+                    </Button>
+                  </ButtonGroup>
+                  <span class="pr-05r"/>
                   {!isFileResetting && (
                       <div>
                         <Button onClick={onImportButtonClick}>Nhập danh sách thay đổi tên</Button>
@@ -489,7 +510,7 @@ const ListDeTai = () => {
                     <td>{(deTai.xacNhanGiuaKi.newName && deTai.xacNhanGiuaKi.newName != '')
                           ? deTai.xacNhanGiuaKi.newName : '-'}
                     </td>
-                    <td>{(deTai.xacNhanGiuaKi.oldEngName != '') ? deTai.xacNhanGiuaKi.oldEngName : deTai.tenDeTai}</td>
+                    <td>{(deTai.xacNhanGiuaKi.oldEngName != '') ? deTai.xacNhanGiuaKi.oldEngName : deTai.englishName}</td>
                     <td>{(deTai.xacNhanGiuaKi.newEnglishName && deTai.xacNhanGiuaKi.newEnglishName != '')
                           ? deTai.xacNhanGiuaKi.newEnglishName : '-'}</td>
                     <td>{(deTai.xacNhanGiuaKi.status)
@@ -515,6 +536,107 @@ const ListDeTai = () => {
                         && (
                           <div>
                             <Button theme='secondary' onClick={() => { onUndoApproveMidTermClick(deTai._id) }}>Hoàn tác</Button>
+                          </div>
+                        )
+                      }
+                    </td>
+                  </tr>
+                ))
+              }
+              </tbody>
+            </LyrTable>
+          </Col>
+        </Row>
+      ) }
+      { listMode == 2 && (
+        <Row>
+          <Col>
+            <LyrTable
+              buttonSection={
+                <Row>
+                  {/* <span class="pr-05r"/>
+                  <Button onClick={toggleDKModal}>Tùy chỉnh điều kiện</Button> */}
+                  <span class="pr-05r"/>
+                  <ButtonGroup className="mr-2 btn-group">
+                    <Button className={listMode == 1 ? "" : "t-button small-font"} onClick={() => { setListMode(1) }}>
+                      Xác nhận đổi tên
+                    </Button>
+                    <Button className={listMode == 2 ? "" : "t-button small-font"} onClick={() => { setListMode(2) }}>
+                      Xác nhận tiến độ sinh viên
+                    </Button>
+                  </ButtonGroup>
+                </Row>
+              }
+              data={resData}
+              getList={getDeTaiList}
+              tableMode={true}
+              headers={[
+                {
+                  label: "Tên Đề tài",
+                  type: Constants.FILTER_TYPE_EQ,
+                  field: 'tenDeTai',
+                },
+                {
+                  label: "Sinh viên",
+                  type: Constants.FILTER_TYPE_NL,
+                },
+                {
+                  label: "SV1 tiếp tục thực hiện",
+                  type: Constants.FILTER_TYPE_NL,
+                },
+                {
+                  label: "SV2 tiếp tục thực hiện",
+                  type: Constants.FILTER_TYPE_NL,
+                },
+                {
+                  label: "Trạng thái",
+                  type: Constants.FILTER_TYPE_SL,
+                  selectList: Utils.getDeTaiMidProgressStatusSL(),
+                  field: 'xacNhanGiuaKi.progressStatus',
+                },
+                {
+                  label: "Thao tác",
+                  type: Constants.FILTER_TYPE_NL,
+                },
+              ]}
+            >
+            <tbody>
+              {
+                deTais.map((deTai, index) => (
+                  <tr key={`de-tai_${index}`}>
+                    <td>{deTai.tenDeTai}</td>
+                    <td><DetailSVThucHienButton deTai={deTai} /></td>
+                    <td>{deTai.xacNhanGiuaKi.sinhVien1.tiepTuc ? 'Có' : 'Không'}</td>
+                    <td>{
+                      deTai.sinhVienThucHien.length > 1
+                        ? (deTai.xacNhanGiuaKi.sinhVien2.tiepTuc ? 'Có' : 'Không')
+                        : '-'
+                    }</td>
+                    <td>{(deTai.xacNhanGiuaKi.progressStatus)
+                          ? Utils.getDeTaiMidProgressStatusText(deTai.xacNhanGiuaKi.progressStatus) : '-'}</td>
+                    <td className='flex-row' style={{ justifyContent: 'center' }}>
+                      { (deTai.xacNhanGiuaKi.progressStatus && deTai.xacNhanGiuaKi.progressStatus == Constants.DE_TAI_MID_PROGRESS_WAITING)
+                        && (
+                          <div>
+                            <Button theme='light' disabled>-</Button>
+                          </div>
+                        )
+                      }
+                      { (deTai.xacNhanGiuaKi.progressStatus && deTai.xacNhanGiuaKi.progressStatus == Constants.DE_TAI_MID_PROGRESS_NOT_APPROVED)
+                        && (
+                          <div className='flex-col'>
+                            <Button onClick={() => { onApproveMidTermClick(deTai._id, 'APPROVE', 'PROGRESS') }}>Xác nhận</Button>
+                            <div className='pt-05r'/>
+                            <Button theme='danger' onClick={() => { onApproveMidTermClick(deTai._id, 'REJECT', 'PROGRESS') }}>Từ chối</Button>
+                          </div>
+                        )
+                      }
+                      { (deTai.xacNhanGiuaKi.progressStatus &&
+                        (deTai.xacNhanGiuaKi.progressStatus != Constants.DE_TAI_MID_PROGRESS_NOT_APPROVED
+                          && deTai.xacNhanGiuaKi.progressStatus != Constants.DE_TAI_MID_PROGRESS_WAITING))
+                        && (
+                          <div>
+                            <Button theme='secondary' onClick={() => { onUndoApproveMidTermClick(deTai._id, 'PROGRESS') }}>Hoàn tác</Button>
                           </div>
                         )
                       }

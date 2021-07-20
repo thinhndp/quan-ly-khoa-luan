@@ -138,7 +138,7 @@ export const getUserTier = (user) => {
 
 export const getFileLogo = (fileName) => {
   const extension = getFileExtension(fileName).toLowerCase();
-  console.log(extension);
+  // console.log(extension);
   switch (extension) {
     case 'xls':
     case 'xlsx':
@@ -329,6 +329,42 @@ export const getDeTaiNameChangeStatusSL = () => {
   ]);
 }
 
+export const getDeTaiMidProgressStatusText = (abbr) => {
+  switch(abbr) {
+    case Constants.DE_TAI_MID_PROGRESS_WAITING:
+      return "Chờ Giảng viên";
+    case Constants.DE_TAI_MID_PROGRESS_NOT_APPROVED:
+      return "Chưa xác nhận";
+    case Constants.DE_TAI_MID_PROGRESS_APPROVED:
+      return "Đã xác nhận";
+    case Constants.DE_TAI_MID_PROGESS_REJECTED:
+      return "Đã từ chối";
+    default:
+      return "-";
+  }
+}
+
+export const getDeTaiMidProgressStatusSL = () => {
+  return ([
+    {
+      value: Constants.DE_TAI_MID_PROGRESS_WAITING,
+      label: getDeTaiMidProgressStatusText(Constants.DE_TAI_MID_PROGRESS_WAITING)
+    },
+    {
+      value: Constants.DE_TAI_MID_PROGRESS_NOT_APPROVED,
+      label: getDeTaiMidProgressStatusText(Constants.DE_TAI_MID_PROGRESS_NOT_APPROVED)
+    },
+    {
+      value: Constants.DE_TAI_MID_PROGRESS_APPROVED,
+      label: getDeTaiMidProgressStatusText(Constants.DE_TAI_MID_PROGRESS_APPROVED)
+    },
+    {
+      value: Constants.DE_TAI_MID_PROGESS_REJECTED,
+      label: getDeTaiMidProgressStatusText(Constants.DE_TAI_MID_PROGESS_REJECTED)
+    },
+  ]);
+}
+
 export const getUserRoleText = (abbr) => {
   switch(abbr) {
     case Constants.USER_ROLE_GUEST:
@@ -502,8 +538,8 @@ export const getFormattedSize = (bytes) => {
 export const getUniqueUploader = (files) => {
   const userList = files.map(file => file.user);
   const retArr = [ ...new Map(userList.map(user => [ user.email, user ])).values() ];
-  console.log('@@@retArr');
-  console.log(retArr);
+  // console.log('@@@retArr');
+  // console.log(retArr);
   return retArr;
 }
 
@@ -526,8 +562,8 @@ export const getFilterString = (filters) => {
       }
     }
   });
-  console.log('res');
-  console.log(res);
+  // console.log('res');
+  // console.log(res);
   return res;
 }
 
@@ -646,9 +682,9 @@ export const showSuccessToast = (message) => {
 
 export const isObjHasAllKeys = (obj, keys) => {
   for (var key of keys) {
-    console.log(key);
+    // console.log(key);
     if (!(key in obj)) {
-      console.log(key);
+      // console.log(key);
       return false;
     }
   }
@@ -657,7 +693,7 @@ export const isObjHasAllKeys = (obj, keys) => {
 
 export const getFormattedErrMsg = (err) => {
   try {
-    console.log(err);
+    // console.log(err);
     console.log(err.response);
     var formattedMsg = err.response.data.message;
     if (formattedMsg.includes('Token used too late')) {

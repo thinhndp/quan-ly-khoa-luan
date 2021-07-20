@@ -34,7 +34,7 @@ export const UserSchema = mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'GiangVien'
   },
-});
+}, { timestamps: true });
 
 UserSchema.plugin(mongoosePaginate);
 

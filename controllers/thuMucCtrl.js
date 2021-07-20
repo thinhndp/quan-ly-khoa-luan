@@ -2,6 +2,8 @@ import mongoose from 'mongoose';
 import ThuMuc from '../models/ThuMuc.js';
 import FileNop from '../models/FileNop.js';
 import User from '../models/User.js';
+import KyThucHien from '../models/KyThucHien.js';
+import * as Utils from '../utils/utils.js';
 
 export const getThuMucs = (req, res) => {
   ThuMuc.find().sort({ createdAt: -1 })
@@ -29,34 +31,42 @@ export const getThuMucs = (req, res) => {
     });
 };
 
-export const getThuMucsWithQuery = (req, res) => {
-  const { search, pagingOptions } = req.body;
-  const searchRegex = new RegExp("^.*" + search + ".*");
-  ThuMuc.paginate({ name: { $regex: searchRegex, $options: "i" } }, pagingOptions)
-    .then((pageData) => {
-      let thuMucs = pageData.docs;
-      let bulkArr = [];
-      let returnedThuMucs = [];
-      for (let thuMuc of thuMucs) {
-        const status = (thuMuc.deadline < Date.now()) ? 'Closed' : 'Open';
-        bulkArr.push({
-          updateOne: {
-            "filter": { "_id": thuMuc._id },
-            "update": { $set: { "status": status } }
-          }
-        });
-        // returnedThuMucs.push({ ...thuMuc, status: status });
-        let thuMucWNewStatus = thuMuc;
-        thuMucWNewStatus.status = status;
-        returnedThuMucs.push(thuMucWNewStatus);
+export const getThuMucsWithQuery = async(req, res) => {
+  try {
+    const { search, pagingOptions } = req.body;
+
+    // Filters
+    const reqQuery = { ...req.query };
+    const removeFields = [ "sort" ];
+    removeFields.forEach((val) => delete reqQuery[val]);
+    let queryStr = JSON.stringify(reqQuery);
+    queryStr = Utils.getConvertedQueryString(queryStr);
+
+    const queryFilters = JSON.parse(queryStr);
+    var rawFilters = {
+      name: '',
+    }
+    rawFilters = { ...rawFilters, ...queryFilters };
+    var filters = {
+      name: rawFilters.name == '' ? Utils.getIncludeFilter(search) : Utils.getIncludeFilter(rawFilters.name),
+    };
+    if (rawFilters.kyThucHien != null) {
+      let kyThucHien = await KyThucHien.findById(rawFilters.kyThucHien);
+      if (kyThucHien != null) {
+        filters.createdAt = { $gte: kyThucHien.startDate, $lte: kyThucHien.endDate }
       }
-      ThuMuc.bulkWrite(bulkArr);
-      // res.status(200).json(returnedThuMucs);
-      res.status(200).json({ ...pageData, docs: returnedThuMucs});
-    })
-    .catch((err) => {
-      res.status(400).json({ message: err.message });
+    }
+    console.log(filters);
+
+    let thuMucs = await ThuMuc.paginate(filters, {
+      ...pagingOptions,
+      sort: { updatedAt: -1 }
     });
+    res.status(200).json(thuMucs);
+  }
+  catch (err) {
+    res.status(400).json({ message: err.message });
+  }
 };
 
 export const getThuMucById = (req, res) => {
@@ -227,4 +237,31 @@ export const createFilesInFolder = (req, res) => {
     .catch((err) => {
       res.status(400).json({ message: err.message });
     });
+}
+
+export const getThuMucsByKTHId = async (req, res) => {
+  const { id } = req.params;
+  try {
+    let kyThucHien = await KyThucHien.findById(id);
+    let thuMucs = await ThuMuc.find({ createdAt: { $gte: kyThucHien.startDate, $lte: kyThucHien.endDate } });
+    deTais = deTais.sort((dt1, dt2) => {
+      if (dt1.trangThaiDuyet == 'CD') {
+        return -1;
+      }
+      if (dt1.trangThaiDuyet == 'DTC') {
+        return 1;
+      }
+      if (dt2.trangThaiDuyet == 'CD') {
+        return 1;
+      }
+      if (dt2.trangThaiDuyet == 'DTC') {
+        return -1;
+      }
+      return 0;
+    });
+    res.status(200).json(deTais);
+  }
+  catch (err) {
+    res.status(400).json({ message: err.message });
+  }
 }

@@ -42,7 +42,7 @@ const hoiDongSchema = mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'DeTai'
   }]
-});
+}, { timestamps: true });
 
 hoiDongSchema.plugin(mongoosePaginate);
 

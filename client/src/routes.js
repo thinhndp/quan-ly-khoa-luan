@@ -48,41 +48,6 @@ export default [
     component: () => <Redirect to="/thong-bao" />
   },
   {
-    path: "/blog-overview",
-    layout: DefaultLayout,
-    component: BlogOverview
-  },
-  {
-    path: "/user-profile-lite",
-    layout: DefaultLayout,
-    component: UserProfileLite
-  },
-  {
-    path: "/add-new-post",
-    layout: DefaultLayout,
-    component: AddNewPost
-  },
-  {
-    path: "/errors",
-    layout: DefaultLayout,
-    component: Errors
-  },
-  {
-    path: "/components-overview",
-    layout: DefaultLayout,
-    component: ComponentsOverview
-  },
-  {
-    path: "/tables",
-    layout: DefaultLayout,
-    component: Tables
-  },
-  {
-    path: "/blog-posts",
-    layout: DefaultLayout,
-    component: BlogPosts
-  },
-  {
     path: "/sinh-vien",
     layout: DefaultLayout,
     exact: true,
@@ -159,6 +124,11 @@ export default [
     path: "/thu-muc/:folderId/files",
     layout: DefaultLayout,
     component: ListFile
+  },
+  {
+    path: "/thu-muc/get-by-kth/:kthId",
+    layout: DefaultLayout,
+    component: ListThuMuc
   },
   {
     path: "/bieu-mau",

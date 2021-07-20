@@ -11,10 +11,10 @@ export const getTaskLogsWithQuery = (search = '', pagingOptions = Utils.getNewPa
     pagingOptions: pagingOptions,
   };
   const filterStr = Utils.getFilterString(filters);
-  console.log('filters');
-  console.log(filters);
-  console.log('filterStr');
-  console.log(filterStr);
+  // console.log('filters');
+  // console.log(filters);
+  // console.log('filterStr');
+  // console.log(filterStr);
   return axios.post(`/task-logs/q?${filterStr}`, options);
 }
 

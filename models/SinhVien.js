@@ -41,7 +41,7 @@ export const SinhVienSchema = mongoose.Schema({
     min: [0, 'Điểm trong khoảng 0 tới 10'],
     max: [10, 'Điểm trong khoảng 0 tới 10']
   }
-});
+}, { timestamps: true });
 
 SinhVienSchema.plugin(upsertMany);
 SinhVienSchema.plugin(mongoosePaginate);

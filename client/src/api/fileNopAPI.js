@@ -19,12 +19,13 @@ export const getFilesBySinhVienId = (id, search = '', pagingOptions = Utils.getN
   return axios.post(`/thu-mucs/get-files-by-sinh-vien/${id}`, options);
 }
 
-export const getThuMucsWithQuery = (search = '', pagingOptions = Utils.getNewPagingOptions()) => {
+export const getThuMucsWithQuery = (search = '', pagingOptions = Utils.getNewPagingOptions(), filters = {}) => {
   var options = {
     search: search,
     pagingOptions: pagingOptions,
   };
-  return axios.post('/thu-mucs/q', options);
+  const filterStr = Utils.getFilterString(filters);
+  return axios.post(`/thu-mucs/q?${filterStr}`, options);
 }
 
 export const getThuMucById = (id) => {

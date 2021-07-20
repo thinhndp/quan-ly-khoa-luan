@@ -30,7 +30,7 @@ const TaskLogSchema = mongoose.Schema({
     ref: 'DeTai',
     required: [true, 'Đề tài không được để trống']
   }
-});
+}, { timestamps: true });
 
 TaskLogSchema.path('commitLink').validate((val) => {
   if (!val) {

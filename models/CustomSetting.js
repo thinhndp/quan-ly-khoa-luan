@@ -10,7 +10,7 @@ const customSettingSchema = mongoose.Schema({
     type: Array,
     default: []
   }
-});
+}, { timestamps: true });
 
 const CustomSetting = mongoose.model('CustomSetting', customSettingSchema, 'CustomSetting');
 

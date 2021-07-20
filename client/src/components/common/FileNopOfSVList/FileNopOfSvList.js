@@ -13,8 +13,8 @@ const FileNopOfSvList = ({ sinhVienId, flat = false }) => {
   const [ resData, setResData ] = useState(Utils.getNewPageData());
 
   useEffect(() => {
-    console.log('bf');
-    console.log(resData);
+    // console.log('bf');
+    // console.log(resData);
     getList();
   }, []);
 

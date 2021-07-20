@@ -1,5 +1,6 @@
 import KyThucHien from '../models/KyThucHien.js';
 import DeTai from '../models/DeTai.js';
+import ThuMuc from '../models/ThuMuc.js';
 import * as Utils from '../utils/utils.js';
 
 export const getKyThucHiens = (req, res) => {

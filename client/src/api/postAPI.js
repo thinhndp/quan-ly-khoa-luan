@@ -15,12 +15,22 @@ export const getPostsWithQuery = (search = '', pagingOptions = Utils.getNewPagin
   return axios.post(`/posts/q?${filterStr}`, options);
 }
 
-export const getPublicPosts = () => {
-  return axios.get('/posts/public');
+export const getPublicPosts = (search = '', pagingOptions = Utils.getNewPagingOptions(), filters = {}) => {
+  var options = {
+    search: search,
+    pagingOptions: pagingOptions,
+  };
+  var filterStr = Utils.getFilterString(filters);
+  return axios.post(`/posts/public?${filterStr}`, options);
 }
 
-export const getPrivatePosts = () => {
-  return axios.get('/posts/private');
+export const getPrivatePosts = (search = '', pagingOptions = Utils.getNewPagingOptions(), filters = {}) => {
+  var options = {
+    search: search,
+    pagingOptions: pagingOptions,
+  };
+  var filterStr = Utils.getFilterString(filters);
+  return axios.post(`/posts/private?${filterStr}`, options);
 }
 
 export const getPostById = (id) => {

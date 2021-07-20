@@ -40,8 +40,20 @@ export const getDeTaiBySinhVienId = (sinhVienid) => {
   return axios.get(`/de-tais/get-by-sinh-vien/${sinhVienid}`);
 }
 
-export const getCurDeTaisByGiangVienId = (giangVienId) => {
-  return axios.get(`/de-tais/get-active-by-giang-vien/${giangVienId}`);
+export const getCurDeTaisByGiangVienId = (giangVienId, search = '', pagingOptions = Utils.getNewPagingOptions()) => {
+  var options = {
+    search: search,
+    pagingOptions: pagingOptions,
+  };
+  return axios.post(`/de-tais/get-active-by-giang-vien/${giangVienId}`, options);
+}
+
+export const getPastDeTaisByGiangVienId = (giangVienId, search = '', pagingOptions = Utils.getNewPagingOptions()) => {
+  var options = {
+    search: search,
+    pagingOptions: pagingOptions,
+  };
+  return axios.post(`/de-tais/get-past-by-giang-vien/${giangVienId}`, options);
 }
 
 export const getDeTaisByKTHId = (kyThucHienId) => {
