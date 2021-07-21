@@ -8,7 +8,7 @@ import CreateOrEditLogModal from './CreateOrEditLogModal';
 import * as Utils from '../../../utils/utils';
 import * as Constants from '../../../constants/constants';
 
-const TaskLogList = ({ sinhVienId, editable = false, flat = false }) => {
+const TaskLogList = ({ sinhVienId, editable = false, flat = false, onLogCreated }) => {
   const [ taskLogs, setTaskLogs ] = useState([])
   const [ resData, setResData ] = useState(Utils.getNewPageData());
   const [ selected, setSelected ] = useState(Utils.getNewTaskLog(sinhVienId));
@@ -56,6 +56,7 @@ const TaskLogList = ({ sinhVienId, editable = false, flat = false }) => {
   const onCreated = () => {
     setIsOpenModal(false);
     getList();
+    onLogCreated();
   }
 
   const onClose = () => {

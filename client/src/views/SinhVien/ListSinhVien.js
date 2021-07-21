@@ -80,7 +80,7 @@ const ListSinhVien = () => {
           Utils.showErrorToast('Đã có lỗi xảy ra');
           return;
         }
-        if (!Utils.isObjHasAllKeys(sinhViens[0], [ 'maSV', 'name', 'lopSH', 'phone', 'email' ])) {
+        if (!Utils.isObjHasAllKeys(sinhViens[0], [ 'maSV', 'name', 'lopSH', 'phone', 'email', 'diemTB' ])) {
           Utils.showErrorToast('Dữ liệu hoặc file Không hợp lệ');
           return;
         }

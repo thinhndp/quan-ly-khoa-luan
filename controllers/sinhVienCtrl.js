@@ -47,7 +47,10 @@ export const getSinhViensWithQuery = (req, res) => {
   };
   console.log(filters);
 
-  SinhVien.paginate(filters, pagingOptions)
+  SinhVien.paginate(filters, { 
+    ...pagingOptions,
+    sort: { updatedAt: -1 }
+  })
     .then((sinhViens) => {
       res.status(200).json(sinhViens);
     })

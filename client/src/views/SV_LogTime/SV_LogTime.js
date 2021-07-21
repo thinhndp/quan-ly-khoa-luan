@@ -60,6 +60,20 @@ const SV_LogTime = () => {
 
   }
 
+  const onLogCreated = () => {
+    getTaskLogReportBySVId(currentUser.relatedInfoSV._id)
+      .then((res) => {
+        console.log('report');
+        console.log(res);
+        if (res.data) {
+          setReport(res.data);
+        }
+      })
+      .catch((err) => {
+        console.log(err.response);
+      });
+  }
+
   return (
     <div className="container min_height_100">
       <div className="public-pages-container">
@@ -88,7 +102,7 @@ const SV_LogTime = () => {
           <div>
             {
               Utils.isUserValidSinhVien(currentUser) && (
-                <TaskLogList sinhVienId={currentUser.relatedInfoSV._id} editable/>
+                <TaskLogList sinhVienId={currentUser.relatedInfoSV._id} editable onLogCreated={onLogCreated}/>
               )
             }
           </div>
