@@ -257,6 +257,9 @@ export const getCurrrentKTHDeTaisByGiangVien = async (req, res) => {
     const { id } = req.params;
     let curKTH = await KyThucHien.findOne({ status: 'DDR' });
     console.log(curKTH);
+    if (curKTH == null) {
+      res.status(200).json({ docs: [] });
+    }
 
     // Search and Paging
     const { search, pagingOptions } = req.body;
@@ -264,7 +267,7 @@ export const getCurrrentKTHDeTaisByGiangVien = async (req, res) => {
     var filters = {
       tenDeTai: Utils.getIncludeFilter(search),
       giangVien: id,
-      kyThucHien: curKTH._id
+      kyThucHien: curKTH ? curKTH._id : 'invalid'
     };
 
     let deTais = await DeTai.paginate(filters, {
@@ -291,11 +294,14 @@ export const getPastDeTaisByGiangVien = async (req, res) => {
     var filters = {
       tenDeTai: Utils.getIncludeFilter(search),
       giangVien: id,
-      kyThucHien: { $ne: curKTH._id }
       // $and: [ { "kyThucHien": { $ne: curKTH._id } }, { "kyThucHien": { $ne: null } } ],
       // kyThucHien: { $nin: [ null, curKTH._id, undefined ] },
       // $not: { kyThucHien: { $in: [ null, curKTH._id ] } }
     };
+
+    if (curKTH != null) {
+      filters.kyThucHien = { $ne: curKTH._id }
+    }
 
     let deTais = await DeTai.paginate(filters, {
       ...pagingOptions,
