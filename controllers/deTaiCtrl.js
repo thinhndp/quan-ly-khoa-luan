@@ -163,7 +163,7 @@ export const getDeTaisWithPendingApproval = async (req, res) => {
     let curKTH = await KyThucHien.findOne({ status: 'DDR' });
 
     if (!curKTH) {
-      res.status(200).json([]);
+      res.status(200).json({ docs: [] });
     }
 
     var filters = {
@@ -190,7 +190,7 @@ export const getDeTaisWithNameChange = async (req, res) => {
     let curKTH = await KyThucHien.findOne({ status: 'DDR' });
 
     if (!curKTH) {
-      res.status(200).json([]);
+      res.status(200).json({ docs: [] });
     }
 
     // Filters
