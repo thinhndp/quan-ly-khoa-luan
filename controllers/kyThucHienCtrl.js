@@ -40,7 +40,10 @@ export const getKyThucHiensWithQuery = (req, res) => {
   };
   console.log(filters);
 
-  KyThucHien.paginate(filters, pagingOptions)
+  KyThucHien.paginate(filters, {
+    ...pagingOptions,
+    sort: { updatedAt: -1 }
+  })
     .then((kyThucHiens) => {
       res.status(200).json(kyThucHiens);
     })
