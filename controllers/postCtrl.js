@@ -56,7 +56,10 @@ export const getPostsWithQuery = (req, res) => {
   }
   console.log(filters);
 
-  Post.paginate(filters, pagingOptions)
+  Post.paginate(filters, {
+    ...pagingOptions,
+    sort: { updatedAt: -1 }
+  })
     .then((posts) => {
       res.status(200).json(posts);
     })

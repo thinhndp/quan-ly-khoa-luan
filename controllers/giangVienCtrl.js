@@ -35,7 +35,10 @@ export const getGiangViensWithQuery = (req, res) => {
     email: Utils.getIncludeFilter(rawFilters.email),
     huongNghienCuu: Utils.getIncludeFilter(rawFilters.huongNghienCuu),
   };
-  GiangVien.paginate(filter, pagingOptions)
+  GiangVien.paginate(filter, {
+    ...pagingOptions,
+    sort: { updatedAt: -1 }
+  })
     .then((giangViens) => {
       // console.log(giangViens);
       res.status(200).json(giangViens);

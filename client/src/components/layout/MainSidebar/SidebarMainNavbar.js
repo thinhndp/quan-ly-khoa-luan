@@ -35,7 +35,7 @@ class SidebarMainNavbar extends React.Component {
                 id="main-logo"
                 className="d-inline-block align-top mr-1"
                 style={{ maxWidth: "25px" }}
-                src={require("../../../images/avatars/logo-uit.png")}
+                src="https://tuoitre.uit.edu.vn/wp-content/uploads/2015/07/logo-uit.png"
                 alt="Logo UIT"
               />
               {!hideLogoText && (
