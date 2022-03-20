@@ -55,7 +55,7 @@ const PORT = process.env.PORT || 8080;
 
 mongoose.plugin(upsertMany);
 
-mongoose.connect(process.env.MONGODB_CONNECTION_STRING, { useNewUrlParser: true, useUnifiedTopology: true })
+mongoose.connect(process.env.MONGODB_CONNECTION_STRING)
   .then(() => console.log("MongoDB has been connected"))
   .catch((error) => console.log(error));
 
